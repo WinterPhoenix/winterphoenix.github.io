@@ -48,7 +48,7 @@ var theater = {
 
 		if(swfobject && !swfobject.hasFlashPlayerVersion("1")) return;
 		if ( ( type == null ) || ( data == null ) ) return;
-		
+
 		if ( type == "" ) {
 			this.disablePlayer();
 			return;
@@ -116,7 +116,7 @@ var theater = {
 		}
 
 	},
-	
+
 	setLanguage: function( language ) {
 		this.language = language;
 	},
@@ -159,7 +159,7 @@ function getPlayerByType( type ) {
 function registerPlayer( type, object ) {
 
 	object.prototype.player = null;
-	
+
 	object.prototype.lastVideoId = null;
 	object.prototype.videoId = null;
 
@@ -552,7 +552,7 @@ var TwitchVideo = function() {
 	this.think = function() {
 
 		if ( this.player ) {
-			
+
 			if ( this.videoId != this.lastVideoId ) {
 				this.embed();
 				this.lastVideoId = this.videoId;
@@ -665,7 +665,7 @@ var TwitchStreamVideo = function() {
 	this.think = function() {
 
 		if ( this.player ) {
-			
+
 			if ( this.videoId != this.lastVideoId ) {
 				this.embed();
 				this.lastVideoId = this.videoId;
@@ -698,10 +698,11 @@ var JustinStreamVideo = function() {
 			channel: this.videoId,
 			// hostname: "www.justin.tv",
 			auto_play: true,
+			enable_javascript: true,
 			start_volume: (this.volume || 25) // this isn't working :(
 		}
 
-		var swfurl = "http://www-cdn.justin.tv/widgets/live_site_player.swf";
+		var swfurl = "http://www.justin.tv/widgets/live_embed_player.swf";
 
 		var params = {
 			"allowFullScreen": "true",
@@ -754,7 +755,10 @@ var JustinStreamVideo = function() {
 		}
 	}
 
-	this.setVolume = function( volume ) {}
+	this.setVolume = function( volume ) {
+		this.lastVolume = null;
+		this.volume = volume;
+	}
 
 	this.setStartTime = function( seconds ) { }
 
@@ -770,10 +774,15 @@ var JustinStreamVideo = function() {
 	this.think = function() {
 
 		if ( this.player ) {
-			
+
 			if ( this.videoId != this.lastVideoId ) {
 				this.embed();
 				this.lastVideoId = this.videoId;
+			}
+				
+			if ( this.volume != this.lastVolume ) {
+				this.player.change_volume( this.volume );
+				this.lastVolume = this.volume;
 			}
 
 		}
@@ -783,6 +792,7 @@ var JustinStreamVideo = function() {
 	this.onReady = function() {
 		this.player = document.getElementById('player');
 		this.interval = setInterval( function() { self.think(self); }, 100 );
+		this.player.change_volume( this.volume );
 	}
 
 };
@@ -1015,7 +1025,7 @@ var UrlVideo = function() {
 	this.think = function() {
 
 		if ( this.player ) {
-			
+
 			if ( this.videoId != this.lastVideoId ) {
 				this.embed();
 				this.lastVideoId = this.videoId;
@@ -1094,16 +1104,16 @@ var LivestreamVideo = function() {
 				this.player.startPlayback();
 				this.lastVideoId = this.videoId;
 			}
-			
+
 			if ( this.volume != this.lastVolume ) {
 				this.player.setVolume( this.volume );
 				this.lastVolume = this.volume;
 			}
-			
+
 		}
 
 	}
-	
+
 	this.onReady = function() {
 		this.player = document.getElementById('player');
 
@@ -1111,7 +1121,7 @@ var LivestreamVideo = function() {
 		this.interval = setInterval( function() { self.think(self); }, 100 );
 		this.player.setVolume( this.volume );
 	}
-	
+
 };
 registerPlayer( "livestream", LivestreamVideo );
 
