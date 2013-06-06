@@ -380,7 +380,10 @@ var VimeoVideo = function() {
 
 	this.setStartTime = function( seconds ) {
 		this.lastStartTime = null;
-		this.startTime = seconds;
+		
+		// Set minimum of 1 seconds due to Vimeo Player issues causing
+		// the video not to load.
+		this.startTime = Math.max( 1, seconds );
 	}
 
 	this.seek = function( seconds ) {
