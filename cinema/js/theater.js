@@ -3,7 +3,7 @@ window.open = function() { return null; }; // prevent popups
 
 var theater = {
 
-	VERSION: '1.1.1',
+	VERSION: '1.1.2',
 
 	playerContainer: null,
 	playerContent: null,
@@ -255,6 +255,7 @@ function registerPlayer( type, object ) {
 	theater.loadVideo( "blip", "6484826", 60 )
 	theater.loadVideo( "html", "<span style='color:red;'>Hello world!</span>", 10 )
 	theater.loadVideo( "viooz", "", 0 )
+	thetaer.loadVideo( "dailymotion", "x1946tk", 0 )
 
 */
 (function() {
@@ -738,10 +739,11 @@ function registerPlayer( type, object ) {
 				channel: this.videoId,
 				// hostname: "www.justin.tv",
 				auto_play: true,
-				start_volume: (this.volume || 25)
+				start_volume: (this.volume || 25),
+				enable_javascript: true
 			};
 
-			var swfurl = "http://www-cdn.justin.tv/widgets/live_site_player.swf";
+			var swfurl = "http://www-cdn.jtvnw.net/swflibs/JustinPlayer.swf";
 
 			var params = {
 				"allowFullScreen": "true",
@@ -1255,7 +1257,126 @@ function registerPlayer( type, object ) {
 
 	};
 	registerPlayer( "viooz", VioozVideo );
+	
+	var DailymotionVideo = function() {
+		
+		/*
+			Embed Player Object
+		*/
+		var params = {
+			//api: "postMessage",
+			allowScriptAccess: "always",
+			bgcolor: "#000000",
+			wmode: "opaque",
+			chromeless: 1
+		};
 
+		var attributes = {
+			id: "player",
+		};
+
+		var url = "http://www.dailymotion.com/swf"
+
+		swfobject.embedSWF( url, "player", "100%", "100%", "9", null, null, params, attributes );
+		
+		/*
+			Standard Player Methods
+		*/
+		this.setVideo = function( id ) {
+			console.log("Video Set!");
+			this.lastStartTime = null;
+			this.lastVideoId = null;
+			this.videoId = id;
+		}
+
+		this.setVolume = function( volume ) {
+			this.lastVolume = null;
+			this.volume = volume;
+		}
+
+		this.setStartTime = function( seconds ) {
+			this.lastStartTime = null;
+			this.startTime = seconds;
+		}
+
+		this.seek = function( seconds ) {
+			if ( this.player != null ) {
+				this.player.seekTo( seconds, true );
+
+				// Video isn't playing
+				if ( this.player.getPlayerState() != 1 ) {
+					this.player.playVideo();
+				}
+			}
+		}
+
+		this.onRemove = function() {
+			clearInterval( this.interval );
+		}
+
+		/*
+			Player Specific Methods
+		*/
+		this.getCurrentTime = function() {
+			if ( this.player != null ) {
+				return this.player.getCurrentTime();
+			}
+		}
+
+		this.canChangeTime = function() {
+			if ( this.player != null ) {
+				//Is loaded and it is not buffering
+				return this.player.getVideoBytesTotal() != -1 &&
+				this.player.getPlayerState() != 3;
+			}
+		}
+
+		this.think = function() {
+			
+			if ( this.player != null ) {
+				console.log("Player != null");
+				if ( this.videoId != this.lastVideoId ) {
+					console.log("Should Play Video");
+					this.player.loadVideoById( this.videoId );
+					this.player.playVideo();
+					this.lastVideoId = this.videoId;
+					this.lastStartTime = this.startTime;
+				}
+
+				if ( this.player.getPlayerState() != -1 ) {
+
+					if ( this.startTime != this.lastStartTime ) {
+						this.seek( this.startTime );
+						this.lastStartTime = this.startTime;
+					}
+
+					if ( this.volume != this.player.getVolume() ) {
+						this.player.setVolume( this.volume );
+						this.volume = this.player.getVolume();
+					}
+
+				}
+			}
+
+		}
+
+		this.onReady = function() {
+			this.player = document.getElementById('player');
+			console.log( "READY!" );
+			if ( theater.isHDEnabled() ) {
+				this.player.setPlaybackQuality("hd720");
+			}
+
+			var self = this;
+			this.interval = setInterval( function() { self.think(self); }, 100 );
+		}
+		
+		// A Workaround because the Dailymotion Callback doesn't work...
+		var self = this;
+		setTimeout(function() { self.onReady(); }, 500);
+	};
+	registerPlayer( "dailymotion", DailymotionVideo );
+	
 })();
 
 /*
@@ -1279,129 +1400,15 @@ function livestreamPlayerCallback( event, data ) {
 	}
 }
 
-if (window.onTheaterReady) {
-	onTheaterReady();
-}
-
-console.log("Loaded theater.js v" + theater.VERSION);
-
-var DailymotionVideo = function() {
-	
-	/*
-		Embed Player Object
-	*/
-	var params = {
-		api: "postMessage",
-		allowScriptAccess: "always",
-		bgcolor: "#000000",
-		wmode: "opaque",
-		chromeless: 1
-	};
-
-	var attributes = {
-		id: "player",
-	};
-
-	var url = "http://www.dailymotion.com/swf"
-
-	swfobject.embedSWF( url, "player", "100%", "100%", "9", null, null, params, attributes );
-	
-	/*
-		Standard Player Methods
-	*/
-	this.setVideo = function( id ) {
-		this.lastStartTime = null;
-		this.lastVideoId = null;
-		this.videoId = id;
-	}
-
-	this.setVolume = function( volume ) {
-		this.lastVolume = null;
-		this.volume = volume;
-	}
-
-	this.setStartTime = function( seconds ) {
-		this.lastStartTime = null;
-		this.startTime = seconds;
-	}
-
-	this.seek = function( seconds ) {
-		if ( this.player != null ) {
-			this.player.seekTo( seconds, true );
-
-			// Video isn't playing
-			if ( this.player.getPlayerState() != 1 ) {
-				this.player.playVideo();
-			}
-		}
-	}
-
-	this.onRemove = function() {
-		clearInterval( this.interval );
-	}
-
-	/*
-		Player Specific Methods
-	*/
-	this.getCurrentTime = function() {
-		if ( this.player != null ) {
-			return this.player.getCurrentTime();
-		}
-	}
-
-	this.canChangeTime = function() {
-		if ( this.player != null ) {
-			//Is loaded and it is not buffering
-			return this.player.getVideoBytesTotal() != -1 &&
-			this.player.getPlayerState() != 3;
-		}
-	}
-
-	this.think = function() {
-
-		if ( this.player != null ) {
-
-			if ( this.videoId != this.lastVideoId ) {
-				this.player.postMessage( loadVideoById( this.videoId ) );
-				this.player.playVideo();
-				this.lastVideoId = this.videoId;
-				this.lastStartTime = this.startTime;
-			}
-
-			if ( this.player.getPlayerState() != -1 ) {
-
-				if ( this.startTime != this.lastStartTime ) {
-					this.seek( this.startTime );
-					this.lastStartTime = this.startTime;
-				}
-
-				if ( this.volume != this.player.getVolume() ) {
-					this.player.setVolume( this.volume );
-					this.volume = this.player.getVolume();
-				}
-
-			}
-		}
-
-	}
-
-	this.onReady = function() {
-		this.player = document.getElementById('player');
-		console.log( "READY!" );
-		if ( theater.isHDEnabled() ) {
-			this.player.setPlaybackQuality("hd720");
-		}
-
-		var self = this;
-		this.interval = setInterval( function() { self.think(self); }, 100 );
-	}
-
-};
-registerPlayer( "dailymotion", DailymotionVideo );
-
 function onDailymotionPlayerReady( playerId ) {
 	var player = theater.getPlayer();
 	if ( player && (player.getType() == "dailymotion") ) {
 		player.onReady();
 	}
 }
+
+if (window.onTheaterReady) {
+	onTheaterReady();
+}
+
+console.log("Loaded theater.js v" + theater.VERSION);
