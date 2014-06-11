@@ -3,7 +3,7 @@ window.open = function() { return null; }; // prevent popups
 
 var theater = {
 
-	VERSION: '1.1.2-YukiTheater',
+	VERSION: '1.1.3-YukiTheater',
 
 	playerContainer: null,
 	playerContent: null,
@@ -506,7 +506,7 @@ function registerPlayer( type, object ) {
 				flashvars.archive_id = id;
 			}
 
-			var swfurl = "http://www.twitch.tv/widgets/archive_site_player.swf";
+			var swfurl = "http://www.twitch.tv/widgets/archive_embed_player.swf";
 			swfurl += "?channel=" + flashvars.channel;
 
 			var params = {
@@ -551,7 +551,7 @@ function registerPlayer( type, object ) {
 				var i = 0;
 				var interval = setInterval( function() {
 					var el = document.getElementById("player");
-					if(el.play_video){
+					if(el.mute){
 						clearInterval(interval);
 						self.onReady();
 					}
@@ -636,7 +636,7 @@ function registerPlayer( type, object ) {
 				hostname: "www.twitch.tv",
 				channel: this.videoId,
 				auto_play: true,
-				start_volume: (this.volume || 25) // this isn't working :(
+				start_volume: 25 // out of 50
 			};
 
 			var swfurl = "http://www.twitch.tv/widgets/live_embed_player.swf";
