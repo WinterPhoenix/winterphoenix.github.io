@@ -3,7 +3,7 @@ window.open = function() { return null; }; // prevent popups
 
 var theater = {
 
-	VERSION: '1.1.4-YukiTheater',
+	VERSION: '1.1.5-YukiTheater',
 
 	playerContainer: null,
 	playerContent: null,
@@ -636,7 +636,7 @@ function registerPlayer( type, object ) {
 				hostname: "www.twitch.tv",
 				channel: this.videoId,
 				auto_play: true,
-				start_volume: 25 // out of 50
+				start_volume: (this.volume || theater.volume || 25)
 			};
 
 			var swfurl = "http://www.twitch.tv/widgets/live_embed_player.swf";
@@ -691,7 +691,12 @@ function registerPlayer( type, object ) {
 				}, 33);
 			}
 		};
-
+		
+		this.setVolume = function( volume ) {
+			this.lastVolume = null;
+			this.volume = volume;
+		};
+		
 		this.onRemove = function() {
 			clearInterval( this.interval );
 		};
@@ -707,7 +712,12 @@ function registerPlayer( type, object ) {
 					this.embed();
 					this.lastVideoId = this.videoId;
 				}
-
+				
+				 if ( this.volume != this.lastVolume ) {
+					// this.embed(); // volume doesn't change...
+					this.lastVolume = this.volume;
+				}
+				
 			}
 
 		};
@@ -1083,8 +1093,15 @@ function registerPlayer( type, object ) {
 
 		var flashstream = document.getElementById("flashstream"),
 			embed = (flashstream && flashstream.children[4]);
-
+		
+		// Make the Player's Div Parent Element accessible
+		var flashstream_container = document.getElementById(flashstream.parentNode.id);
+		flashstream_container.style.display="initial";
+		
 		if (embed) {
+			// Hide the Banner Ad that overlays the player
+			document.getElementById("rhw_footer").style.display="none";
+		
 			// Force player fullscreen
 			document.body.style.setProperty('overflow', 'hidden');
 			embed.style.setProperty('z-index', '99999');
