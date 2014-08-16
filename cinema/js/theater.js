@@ -1166,6 +1166,9 @@ function registerPlayer( type, object ) {
 
 		this.toggleControls = function( enabled ) {
 			this.player.height = enabled ? "100%" : "105%";
+			
+			// Hide the Banner Ad that overlays the player
+			document.getElementById("rhw_footer").style.display="none";
 		};
 
 	};
