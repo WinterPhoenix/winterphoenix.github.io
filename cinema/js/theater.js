@@ -3,7 +3,7 @@ window.open = function() { return null; }; // prevent popups
 
 var theater = {
 
-	VERSION: '1.1.6-YukiTheater',
+	VERSION: '1.1.7-YukiTheater',
 
 	playerContainer: null,
 	playerContent: null,
@@ -115,12 +115,12 @@ var theater = {
 		}
 	},
 
-	enableHD: function() {
-		this.hdPlayback = true;
+	enableForceVideoRes: function() {
+		this.forceVideoRes = true;
 	},
 
-	isHDEnabled: function() {
-		return this.hdPlayback;
+	isForceVideoRes: function() {
+		return this.forceVideoRes;
 	},
 
 	sync: function( time ) {
@@ -256,6 +256,7 @@ function registerPlayer( type, object ) {
 	theater.loadVideo( "html", "<span style='color:red;'>Hello world!</span>", 10 )
 	theater.loadVideo( "viooz", "", 0 )
 	thetaer.loadVideo( "dailymotion", "x1946tk", 0 )
+	theater.loadVideo( "ustreamlive", "1524" )
 
 */
 (function() {
@@ -337,7 +338,35 @@ function registerPlayer( type, object ) {
 		this.think = function() {
 
 			if ( this.player !== null ) {
-
+			
+				if ( theater.isForceVideoRes() ) {
+					if ( this.lastWindowHeight != window.innerHeight ) {
+						if ( window.innerHeight == 1536 ) {
+							this.player.setPlaybackQuality("highres");
+						}
+						if ( window.innerHeight == 1440 ) {
+							this.player.setPlaybackQuality("highres");
+						}
+						if ( window.innerHeight == 1080 ) {
+							this.player.setPlaybackQuality("hd1080");
+						}
+						if ( window.innerHeight == 720 ) {
+							this.player.setPlaybackQuality("hd720");
+						}
+						if ( window.innerHeight == 480 ) {
+							this.player.setPlaybackQuality("large");
+						}
+						if ( window.innerHeight == 360 ) {
+							this.player.setPlaybackQuality("medium");
+						}
+						if ( window.innerHeight == 240 ) {
+							this.player.setPlaybackQuality("small");
+						}
+						
+						this.lastWindowHeight = window.innerHeight;
+					}
+				}
+				
 				if ( this.videoId != this.lastVideoId ) {
 					this.player.loadVideoById( this.videoId, this.startTime );
 					this.lastVideoId = this.videoId;
@@ -364,8 +393,28 @@ function registerPlayer( type, object ) {
 		this.onReady = function() {
 			this.player = document.getElementById('player');
 
-			if ( theater.isHDEnabled() ) {
-				this.player.setPlaybackQuality("hd720");
+			if ( theater.isForceVideoRes() ) {
+				if ( window.innerHeight == 1536 ) {
+					this.player.setPlaybackQuality("highres");
+				}
+				if ( window.innerHeight == 1440 ) {
+					this.player.setPlaybackQuality("highres");
+				}
+				if ( window.innerHeight == 1080 ) {
+					this.player.setPlaybackQuality("hd1080");
+				}
+				if ( window.innerHeight == 720 ) {
+					this.player.setPlaybackQuality("hd720");
+				}
+				if ( window.innerHeight == 480 ) {
+					this.player.setPlaybackQuality("large");
+				}
+				if ( window.innerHeight == 360 ) {
+					this.player.setPlaybackQuality("medium");
+				}
+				if ( window.innerHeight == 240 ) {
+					this.player.setPlaybackQuality("small");
+				}
 			}
 
 			var self = this;
@@ -1279,7 +1328,7 @@ function registerPlayer( type, object ) {
 		this.onReady = function() {
 			this.player = document.getElementById('player');
 			console.log( "READY!" );
-			if ( theater.isHDEnabled() ) {
+			if ( theater.isForceVideoRes() ) {
 				this.player.setPlaybackQuality("hd720");
 			}
 
@@ -1287,11 +1336,103 @@ function registerPlayer( type, object ) {
 			this.interval = setInterval( function() { self.think(self); }, 100 );
 		}
 		
-		// A Workaround because the Dailymotion Callback doesn't work...
 		var self = this;
 		setTimeout(function() { self.onReady(); }, 500);
 	};
 	registerPlayer( "dailymotion", DailymotionVideo );
+	
+	var UstreamLiveVideo = function() {
+		
+		var pre_player = document.createElement('iframe');
+		pre_player.src = "http://www.ustream.tv/embed/1?controls=false"; // bogus channel
+		pre_player.id = "player";
+		pre_player.width = "100%";
+		pre_player.height = "100%";
+		var player_container = document.getElementById('player').parentNode;
+		player_container.removeChild(document.getElementById('player'));
+		player_container.appendChild(pre_player);
+		
+		var viewer = UstreamEmbed('player');
+		
+		/*
+			Standard Player Methods
+		*/
+		this.setVideo = function( id ) {
+			this.lastVideoId = null;
+			this.videoId = id;
+		};
+
+		this.setVolume = function( volume ) {
+			this.lastVolume = null;
+			this.volume = volume;
+		};
+
+		this.onRemove = function() {
+			clearInterval( this.interval );
+		};
+
+		/*
+			Player Specific Methods
+		*/
+		this.think = function() {
+
+			if ( this.player !== null ) {
+				
+				if ( this.videoId != this.lastVideoId ) {
+					this.player.callMethod( 'load', 'channel', this.videoId );
+					
+					var self = this;
+					setTimeout(function(){self.player.callMethod('play');}, 3000);
+					
+					setTimeout(function(){
+						if ( theater.isForceVideoRes() ) {
+							if ( window.innerHeight == 1536 ) {
+								this.player.callMethod( 'quality', 16 );
+							}
+							if ( window.innerHeight == 1440 ) {
+								this.player.callMethod( 'quality', 16 );
+							}
+							if ( window.innerHeight == 1080 ) {
+								this.player.callMethod( 'quality', 16 );
+							}
+							if ( window.innerHeight == 720 ) {
+								this.player.callMethod( 'quality', 16 );
+							}
+							if ( window.innerHeight == 480 ) {
+								this.player.callMethod( 'quality', 2 );
+							}
+							if ( window.innerHeight == 360 ) {
+								this.player.callMethod( 'quality', 1 );
+							}
+							if ( window.innerHeight == 240 ) {
+								this.player.callMethod( 'quality', 0 );
+							}
+						};
+					}, 5000);
+					
+					this.lastVideoId = this.videoId;
+				}
+				
+				if ( this.volume != this.lastVolume ) {
+					this.player.callMethod( 'volume', (this.volume < 100) ? this.volume : 99); // 100% Volume on this Player mutes it
+					this.lastVolume = this.volume;
+				}
+				
+			}
+
+		};
+		
+		this.onReady = function() {
+			this.player = viewer;
+			
+			var self = this;
+			this.interval = setInterval( function() { self.think(self); }, 100 );
+		};
+		
+		var self = this;
+		setTimeout(function(){self.onReady()}, 2000);
+	};
+	registerPlayer( "ustreamlive", UstreamLiveVideo );
 	
 })();
 
