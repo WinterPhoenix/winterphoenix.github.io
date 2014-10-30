@@ -3,7 +3,7 @@ window.open = function() { return null; }; // prevent popups
 
 var theater = {
 
-	VERSION: '1.1.7-YukiTheater',
+	VERSION: '1.1.8-YukiTheater',
 
 	playerContainer: null,
 	playerContent: null,
@@ -341,25 +341,25 @@ function registerPlayer( type, object ) {
 			
 				if ( theater.isForceVideoRes() ) {
 					if ( this.lastWindowHeight != window.innerHeight ) {
-						if ( window.innerHeight == 1536 ) {
+						if ( window.innerHeight <= 1536 && window.innerHeight > 1440 ) {
 							this.player.setPlaybackQuality("highres");
 						}
-						if ( window.innerHeight == 1440 ) {
+						if ( window.innerHeight <= 1440 && window.innerHeight > 1080 ) {
 							this.player.setPlaybackQuality("highres");
 						}
-						if ( window.innerHeight == 1080 ) {
+						if ( window.innerHeight <= 1080 && window.innerHeight > 720 ) {
 							this.player.setPlaybackQuality("hd1080");
 						}
-						if ( window.innerHeight == 720 ) {
+						if ( window.innerHeight <= 720 && window.innerHeight > 480 ) {
 							this.player.setPlaybackQuality("hd720");
 						}
-						if ( window.innerHeight == 480 ) {
+						if ( window.innerHeight <= 480 && window.innerHeight > 360 ) {
 							this.player.setPlaybackQuality("large");
 						}
-						if ( window.innerHeight == 360 ) {
+						if ( window.innerHeight <= 360 && window.innerHeight > 240 ) {
 							this.player.setPlaybackQuality("medium");
 						}
-						if ( window.innerHeight == 240 ) {
+						if ( window.innerHeight <= 240 ) {
 							this.player.setPlaybackQuality("small");
 						}
 						
@@ -394,25 +394,25 @@ function registerPlayer( type, object ) {
 			this.player = document.getElementById('player');
 
 			if ( theater.isForceVideoRes() ) {
-				if ( window.innerHeight == 1536 ) {
+				if ( window.innerHeight <= 1536 && window.innerHeight > 1440 ) {
 					this.player.setPlaybackQuality("highres");
 				}
-				if ( window.innerHeight == 1440 ) {
+				if ( window.innerHeight <= 1440 && window.innerHeight > 1080 ) {
 					this.player.setPlaybackQuality("highres");
 				}
-				if ( window.innerHeight == 1080 ) {
+				if ( window.innerHeight <= 1080 && window.innerHeight > 720 ) {
 					this.player.setPlaybackQuality("hd1080");
 				}
-				if ( window.innerHeight == 720 ) {
+				if ( window.innerHeight <= 720 && window.innerHeight > 480 ) {
 					this.player.setPlaybackQuality("hd720");
 				}
-				if ( window.innerHeight == 480 ) {
+				if ( window.innerHeight <= 480 && window.innerHeight > 360 ) {
 					this.player.setPlaybackQuality("large");
 				}
-				if ( window.innerHeight == 360 ) {
+				if ( window.innerHeight <= 360 && window.innerHeight > 240 ) {
 					this.player.setPlaybackQuality("medium");
 				}
-				if ( window.innerHeight == 240 ) {
+				if ( window.innerHeight <= 240 ) {
 					this.player.setPlaybackQuality("small");
 				}
 			}
@@ -1386,25 +1386,25 @@ function registerPlayer( type, object ) {
 					
 					setTimeout(function(){
 						if ( theater.isForceVideoRes() ) {
-							if ( window.innerHeight == 1536 ) {
+							if ( window.innerHeight <= 1536 && window.innerHeight > 1440 ) {
 								this.player.callMethod( 'quality', 16 );
 							}
-							if ( window.innerHeight == 1440 ) {
+							if ( window.innerHeight <= 1440 && window.innerHeight > 1080 ) {
 								this.player.callMethod( 'quality', 16 );
 							}
-							if ( window.innerHeight == 1080 ) {
+							if ( window.innerHeight <= 1080 && window.innerHeight > 720 ) {
 								this.player.callMethod( 'quality', 16 );
 							}
-							if ( window.innerHeight == 720 ) {
+							if ( window.innerHeight <= 720 && window.innerHeight > 480 ) {
 								this.player.callMethod( 'quality', 16 );
 							}
-							if ( window.innerHeight == 480 ) {
+							if ( window.innerHeight <= 480 && window.innerHeight > 360 ) {
 								this.player.callMethod( 'quality', 2 );
 							}
-							if ( window.innerHeight == 360 ) {
+							if ( window.innerHeight <= 360 && window.innerHeight > 240 ) {
 								this.player.callMethod( 'quality', 1 );
 							}
-							if ( window.innerHeight == 240 ) {
+							if ( window.innerHeight <= 240 ) {
 								this.player.callMethod( 'quality', 0 );
 							}
 						};
