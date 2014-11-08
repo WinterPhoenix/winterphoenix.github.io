@@ -1505,7 +1505,6 @@ function registerPlayer( type, object ) {
 		};
 		
 		this.toggleControls = function( enabled ) {
-			console.log(enabled);
 			this.player.controls(enabled);
 		};
 		
