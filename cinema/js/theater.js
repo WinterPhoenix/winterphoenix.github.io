@@ -3,7 +3,7 @@ window.open = function() { return null; }; // prevent popups
 
 var theater = {
 
-	VERSION: '1.1.8-YukiTheater',
+	VERSION: '1.1.9-YukiTheater',
 
 	playerContainer: null,
 	playerContent: null,
@@ -1433,6 +1433,87 @@ function registerPlayer( type, object ) {
 		setTimeout(function(){self.onReady()}, 2000);
 	};
 	registerPlayer( "ustreamlive", UstreamLiveVideo );
+	
+	var YukiTheaterRTMP = function() {
+		
+		var pre_player = document.createElement('video');
+		pre_player.className = "video-js vjs-default-skin";
+		pre_player.id = "player";
+		pre_player.preload = "auto";
+		pre_player.autoplay = "true";
+		var player_container = document.getElementById('player').parentNode;
+		player_container.removeChild(document.getElementById('player'));
+		player_container.appendChild(pre_player);
+		
+		var viewer = videojs('player');
+		viewer.src({ type: "rtmp/mp4", src: "rtmp://join.yukitheater.org/live/bogus" }); // bogus url
+		viewer.width(window.innerWidth);
+		viewer.height(window.innerHeight);
+		viewer.poster("http://www.yukitheater.org/theater/rtmp-thumbnail.png");
+		
+		/*
+			Standard Player Methods
+		*/
+		this.setVideo = function( id ) {
+			this.lastVideoId = null;
+			this.videoId = id;
+		};
+
+		this.setVolume = function( volume ) {
+			this.lastVolume = null;
+			this.volume = volume / 100;
+		};
+
+		this.onRemove = function() {
+			clearInterval( this.interval );
+		};
+
+		/*
+			Player Specific Methods
+		*/
+		this.think = function() {
+
+			if ( this.player !== null ) {
+				// Resize the player dynamically since 100% as a size in CSS for Video.JS doesn't work
+				this.player.width(window.innerWidth, true);
+				this.player.height(window.innerHeight, true);
+				
+				if (this.player.paused()) {
+					this.player.play();
+				}
+				
+				if ( this.videoId != this.lastVideoId ) {
+					this.player.src({ type: "rtmp/mp4", src: "rtmp://join.yukitheater.org/live/" + this.videoId});
+				
+					this.lastVideoId = this.videoId;
+				}
+				
+				if ( this.volume != this.lastVolume ) {
+					this.player.volume( this.volume );
+					this.lastVolume = this.volume;
+				}
+				
+			}
+
+		};
+		
+		this.onReady = function() {
+			this.player = viewer;
+			
+			var self = this;
+			this.interval = setInterval( function() { self.think(self); }, 100 );
+		};
+		
+		this.toggleControls = function( enabled ) {
+			console.log(enabled);
+			this.player.controls(enabled);
+		};
+		
+		var self = this;
+		viewer.ready(function(){self.onReady();});
+		
+	};
+	registerPlayer( "yukirtmp", YukiTheaterRTMP );
 	
 })();
 
