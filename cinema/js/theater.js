@@ -3,7 +3,7 @@ window.open = function() { return null; }; // prevent popups
 
 var theater = {
 
-	VERSION: '1.2.0-YukiTheater',
+	VERSION: '1.2.1-YukiTheater',
 
 	playerContainer: null,
 	playerContent: null,
@@ -266,14 +266,7 @@ function registerPlayer( type, object ) {
 		/*
 			Embed Player Object
 		*/
-		var player = new YT.Player('player', {
-			height: '100%',
-			width: '100%',
-			playerVars: { 'autoplay': 1, 'controls': 0, 'iv_load_policy': 3/*, 'cc_load_policy': 1*/ }, // I can't figure out why CC isn't working here
-			events: {
-				'onReady': onYouTubePlayerReady,
-			}
-		});
+		var player;
 
 		/*
 			Standard Player Methods
@@ -282,6 +275,23 @@ function registerPlayer( type, object ) {
 			this.lastStartTime = null;
 			this.lastVideoId = null;
 			this.videoId = id;
+			
+			if (player) { return; }
+
+			player = new YT.Player('player', {
+				height: '100%',
+				width: '100%',
+				videoId: id,
+				playerVars: {
+					autoplay: 1,
+					controls: 0,
+					iv_load_policy: 3, // hide annotations
+					cc_load_policy: theater.closedCaptions ? 1 : 0
+				},
+				events: {
+					onReady: onYouTubePlayerReady,
+				}
+			});
 		};
 
 		this.setVolume = function( volume ) {
@@ -408,8 +418,7 @@ function registerPlayer( type, object ) {
 				}
 			}
 
-			var self = this;
-			this.interval = setInterval( function() { self.think(self); }, 100 );
+			this.interval = setInterval( this.think.bind(this), 100 );
 		};
 
 	};
