@@ -3,7 +3,7 @@ window.open = function() { return null; }; // prevent popups
 
 var theater = {
 
-	VERSION: '1.2.1-YukiTheater',
+	VERSION: '1.2.2-YukiTheater',
 
 	playerContainer: null,
 	playerContent: null,
