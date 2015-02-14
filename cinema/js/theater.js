@@ -1514,6 +1514,108 @@ function registerPlayer( type, object ) {
 	};
 	registerPlayer( "yukirtmp", YukiTheaterRTMP );
 	
+		var KissAnime = function() {
+		
+		var pre_player = document.createElement('video');
+		pre_player.className = "video-js vjs-default-skin";
+		pre_player.id = "player";
+		pre_player.preload = "auto";
+		pre_player.autoplay = "true";
+		var player_container = document.getElementById('player').parentNode;
+		player_container.removeChild(document.getElementById('player'));
+		player_container.appendChild(pre_player);
+		
+		var viewer = videojs('player');
+		viewer.src({ type: "video/mp4", src: "http://www.google.com" }); // bogus url
+		viewer.width(window.innerWidth);
+		viewer.height(window.innerHeight);
+		
+		/*
+			Standard Player Methods
+		*/
+		this.setVideo = function( id ) {
+			this.lastVideoId = null;
+			this.videoId = id;
+		};
+
+		this.setVolume = function( volume ) {
+			this.lastVolume = null;
+			this.volume = volume / 100;
+		};
+		
+		this.setStartTime = function( seconds ) {
+			this.lastStartTime = null;
+			this.startTime = seconds;
+		};
+
+		this.seek = function( seconds ) {
+			if ( this.player !== null ) {
+				if (this.player.seeking() === false) { // Why does this not ever return true..?
+					this.player.currentTime( seconds );
+				}
+			}
+		};
+		
+		this.onRemove = function() {
+			clearInterval( this.interval );
+		};
+
+		/*
+			Player Specific Methods
+		*/
+		this.getCurrentTime = function() {
+			if ( this.player !== null ) {
+				return this.player.currentTime();
+			}
+		};
+		
+		this.think = function() {
+
+			if ( this.player !== null ) {
+				// Resize the player dynamically since 100% as a size in CSS for Video.JS doesn't work
+				this.player.width(window.innerWidth, true);
+				this.player.height(window.innerHeight, true);
+				
+				if (this.player.paused() && !this.player.ended()) {
+					this.player.play();
+				}
+				
+				if ( this.videoId != this.lastVideoId ) {
+					this.player.src({ type: "video/mp4", src: this.videoId}); // Currently only MP4 videos are supported in this API
+					this.lastVideoId = this.videoId;
+					this.lastStartTime = this.startTime;
+				}
+				
+				if ( this.volume != this.lastVolume ) {
+					this.player.volume( this.volume );
+					this.lastVolume = this.volume;
+				}
+
+				if ( this.startTime != this.lastStartTime ) {
+					this.seek( this.startTime );
+					this.lastStartTime = this.startTime;
+				}
+			}
+
+		};
+		
+		this.onReady = function() {
+			this.player = viewer;
+			
+			var self = this;
+			this.interval = setInterval( function() { self.think(self); }, 100 );
+		};
+		
+		this.toggleControls = function( enabled ) {
+			this.player.controls(enabled);
+		};
+		
+		var self = this;
+		viewer.ready(function(){self.onReady();});
+		
+	};
+	registerPlayer( "kissanime", KissAnime );
+	
 })();
 
 /*
