@@ -3,7 +3,7 @@ window.open = function() { return null; }; // prevent popups
 
 var theater = {
 
-	VERSION: '1.2.2-YukiTheater',
+	VERSION: '1.2.3-YukiTheater',
 
 	playerContainer: null,
 	playerContent: null,
@@ -1446,7 +1446,7 @@ function registerPlayer( type, object ) {
 		player_container.appendChild(pre_player);
 		
 		var viewer = videojs('player');
-		viewer.src({ type: "rtmp/mp4", src: "rtmp://join.yukitheater.org/live/bogus" }); // bogus url
+		viewer.src({ type: "rtmp/mp4", src: "rtmp://rtmp.yukitheater.org/live/bogus" }); // bogus url
 		viewer.width(window.innerWidth);
 		viewer.height(window.innerHeight);
 		viewer.poster("http://www.yukitheater.org/theater/rtmp-thumbnail.png");
@@ -1483,7 +1483,7 @@ function registerPlayer( type, object ) {
 				}
 				
 				if ( this.videoId != this.lastVideoId ) {
-					this.player.src({ type: "rtmp/mp4", src: "rtmp://join.yukitheater.org/live/" + this.videoId});
+					this.player.src({ type: "rtmp/mp4", src: "rtmp://rtmp.yukitheater.org/live/" + this.videoId});
 				
 					this.lastVideoId = this.videoId;
 				}
@@ -1514,7 +1514,7 @@ function registerPlayer( type, object ) {
 	};
 	registerPlayer( "yukirtmp", YukiTheaterRTMP );
 	
-		var KissAnime = function() {
+	var KissAnime = function() {
 		
 		var pre_player = document.createElement('video');
 		pre_player.className = "video-js vjs-default-skin";
