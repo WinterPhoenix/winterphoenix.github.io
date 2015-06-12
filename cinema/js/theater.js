@@ -3,7 +3,7 @@ window.open = function() { return null; }; // prevent popups
 
 var theater = {
 
-	VERSION: '1.2.3-YukiTheater',
+	VERSION: '1.2.4-YukiTheater',
 
 	playerContainer: null,
 	playerContent: null,
@@ -66,8 +66,6 @@ var theater = {
 
 	loadVideo: function( type, data, startTime ) {
 
-		if((swfobject !== null) &&
-			!swfobject.hasFlashPlayerVersion("1")) return;
 		if ( ( type === null ) || ( data === null ) ) return;
 		
 		if ( type === "" ) {
@@ -1193,7 +1191,7 @@ function registerPlayer( type, object ) {
 				}
 
 				// Video isn't playing
-				if ( state === "IDLE" ) {
+				if ( state === "IDLE" || state === "PAUSED" ) {
 					this.player.jwPlay();
 				}
 			}
@@ -1516,33 +1514,56 @@ function registerPlayer( type, object ) {
 	
 	var KissAnime = function() {
 		
-		var pre_player = document.createElement('video');
-		pre_player.className = "video-js vjs-default-skin";
-		pre_player.id = "player";
-		pre_player.preload = "auto";
-		pre_player.autoplay = "true";
-		var player_container = document.getElementById('player').parentNode;
-		player_container.removeChild(document.getElementById('player'));
-		player_container.appendChild(pre_player);
-		
-		var viewer = videojs('player');
-		viewer.src({ type: "video/mp4", src: "http://www.google.com" }); // bogus url
-		viewer.width(window.innerWidth);
-		viewer.height(window.innerHeight);
-		
+		/*
+			Embed Player Object
+		*/	
+		var params = {
+			allowScriptAccess: "always",
+			bgcolor: "#000000",
+			wmode: "opaque"
+		};
+
+		var attributes = {
+			id: "player",
+		};
+
+		var url = "http://www.youtube.com/get_player?enablejsapi=1&vq=hd720&modestbranding=1";
+
 		/*
 			Standard Player Methods
 		*/
 		this.setVideo = function( id ) {
+			// We have to reinitialize the Flash Object everytime we change the video
+			this.lastStartTime = null;
 			this.lastVideoId = null;
 			this.videoId = id;
+			
+			//Base64 Decode so we can actually use the flashvars
+			id = asp.wrap(id);
+			
+			var flashvars = {};
+			
+			var k;
+			var v;
+			for (k in id.split("&")) {
+				for (v in id.split("&")[k].split("=")) {
+					if ((typeof(id.split("&")[k].split("=")[v - 1]) != "undefined") && (typeof(id.split("&")[k].split("=")[v]) != "undefined")) {
+						flashvars[id.split("&")[k].split("=")[v - 1].replace("amp;", "")] = id.split("&")[k].split("=")[v];
+					};
+				};
+			};
+			
+			swfobject.embedSWF( url, "player", "100%", "100%", "9", null, flashvars, params, attributes );
+			
+			this.sentKADuration = false;
+			this.initSeek = false;
 		};
 
 		this.setVolume = function( volume ) {
 			this.lastVolume = null;
-			this.volume = volume / 100;
+			this.volume = volume;
 		};
-		
+
 		this.setStartTime = function( seconds ) {
 			this.lastStartTime = null;
 			this.startTime = seconds;
@@ -1550,12 +1571,15 @@ function registerPlayer( type, object ) {
 
 		this.seek = function( seconds ) {
 			if ( this.player !== null ) {
-				if (this.player.seeking() === false) { // Why does this not ever return true..?
-					this.player.currentTime( seconds );
+				this.player.seekTo( seconds, true );
+
+				// Video isn't playing
+				if ( this.player.getPlayerState() != 1 ) {
+					this.player.playVideo();
 				}
 			}
 		};
-		
+
 		this.onRemove = function() {
 			clearInterval( this.interval );
 		};
@@ -1565,53 +1589,112 @@ function registerPlayer( type, object ) {
 		*/
 		this.getCurrentTime = function() {
 			if ( this.player !== null ) {
-				return this.player.currentTime();
+				return this.player.getCurrentTime();
 			}
 		};
-		
+
+		this.canChangeTime = function() {
+			if ( this.player !== null ) {
+				//Is loaded and it is not buffering
+				return this.player.getVideoBytesTotal() != -1 &&
+				this.player.getPlayerState() != 3;
+			}
+		};
+
 		this.think = function() {
 
 			if ( this.player !== null ) {
-				// Resize the player dynamically since 100% as a size in CSS for Video.JS doesn't work
-				this.player.width(window.innerWidth, true);
-				this.player.height(window.innerHeight, true);
 				
-				if (this.player.paused() && !this.player.ended()) {
-					this.player.play();
+				if ( !this.sentKADuration && (this.player.getPlayerState() == 1) ) {
+					console.log("RUNLUA: theater.SendKADuration(" + this.player.getDuration() + ")");
+					this.sentKADuration = true;
+				}
+				
+				if ( theater.isForceVideoRes() ) {
+					if ( this.lastWindowHeight != window.innerHeight ) {
+						if ( window.innerHeight <= 1536 && window.innerHeight > 1440 ) {
+							this.player.setPlaybackQuality("highres");
+						}
+						if ( window.innerHeight <= 1440 && window.innerHeight > 1080 ) {
+							this.player.setPlaybackQuality("highres");
+						}
+						if ( window.innerHeight <= 1080 && window.innerHeight > 720 ) {
+							this.player.setPlaybackQuality("hd1080");
+						}
+						if ( window.innerHeight <= 720 && window.innerHeight > 480 ) {
+							this.player.setPlaybackQuality("hd720");
+						}
+						if ( window.innerHeight <= 480 && window.innerHeight > 360 ) {
+							this.player.setPlaybackQuality("large");
+						}
+						if ( window.innerHeight <= 360 && window.innerHeight > 240 ) {
+							this.player.setPlaybackQuality("medium");
+						}
+						if ( window.innerHeight <= 240 ) {
+							this.player.setPlaybackQuality("small");
+						}
+						
+						this.lastWindowHeight = window.innerHeight;
+					}
 				}
 				
 				if ( this.videoId != this.lastVideoId ) {
-					this.player.src({ type: "video/mp4", src: this.videoId}); // Currently only MP4 videos are supported in this API
 					this.lastVideoId = this.videoId;
 					this.lastStartTime = this.startTime;
 				}
-				
-				if ( this.volume != this.lastVolume ) {
-					this.player.volume( this.volume );
-					this.lastVolume = this.volume;
-				}
 
-				if ( this.startTime != this.lastStartTime ) {
-					this.seek( this.startTime );
-					this.lastStartTime = this.startTime;
+				if ( this.player.getPlayerState() != -1 ) {
+					// Since startSeconds isn't supported with the FMT Mode we're using...
+					if ( !this.initSeek ) {
+						this.seek( this.startTime + 3 ); // Assume 3 seconds of buffering
+						this.initSeek = true
+					}
+					
+					if ( this.startTime != this.lastStartTime ) {
+						this.seek( this.startTime );
+						this.lastStartTime = this.startTime;
+					}
+
+					if ( this.volume != this.player.getVolume() ) {
+						this.player.setVolume( this.volume );
+						this.volume = this.player.getVolume();
+					}
+
 				}
 			}
 
 		};
-		
+
 		this.onReady = function() {
-			this.player = viewer;
+			this.player = document.getElementById('player');
+
+			if ( theater.isForceVideoRes() ) {
+				if ( window.innerHeight <= 1536 && window.innerHeight > 1440 ) {
+					this.player.setPlaybackQuality("highres");
+				}
+				if ( window.innerHeight <= 1440 && window.innerHeight > 1080 ) {
+					this.player.setPlaybackQuality("highres");
+				}
+				if ( window.innerHeight <= 1080 && window.innerHeight > 720 ) {
+					this.player.setPlaybackQuality("hd1080");
+				}
+				if ( window.innerHeight <= 720 && window.innerHeight > 480 ) {
+					this.player.setPlaybackQuality("hd720");
+				}
+				if ( window.innerHeight <= 480 && window.innerHeight > 360 ) {
+					this.player.setPlaybackQuality("large");
+				}
+				if ( window.innerHeight <= 360 && window.innerHeight > 240 ) {
+					this.player.setPlaybackQuality("medium");
+				}
+				if ( window.innerHeight <= 240 ) {
+					this.player.setPlaybackQuality("small");
+				}
+			}
 			
 			var self = this;
 			this.interval = setInterval( function() { self.think(self); }, 100 );
 		};
-		
-		this.toggleControls = function( enabled ) {
-			this.player.controls(enabled);
-		};
-		
-		var self = this;
-		viewer.ready(function(){self.onReady();});
 		
 	};
 	registerPlayer( "kissanime", KissAnime );
@@ -1625,7 +1708,7 @@ function registerPlayer( type, object ) {
 function onYouTubePlayerReady( playerId ) {
 	var player = theater.getPlayer(),
 		type = player && player.getType();
-	if ( player && ((type == "youtube") || (type == "youtubelive")) ) {
+	if ( player && ((type == "youtube") || (type == "youtubelive")) || (type == "kissanime")) {
 		player.onReady();
 	}
 }
