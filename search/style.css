@@ -52,31 +52,25 @@ body {
 	left: 0;
 }
 
-.gofundme {
-	width: 315px;
+.gofundme-text {
+	width: auto;
 	display: -webkit-box;
-	-webkit-box-orient: vertical;
-	-webkit-box-align: center;
-	-webkit-box-pack: center;
-	overflow: auto;
-
+	overflow: visible;
+	text-align: left;
+	
 	position: absolute;
-	top: 0;
-	bottom: 0;
-	right: 0;
+	bottom: 4px;
+	left: 156px;
 }
 
-.gofundme .desc {
-	margin: 0 0 15px 0;
-	padding: 0 49px;
-	text-align: justify;
-	line-height: 20px;
-}
-
-.gofundme-embed {
-	display: block;
-	width: 220px;
-	height: 440px;
+.gofundme-widget{
+	width: auto;
+	display: -webkit-box;
+	overflow: visible;
+	
+	position: absolute;
+	bottom: 4px;
+	left: 4px;
 }
 
 h1 {
