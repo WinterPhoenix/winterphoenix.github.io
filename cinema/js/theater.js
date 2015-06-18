@@ -3,7 +3,7 @@ window.open = function() { return null; }; // prevent popups
 
 var theater = {
 
-	VERSION: '1.2.4-YukiTheater',
+	VERSION: '1.2.5-YukiTheater',
 
 	playerContainer: null,
 	playerContent: null,
@@ -12,7 +12,7 @@ var theater = {
 	hdPlayback: false,
 	player: null,
 	volume: 25,
-	syncMaxDiff: 5,
+	syncMaxDiff: 10,
 
 	getPlayerContainer: function() {
 		if ( this.playerContainer === null ) {
@@ -341,33 +341,35 @@ function registerPlayer( type, object ) {
 				if ( theater.isForceVideoRes() ) {
 					if ( this.lastWindowHeight != window.innerHeight ) {
 						if ( window.innerHeight <= 1536 && window.innerHeight > 1440 ) {
-							this.player.setPlaybackQuality("highres");
+							this.ytforceres = "highres";
 						}
 						if ( window.innerHeight <= 1440 && window.innerHeight > 1080 ) {
-							this.player.setPlaybackQuality("highres");
+							this.ytforceres = "highres";
 						}
 						if ( window.innerHeight <= 1080 && window.innerHeight > 720 ) {
-							this.player.setPlaybackQuality("hd1080");
+							this.ytforceres = "hd1080";
 						}
 						if ( window.innerHeight <= 720 && window.innerHeight > 480 ) {
-							this.player.setPlaybackQuality("hd720");
+							this.ytforceres = "hd720";
 						}
 						if ( window.innerHeight <= 480 && window.innerHeight > 360 ) {
-							this.player.setPlaybackQuality("large");
+							this.ytforceres = "large";
 						}
 						if ( window.innerHeight <= 360 && window.innerHeight > 240 ) {
-							this.player.setPlaybackQuality("medium");
+							this.ytforceres = "medium";
 						}
 						if ( window.innerHeight <= 240 ) {
-							this.player.setPlaybackQuality("small");
+							this.ytforceres = "small";
 						}
+						
+						this.player.setPlaybackQuality(this.ytforceres);
 						
 						this.lastWindowHeight = window.innerHeight;
 					}
 				}
 				
 				if ( this.videoId != this.lastVideoId ) {
-					this.player.loadVideoById( this.videoId, this.startTime );
+					this.player.loadVideoById( this.videoId, this.startTime, this.ytforceres ? this.ytforceres : "default");
 					this.lastVideoId = this.videoId;
 					this.lastStartTime = this.startTime;
 				}
@@ -394,26 +396,28 @@ function registerPlayer( type, object ) {
 
 			if ( theater.isForceVideoRes() ) {
 				if ( window.innerHeight <= 1536 && window.innerHeight > 1440 ) {
-					this.player.setPlaybackQuality("highres");
+					this.ytforceres = "highres";
 				}
 				if ( window.innerHeight <= 1440 && window.innerHeight > 1080 ) {
-					this.player.setPlaybackQuality("highres");
+					this.ytforceres = "highres";
 				}
 				if ( window.innerHeight <= 1080 && window.innerHeight > 720 ) {
-					this.player.setPlaybackQuality("hd1080");
+					this.ytforceres = "hd1080";
 				}
 				if ( window.innerHeight <= 720 && window.innerHeight > 480 ) {
-					this.player.setPlaybackQuality("hd720");
+					this.ytforceres = "hd720";
 				}
 				if ( window.innerHeight <= 480 && window.innerHeight > 360 ) {
-					this.player.setPlaybackQuality("large");
+					this.ytforceres = "large";
 				}
 				if ( window.innerHeight <= 360 && window.innerHeight > 240 ) {
-					this.player.setPlaybackQuality("medium");
+					this.ytforceres = "medium";
 				}
 				if ( window.innerHeight <= 240 ) {
-					this.player.setPlaybackQuality("small");
+					this.ytforceres = "small";
 				}
+				
+				this.player.setPlaybackQuality(this.ytforceres);
 			}
 
 			this.interval = setInterval( this.think.bind(this), 100 );
