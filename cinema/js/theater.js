@@ -3,7 +3,7 @@ window.open = function() { return null; }; // prevent popups
 
 var theater = {
 
-	VERSION: '1.2.7-YukiTheater',
+	VERSION: '1.2.8-YukiTheater',
 
 	playerContainer: null,
 	playerContent: null,
@@ -264,8 +264,24 @@ function registerPlayer( type, object ) {
 		/*
 			Embed Player Object
 		*/
-		var player;
-
+		var params = {
+			allowScriptAccess: "always",
+			bgcolor: "#000000",
+			wmode: "opaque"
+		};
+		
+		var attributes = {
+			id: "player",
+		};
+		
+		var url = "http://www.youtube.com/get_player?enablejsapi=1&modestbranding=1&autohide=1&controls=1&autoplay=1&iv_load_policy=3";
+		if ( theater.isCCEnabled() ) {
+			url += "&cc_load_policy=1";
+			url += "&yt:cc=on";
+		}
+		
+		swfobject.embedSWF( url, "player", "100%", "100%", "9", null, null, params, attributes );
+		
 		/*
 			Standard Player Methods
 		*/
@@ -273,24 +289,6 @@ function registerPlayer( type, object ) {
 			this.lastStartTime = null;
 			this.lastVideoId = null;
 			this.videoId = id;
-			
-			if (player) { return; }
-
-			player = new YT.Player('player', {
-				height: '100%',
-				width: '100%',
-				videoId: id,
-				playerVars: {
-					autoplay: 1,
-					controls: 1,
-					autohide: 1,
-					iv_load_policy: 3, // hide annotations
-					cc_load_policy: theater.closedCaptions ? 1 : 0
-				},
-				events: {
-					onReady: onYouTubePlayerReady,
-				}
-			});
 		};
 
 		this.setVolume = function( volume ) {
@@ -393,7 +391,7 @@ function registerPlayer( type, object ) {
 		};
 
 		this.onReady = function() {
-			this.player = player;
+			this.player = document.getElementById('player');
 
 			if ( theater.isForceVideoRes() ) {
 				if ( window.innerHeight <= 1536 && window.innerHeight > 1440 ) {
