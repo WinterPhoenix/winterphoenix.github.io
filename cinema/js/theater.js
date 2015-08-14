@@ -1,9 +1,9 @@
-if (window.swfobject === undefined) window.swfobject = null;
+if (window.swfobject == undefined) window.swfobject = null;
 window.open = function() { return null; }; // prevent popups
 
 var theater = {
 
-	VERSION: '1.2.8-YukiTheater',
+	VERSION: '1.2.9-YukiTheater',
 
 	playerContainer: null,
 	playerContent: null,
@@ -15,7 +15,7 @@ var theater = {
 	syncMaxDiff: 10,
 
 	getPlayerContainer: function() {
-		if ( this.playerContainer === null ) {
+		if ( this.playerContainer == null ) {
 			this.playerContainer = document.getElementById('player-container') ||
 				document.createElement('div');
 		}
@@ -23,7 +23,7 @@ var theater = {
 	},
 
 	getPlayerContent: function() {
-		if ( this.playerContent === null ) {
+		if ( this.playerContent == null ) {
 			this.playerContent = document.getElementById('content') ||
 				document.createElement('div');
 		}
@@ -66,9 +66,9 @@ var theater = {
 
 	loadVideo: function( type, data, startTime ) {
 
-		if ( ( type === null ) || ( data === null ) ) return;
+		if ( ( type == null ) || ( data == null ) ) return;
 		
-		if ( type === "" ) {
+		if ( type == "" ) {
 			this.disablePlayer();
 			return;
 		}
@@ -78,22 +78,23 @@ var theater = {
 		var player = this.getPlayer();
 
 		// player doesn't exist or is different video type
-		if ( (player === null) || (player.getType() != type) ) {
+		if ( (player == null) || (player.getType() != type) ) {
 
 			this.resetPlayer();
 			this.enablePlayer();
 
 			var playerObject = getPlayerByType( type );
-			if ( playerObject !== null ) {
+			if ( playerObject != null ) {
 				this.player = new playerObject();
 			} else {
-				this.getPlayerContainer().innerText = "Video type not yet implemented.";
+				this.getPlayerContainer().innerText = "ERROR: Video type not yet implemented.";
+				this.getPlayerContainer().style.color = "red";
 				return;
 			}
 
 		}
 
-		this.player.setVolume( (this.volume !== null) ? this.volume : 25 );
+		this.player.setVolume( (this.volume != null) ? this.volume : 25 );
 		this.player.setStartTime( startTime || 0 );
 		this.player.setVideo( data );
 
@@ -101,7 +102,7 @@ var theater = {
 
 	setVolume: function( volume ) {
 		this.volume = volume;
-		if ( this.player !== null ) {
+		if ( this.player != null ) {
 			this.player.setVolume( volume );
 		}
 	},
@@ -123,12 +124,12 @@ var theater = {
 
 	sync: function( time ) {
 
-		if ( time === null ) return;
+		if ( time == null ) return;
 
-		if ( this.player !== null ) {
+		if ( this.player != null ) {
 
 			var current = this.player.getCurrentTime();
-			if ( ( current !== null ) &&
+			if ( ( current != null ) &&
 				( Math.abs(time - current) > this.syncMaxDiff ) ) {
 				this.player.setStartTime( time );
 			}
@@ -138,7 +139,7 @@ var theater = {
 	},
 
 	toggleControls: function( enabled ) {
-		if ( this.player !== null ) {
+		if ( this.player != null ) {
 			this.player.toggleControls( enabled );
 		}
 	},
@@ -302,7 +303,7 @@ function registerPlayer( type, object ) {
 		};
 
 		this.seek = function( seconds ) {
-			if ( this.player !== null ) {
+			if ( this.player != null ) {
 				this.player.seekTo( seconds, true );
 
 				// Video isn't playing
@@ -320,13 +321,13 @@ function registerPlayer( type, object ) {
 			Player Specific Methods
 		*/
 		this.getCurrentTime = function() {
-			if ( this.player !== null ) {
+			if ( this.player != null ) {
 				return this.player.getCurrentTime();
 			}
 		};
 
 		this.canChangeTime = function() {
-			if ( this.player !== null ) {
+			if ( this.player != null ) {
 				//Is loaded and it is not buffering
 				return this.player.getVideoBytesTotal() != -1 &&
 				this.player.getPlayerState() != 3;
@@ -335,7 +336,7 @@ function registerPlayer( type, object ) {
 
 		this.think = function() {
 
-			if ( this.player !== null ) {
+			if ( this.player != null ) {
 				
 				if ( theater.isForceVideoRes() ) {
 					if ( this.lastWindowHeight != window.innerHeight ) {
@@ -473,7 +474,7 @@ function registerPlayer( type, object ) {
 		};
 
 		this.seek = function( seconds ) {
-			if ( this.froogaloop !== null && seconds > 1 ) {
+			if ( this.froogaloop != null && seconds > 1 ) {
 				this.froogaloop.api('seekTo', seconds);
 			}
 		};
@@ -488,7 +489,7 @@ function registerPlayer( type, object ) {
 		*/
 		this.think = function() {
 
-			if ( this.froogaloop !== null ) {
+			if ( this.froogaloop != null ) {
 
 				if ( this.volume != this.lastVolume ) {
 					this.froogaloop.api('setVolume', this.volume);
@@ -592,7 +593,7 @@ function registerPlayer( type, object ) {
 			this.videoInfo.archive_id = info[1];
 
 			// Wait for player to be ready
-			if ( this.player === null ) {
+			if ( this.player == null ) {
 				this.lastVideoId = this.videoId;
 				this.embed();
 
@@ -721,7 +722,7 @@ function registerPlayer( type, object ) {
 			this.videoId = id;
 
 			// Wait for player to be ready
-			if ( this.player === null ) {
+			if ( this.player == null ) {
 				this.lastVideoId = this.videoId;
 				this.embed();
 
@@ -860,7 +861,7 @@ function registerPlayer( type, object ) {
 			this.videoId = id;
 
 			// Wait for player to be ready
-			if ( this.player === null ) {
+			if ( this.player == null ) {
 				var i = 0;
 				var interval = setInterval( function() {
 					var el = document.getElementById("player");
@@ -892,7 +893,7 @@ function registerPlayer( type, object ) {
 		};
 
 		this.seek = function( seconds ) {
-			if ( this.player !== null ) {
+			if ( this.player != null ) {
 				this.player.sendEvent( 'seek', seconds );
 			}
 		};
@@ -907,7 +908,7 @@ function registerPlayer( type, object ) {
 
 		this.think = function() {
 
-			if ( (this.player !== null) ) {
+			if ( (this.player != null) ) {
 
 				if ( this.videoId != this.lastVideoId ) {
 					this.player.sendEvent( 'newFeed', "http://blip.tv/rss/flash/" + this.videoId );
@@ -974,7 +975,7 @@ function registerPlayer( type, object ) {
 			this.videoId = id;
 
 			// Wait for player to be ready
-			if ( this.player === null ) {
+			if ( this.player == null ) {
 				this.lastVideoId = this.videoId;
 				this.embed();
 
@@ -1073,7 +1074,7 @@ function registerPlayer( type, object ) {
 		*/
 		this.think = function() {
 
-			if ( this.player !== null ) {
+			if ( this.player != null ) {
 
 				if ( this.videoId != this.lastVideoId ) {
 					this.player.load( this.videoId );
@@ -1173,7 +1174,7 @@ function registerPlayer( type, object ) {
 
 		this.setVolume = function( volume ) {
 			this.lastVolume = volume;
-			if ( this.player !== null ) {
+			if ( this.player != null ) {
 				this.player.jwSetVolume(volume);
 			}
 		};
@@ -1183,18 +1184,18 @@ function registerPlayer( type, object ) {
 		};
 
 		this.seek = function( seconds ) {
-			if ( this.player !== null ) {
+			if ( this.player != null ) {
 				this.player.jwSetVolume( this.lastVolume );
 
 				var state = this.player.jwGetState();
 
-				if ((state !== "BUFFERING") ||
+				if ((state != "BUFFERING") ||
 					(this.getBufferedTime() > seconds)) {
 					this.player.jwSeek( seconds );
 				}
 
 				// Video isn't playing
-				if ( state === "IDLE" || state === "PAUSED" ) {
+				if ( state == "IDLE" || state == "PAUSED" ) {
 					this.player.jwPlay();
 				}
 			}
@@ -1204,7 +1205,7 @@ function registerPlayer( type, object ) {
 			Player Specific Methods
 		*/
 		this.getCurrentTime = function() {
-			if ( this.player !== null ) {
+			if ( this.player != null ) {
 				return this.player.jwGetPosition();
 			}
 		};
@@ -1377,7 +1378,7 @@ function registerPlayer( type, object ) {
 		*/
 		this.think = function() {
 
-			if ( this.player !== null ) {
+			if ( this.player != null ) {
 				
 				if ( this.videoId != this.lastVideoId ) {
 					this.player.callMethod( 'load', 'channel', this.videoId );
@@ -1474,7 +1475,7 @@ function registerPlayer( type, object ) {
 		*/
 		this.think = function() {
 
-			if ( this.player !== null ) {
+			if ( this.player != null ) {
 				// Resize the player dynamically since 100% as a size in CSS for Video.JS doesn't work
 				this.player.width(window.innerWidth, true);
 				this.player.height(window.innerHeight, true);
@@ -1573,7 +1574,7 @@ function registerPlayer( type, object ) {
 		};
 
 		this.seek = function( seconds ) {
-			if ( this.player !== null ) {
+			if ( this.player != null ) {
 				this.player.seekTo( seconds, true );
 
 				// Video isn't playing
@@ -1591,13 +1592,13 @@ function registerPlayer( type, object ) {
 			Player Specific Methods
 		*/
 		this.getCurrentTime = function() {
-			if ( this.player !== null ) {
+			if ( this.player != null ) {
 				return this.player.getCurrentTime();
 			}
 		};
 
 		this.canChangeTime = function() {
-			if ( this.player !== null ) {
+			if ( this.player != null ) {
 				//Is loaded and it is not buffering
 				return this.player.getVideoBytesTotal() != -1 &&
 				this.player.getPlayerState() != 3;
@@ -1606,7 +1607,7 @@ function registerPlayer( type, object ) {
 
 		this.think = function() {
 
-			if ( this.player !== null ) {
+			if ( this.player != null ) {
 				
 				if ( !this.sentKADuration && (this.player.getPlayerState() == 1) ) {
 					console.log("RUNLUA: theater.SendKADuration(" + this.player.getDuration() + ")");

@@ -1,14 +1,9 @@
 <html>
 <head>
-	<title>YukiTheater Video Handler Page</title>
+	<title>Snowfall JS Demonstration</title>
 	<link rel="stylesheet" href="css/style.css" type="text/css">
-	<link rel="stylesheet" href="css/video-js.min.css" type="text/css">
-	<script src="https://www.youtube.com/iframe_api" type="text/javascript"></script>
 	<script src="http://cdnjs.cloudflare.com/ajax/libs/swfobject/2.2/swfobject.js" type="text/javascript"></script>
-	<script src="http://ustream.github.io/api-docs/js/ustream-embedapi.min.js" type="text/javascript"></script>
-	<script src="js/video.dev.js" type="text/javascript"></script>
-	<script src="https://f.vimeocdn.com/js/froogaloop2.min.js" type="text/javascript"></script>
-	<script src="js/asp.js" type="text/javascript"></script> <!--Used for Base64 Decoding-->
+	<script src="js/froogaloop.min.js" type="text/javascript"></script>
 	<script src="js/theater.js" type="text/javascript"></script>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
 	<style type="text/css">
@@ -17,18 +12,8 @@
 		}
 	</style>
 </head>
-<body onload="init()">	
-	<!--
-		Landing page for YukiTheater
-
-		This webpage appears during the idle theater state
-		while there are no videos queued to play. 
-	-->
-	<div id="player-container">
-		<div id="player"></div>
-	</div>
+<body onload="init()">
 	<div id="content">
-		
 		<!--BEGIN SNOW JAVASCRIPT-->
 		<script type="text/javascript" src="js/ThreeCanvas.js"></script>
 		<script type="text/javascript" src="js/Snow.js"></script>
@@ -143,44 +128,12 @@
 				camera.lookAt(scene.position); 
 
 				renderer.render( scene, camera );
+
 				
 			}
 
 		</script>
 		<!--END SNOW JAVASCRIPT-->
-		
-		<!-- Curtains -->
-		<div id="right-curtain"></div>
-		<div id="left-curtain"></div>
-		<div id="top-curtain"></div>
-
-		<!-- Welcome header -->
-		<div id="header-container">
-			<div id="welcome"></div>
-		</div>
-
-		<!-- Information -->
-		<div id="info-container">
-
-			<!-- Flash Detection -->
-			<div class="info" id="noflash">
-				<script type="text/javascript">
-				var elem = document.getElementById("noflash");
-				if(!swfobject.hasFlashPlayerVersion("1")) {
-					elem.innerText = "Adobe Flash Player not detected! Some videos may not load. Press F6 for installation instructions or visit http://pixeltailgames.com/cinema/flash.php";
-					gmod.detectFlash(false);
-				}
-				</script>
-			</div>
-
-			<div class="info">To request a video, open the Video Request Menu by pressing F1, input a Link into the Text Box and then press the "Request Video" Button. Alternatively, Request it via the Web Browser.</div>
-
-		</div>
-		<!-- Footer -->
-		<div id="footer-container">
-		</div>
-
 	</div>
-
 </body>
 </html>
