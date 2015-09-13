@@ -3,7 +3,7 @@ window.open = function() { return null; }; // prevent popups
 
 var theater = {
 
-	VERSION: '1.3.0-YukiTheater',
+	VERSION: '1.3.5-YukiTheater',
 
 	playerContainer: null,
 	playerContent: null,
@@ -1359,7 +1359,7 @@ function registerPlayer( type, object ) {
 	};
 	registerPlayer( "yukirtmp", YukiTheaterRTMP );
 	
-	var KissAnime = function() {
+	var Kiss = function() {
 		
 		/*
 			Embed Player Object
@@ -1402,7 +1402,7 @@ function registerPlayer( type, object ) {
 			
 			swfobject.embedSWF( url, "player", "100%", "100%", "9", null, flashvars, params, attributes );
 			
-			this.sentKADuration = false;
+			this.sentKissDuration = false;
 			this.initSeek = false;
 		};
 
@@ -1452,9 +1452,9 @@ function registerPlayer( type, object ) {
 
 			if ( this.player != null ) {
 				
-				if ( !this.sentKADuration && (this.player.getPlayerState() == 1) ) {
-					console.log("RUNLUA: theater.SendKADuration(" + this.player.getDuration() + ")");
-					this.sentKADuration = true;
+				if ( !this.sentKissDuration && (this.player.getPlayerState() == 1) ) {
+					console.log("RUNLUA: theater.SendKissDuration(" + this.player.getDuration() + ")");
+					this.sentKissDuration = true;
 				}
 				
 				if ( theater.isForceVideoRes() ) {
@@ -1544,7 +1544,9 @@ function registerPlayer( type, object ) {
 		};
 		
 	};
-	registerPlayer( "kissanime", KissAnime );
+	registerPlayer( "kissanime", Kiss );
+	registerPlayer( "kissasian", Kiss );
+	registerPlayer( "kisscartoon", Kiss );
 	
 })();
 
@@ -1555,7 +1557,7 @@ function registerPlayer( type, object ) {
 function onYouTubePlayerReady( playerId ) {
 	var player = theater.getPlayer(),
 		type = player && player.getType();
-	if ( player && ((type == "youtube") || (type == "youtubelive")) || (type == "kissanime")) {
+	if ( player && ((type == "youtube") || (type == "youtubelive")) || (type == "kissanime") || (type == "kissasian") || (type == "kisscartoon")) {
 		player.onReady();
 	}
 }
