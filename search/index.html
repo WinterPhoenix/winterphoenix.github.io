@@ -42,7 +42,7 @@
 
 			</section>
 		</div>
-
+		<script async="" src="//www.google-analytics.com/analytics.js"></script>
 		<script type="text/javascript">
 		// Navigation sounds
 		var hoverSound = new Audio('sounds/00.wav');
@@ -57,6 +57,7 @@
 		function selectService(name, url) {
 			selectSound.play();
 			
+			ga('send', 'event', 'services', 'visit', name);
 			setTimeout(function(){
 				window.location.href = url;
 			}, 800);
