@@ -94,6 +94,9 @@ var theater = {
 
 		}
 
+		// Video Service Usage Tracking
+		ga('send', 'event', 'services', 'load', type);
+		
 		this.player.setVolume( (this.volume != null) ? this.volume : 25 );
 		this.player.setStartTime( startTime || 0 );
 		this.player.setVideo( data );
