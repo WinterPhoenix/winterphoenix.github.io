@@ -3,7 +3,7 @@ window.open = function() { return null; }; // prevent popups
 
 var theater = {
 
-	VERSION: '1.3.5-YukiTheater',
+	VERSION: '1.3.6-YukiTheater',
 
 	playerContainer: null,
 	playerContent: null,
@@ -645,7 +645,10 @@ function registerPlayer( type, object ) {
 
 		this.seek = function( seconds ) {
 			if ( this.froogaloop != null && seconds > 1 ) {
+				// We pause it before seeking because Vimeo Player + Awesomium is special
+				this.froogaloop.api('pause');
 				this.froogaloop.api('seekTo', seconds);
+				this.froogaloop.api('play');
 			}
 		};
 
@@ -657,6 +660,12 @@ function registerPlayer( type, object ) {
 		/*
 			Player Specific Methods
 		*/
+		this.getCurrentTime = function() {
+			if ( this.froogaloop != null ) {
+				return self.currentTime || 1;
+			}
+		};
+
 		this.think = function() {
 
 			if ( this.froogaloop != null ) {
@@ -687,7 +696,10 @@ function registerPlayer( type, object ) {
 			self.lastStartTime = null;
 			self.froogaloop = $f(player_id);
 			self.froogaloop.api('play');
-			self.interval = setInterval( function() { self.think(self); }, 100 );
+			setTimeout(function() { // Work around the player not actually being ready to seek until it's started playing :/
+				// Also, if you manage to call this in the middle of it loading, it creates a race-condition where currentTime won't actually be where the video is! :D
+				self.interval = setInterval( function() { self.think(self); }, 100 );
+			}, 2500);
 		};
 
 	};
