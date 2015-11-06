@@ -117,9 +117,9 @@ var theater = {
 		}
 	},
 
-	enableForceVideoRes: function() {
-		this.forceVideoRes = true;
-		console.log("forceVideoRes enabled!");
+	setForceVideoRes: function(bool) {
+		this.forceVideoRes = bool;
+		console.log("forceVideoRes set to " + bool + "!");
 	},
 
 	isForceVideoRes: function() {
@@ -1669,7 +1669,7 @@ function registerPlayer( type, object ) {
 					setTimeout(function(){
 						if (!self.player.getPlaylist()[0] || self.player.getPlaylist()[0].file == "example.mp4") { // Let's make sure it moved on with loading...
 							self.onRemove();
-							theater.getPlayerContainer().innerText = "ERROR: Kiss Video Source Load Failure";
+							theater.getPlayerContainer().innerText = "ERROR: Kiss Video Sources Load Failure";
 							theater.getPlayerContainer().style.color = "red";
 							return;
 						}
