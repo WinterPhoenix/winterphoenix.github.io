@@ -8,5 +8,6 @@
 	{"id":"moose", "title":"Moose O' Crack - Stream", "live":true, "thumbnail":"http://www.yukitheater.org/theater/rtmp-thumbnail.png"},
 	{"id":"ognik", "title":"ogniK - Stream", "live":true, "thumbnail":"http://www.yukitheater.org/theater/rtmp-thumbnail.png"},
 	{"id":"nighthawk", "title":"Nighthawk - Stream", "live":true, "thumbnail":"http://www.yukitheater.org/theater/rtmp-thumbnail.png"},
-	{"id":"brave", "title":"BraVe - Stream", "live":true, "thumbnail":"http://www.yukitheater.org/theater/rtmp-thumbnail.png"}
+	{"id":"brave", "title":"BraVe - Stream", "live":true, "thumbnail":"http://www.yukitheater.org/theater/rtmp-thumbnail.png"},
+	{"id":"shima", "title":"iShimakaze - Stream", "live":true, "thumbnail":"http://www.yukitheater.org/theater/rtmp-thumbnail.png"}
 ]}
