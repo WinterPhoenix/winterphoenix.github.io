@@ -10,5 +10,6 @@
 	{"id":"nighthawk", "title":"Nighthawk - Stream", "live":true, "thumbnail":"http://www.yukitheater.org/theater/rtmp-thumbnail.png"},
 	{"id":"brave", "title":"BraVe - Stream", "live":true, "thumbnail":"http://www.yukitheater.org/theater/rtmp-thumbnail.png"},
 	{"id":"shima", "title":"iShimakaze - Stream", "live":true, "thumbnail":"http://www.yukitheater.org/theater/rtmp-thumbnail.png"},
-	{"id":"pata", "title":"patanima - Stream", "live":true, "thumbnail":"http://www.yukitheater.org/theater/rtmp-thumbnail.png"}
+	{"id":"pata", "title":"patanima - Stream", "live":true, "thumbnail":"http://www.yukitheater.org/theater/rtmp-thumbnail.png"},
+	{"id":"recon", "title":"ReconZer0 - Stream", "live":true, "thumbnail":"http://www.yukitheater.org/theater/rtmp-thumbnail.png"}
 ]}
