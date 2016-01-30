@@ -3,7 +3,7 @@ window.open = function() { return null; }; // prevent popups
 
 var theater = {
 
-	VERSION: '1.3.6-YukiTheater',
+	VERSION: '1.3.7-YukiTheater',
 
 	playerContainer: null,
 	playerContent: null,
@@ -1632,29 +1632,29 @@ function registerPlayer( type, object ) {
 						}
 
 						if (defaultQuality == null) {
-							defaultQuality = resMatching["720p"] ? resMatching["720p"] : 1; // We're just gonna guess! :D
+							defaultQuality = ("720p" in resMatching) ? resMatching["720p"] : 1; // We're just gonna guess! :D
 						}
 
 						if ( window.innerHeight <= 1536 && window.innerHeight > 1440 ) {
-							this.forceRes = resMatching["1080p"] ? resMatching["1080p"] : defaultQuality;
+							this.forceRes = ("1080p" in resMatching) ? resMatching["1080p"] : defaultQuality;
 						}
 						if ( window.innerHeight <= 1440 && window.innerHeight > 1080 ) {
-							this.forceRes = resMatching["1080p"] ? resMatching["1080p"] : defaultQuality;
+							this.forceRes = ("1080p" in resMatching) ? resMatching["1080p"] : defaultQuality;
 						}
 						if ( window.innerHeight <= 1080 && window.innerHeight > 720 ) {
-							this.forceRes = resMatching["1080p"] ? resMatching["1080p"] : defaultQuality;
+							this.forceRes = ("1080p" in resMatching) ? resMatching["1080p"] : defaultQuality;
 						}
 						if ( window.innerHeight <= 720 && window.innerHeight > 480 ) {
-							this.forceRes = resMatching["720p"] ? resMatching["720p"] : defaultQuality;
+							this.forceRes = ("720p" in resMatching) ? resMatching["720p"] : defaultQuality;
 						}
 						if ( window.innerHeight <= 480 && window.innerHeight > 360 ) {
-							this.forceRes = resMatching["480p"] ? resMatching["480p"] : defaultQuality;
+							this.forceRes = ("480p" in resMatching) ? resMatching["480p"] : defaultQuality;
 						}
 						if ( window.innerHeight <= 360 && window.innerHeight > 240 ) {
-							this.forceRes = resMatching["360p"] ? resMatching["360p"] : defaultQuality;
+							this.forceRes = ("360p" in resMatching) ? resMatching["360p"] : defaultQuality;
 						}
 						if ( window.innerHeight <= 240 ) {
-							this.forceRes = resMatching["240p"] ? resMatching["240p"] : defaultQuality;
+							this.forceRes = ("240p" in resMatching) ? resMatching["240p"] : defaultQuality;
 						}
 
 						this.player.setCurrentQuality(this.forceRes);
