@@ -3,7 +3,7 @@ window.open = function() { return null; }; // prevent popups
 
 var theater = {
 
-	VERSION: '1.3.7-YukiTheater',
+	VERSION: '1.3.8-YukiTheater',
 
 	playerContainer: null,
 	playerContent: null,
@@ -1673,7 +1673,7 @@ function registerPlayer( type, object ) {
 							theater.getPlayerContainer().style.color = "red";
 							return;
 						}
-					}, 500);
+					}, 1500);
 
 					this.player.load([{ sources: eval(atob(this.videoId)) }]); // Base64 -> String -> Array *sigh*
 					this.lastVideoId = this.videoId;
