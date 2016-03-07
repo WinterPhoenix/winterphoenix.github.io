@@ -1673,7 +1673,7 @@ function registerPlayer( type, object ) {
 							theater.getPlayerContainer().style.color = "red";
 							return;
 						}
-					}, 1500);
+					}, 3000);
 
 					this.player.load([{ sources: eval(atob(this.videoId)) }]); // Base64 -> String -> Array *sigh*
 					this.lastVideoId = this.videoId;
