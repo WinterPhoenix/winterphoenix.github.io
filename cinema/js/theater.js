@@ -3,7 +3,7 @@ window.open = function() { return null; }; // prevent popups
 
 var theater = {
 
-	VERSION: '1.3.8-YukiTheater',
+	VERSION: '1.3.9-YukiTheater',
 
 	playerContainer: null,
 	playerContent: null,
@@ -1675,7 +1675,26 @@ function registerPlayer( type, object ) {
 						}
 					}, 3000);
 
-					this.player.load([{ sources: eval(atob(this.videoId)) }]); // Base64 -> String -> Array *sigh*
+					if ( this.videoId.startsWith("ol_") ) {
+						// Base64 -> UTF-8 String -> Load JS -> Grab vs variable -> XHR to get actual video -> Load Video *sigh*
+						eval(base64.decode(this.videoId.replace("ol_", "")));
+						if (typeof vs !== "undefined" && typeof vs !== "null") {
+							var openLoadXHR = new XMLHttpRequest();
+							openLoadXHR.open("GET", vs, true);
+							//openLoadXHR.channel.QueryInterface(Components.interfaces.nsIHttpChannel).redirectionLimit = 0;
+							openLoadXHR.send(null);
+							openLoadXHR.onreadystatechange = function() {
+								if (openLoadXHR.readystate == 4) {
+									if (openLoadXHR.status == 302) {
+										this.player.load([{ file: openLoadXHR.getResponseHeader("Location") }]);
+										vs = null;
+									}
+								}
+							};
+						}
+					} else {
+						this.player.load([{ sources: eval(atob(this.videoId)) }]); // Base64 -> String -> Array *sigh*
+					}
 					this.lastVideoId = this.videoId;
 					this.lastStartTime = this.startTime;
 				}
