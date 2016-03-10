@@ -100,7 +100,7 @@ var theater = {
 		this.player.setVolume( (this.volume != null) ? this.volume : 25 );
 		this.player.setStartTime( startTime || 0 );
 		this.player.setVideo( data );
-
+		console.log("Initializing Player: " + type + " at " + startTime + " seconds...");
 	},
 
 	setVolume: function( volume ) {
@@ -118,8 +118,10 @@ var theater = {
 	},
 
 	setForceVideoRes: function(bool) {
-		this.forceVideoRes = bool;
-		console.log("forceVideoRes set to " + bool + "!");
+		if (this.forceVideoRes != bool) {
+			this.forceVideoRes = bool;
+			console.log("forceVideoRes set to " + bool + "!");
+		}
 	},
 
 	isForceVideoRes: function() {
@@ -136,6 +138,7 @@ var theater = {
 			if ( ( current != null ) &&
 				( Math.abs(time - current) > this.syncMaxDiff ) ) {
 				this.player.setStartTime( time );
+				console.log("Attempting to sync player to " + time + " seconds...");
 			}
 
 		}
@@ -1675,25 +1678,15 @@ function registerPlayer( type, object ) {
 						}
 					}, 3000);
 
-					if ( this.videoId.startsWith("ol_") ) {
+					if ( this.videoId.lastIndexOf("ol_", 0) === 0 ) {
 						// Base64 -> UTF-8 String -> Load JS -> Grab vs variable -> XHR to get actual video -> Load Video *sigh*
 						eval(base64.decode(this.videoId.replace("ol_", "")));
 						if (typeof vs !== "undefined" && typeof vs !== "null") {
-							var openLoadXHR = new XMLHttpRequest();
-							openLoadXHR.open("GET", vs, true);
-							//openLoadXHR.channel.QueryInterface(Components.interfaces.nsIHttpChannel).redirectionLimit = 0;
-							openLoadXHR.send(null);
-							openLoadXHR.onreadystatechange = function() {
-								if (openLoadXHR.readystate == 4) {
-									if (openLoadXHR.status == 302) {
-										this.player.load([{ file: openLoadXHR.getResponseHeader("Location") }]);
-										vs = null;
-									}
-								}
-							};
+							this.player.load([{ file: vs }]); // Doesn't work because JWPlayer doesn't resolve 302 Redirects
+							vs = null;
 						}
 					} else {
-						this.player.load([{ sources: eval(atob(this.videoId)) }]); // Base64 -> String -> Array *sigh*
+						this.player.load([{ sources: eval(atob(this.videoId.replace("jw_", ""))) }]); // Base64 -> String -> Array *sigh*
 					}
 					this.lastVideoId = this.videoId;
 					this.lastStartTime = this.startTime;
@@ -1737,7 +1730,195 @@ function registerPlayer( type, object ) {
 	registerPlayer( "kissanime", Kiss );
 	registerPlayer( "kissasian", Kiss );
 	registerPlayer( "kisscartoon", Kiss );
-	
+
+	var KissYT = function() {
+		/*
+			Embed Player Object
+		*/
+		var params = {
+			allowScriptAccess: "always",
+			bgcolor: "#000000",
+			wmode: "opaque"
+		};
+
+		var attributes = {
+			id: "player",
+		};
+
+		var url = "http://www.youtube.com/get_player?enablejsapi=1&modestbranding=1";
+
+		/*
+			Standard Player Methods
+		*/
+		this.setVideo = function( id ) {
+			// We have to reinitialize the Flash Object everytime we change the video
+			this.lastStartTime = null;
+			this.lastVideoId = null;
+			this.videoId = id;
+
+			//Base64 Decode for the flashvars
+			id = atob(id.replace("yt_", ""));
+
+			var flashvars = {};
+
+			var k;
+			var v;
+			for (k in id.split("&")) {
+				for (v in id.split("&")[k].split("=")) {
+					if ((typeof(id.split("&")[k].split("=")[v - 1]) != "undefined") && (typeof(id.split("&")[k].split("=")[v]) != "undefined")) {
+						flashvars[id.split("&")[k].split("=")[v - 1].replace("amp;", "")] = id.split("&")[k].split("=")[v];
+					};
+				};
+			};
+
+			swfobject.embedSWF( url, "player", "100%", "100%", "9", null, flashvars, params, attributes );
+
+			this.sentKissDuration = false;
+			this.initSeek = false;
+		}
+
+		this.setVolume = function( volume ) {
+			this.lastVolume = null;
+			this.volume = volume;
+		};
+
+		this.setStartTime = function( seconds ) {
+			this.lastStartTime = null;
+			this.startTime = seconds;
+		};
+
+		this.seek = function( seconds ) {
+			if ( this.player != null ) {
+				this.player.seekTo( seconds, true );
+
+				// Video isn't playing
+				if ( this.player.getPlayerState() != 1 ) {
+					this.player.playVideo();
+				}
+			}
+		};
+
+				this.onRemove = function() {
+			clearInterval( this.interval );
+		};
+
+		/*
+			Player Specific Methods
+		*/
+		this.getCurrentTime = function() {
+			if ( this.player != null ) {
+				return this.player.getCurrentTime();
+			}
+		};
+
+		this.canChangeTime = function() {
+			if ( this.player != null ) {
+				//Is loaded and it is not buffering
+				return this.player.getVideoBytesTotal() != -1 && this.player.getPlayerState() != 3;
+			}
+		};
+
+		this.think = function() {
+			if ( this.player != null ) {
+				if ( theater.isForceVideoRes() ) {
+					if ( this.lastWindowHeight != window.innerHeight ) {
+						if ( window.innerHeight <= 1536 && window.innerHeight > 1440 ) {
+							this.ytforceres = "highres";
+						}
+						if ( window.innerHeight <= 1440 && window.innerHeight > 1080 ) {
+							this.ytforceres = "highres";
+						}
+						if ( window.innerHeight <= 1080 && window.innerHeight > 720 ) {
+							this.ytforceres = "hd1080";
+						}
+						if ( window.innerHeight <= 720 && window.innerHeight > 480 ) {
+							this.ytforceres = "hd720";
+						}
+						if ( window.innerHeight <= 480 && window.innerHeight > 360 ) {
+							this.ytforceres = "large";
+						}
+						if ( window.innerHeight <= 360 && window.innerHeight > 240 ) {
+							this.ytforceres = "medium";
+						}
+						if ( window.innerHeight <= 240 ) {
+							this.ytforceres = "small";
+						}
+
+						this.player.setPlaybackQuality(this.ytforceres);
+						console.log("Forcing Quality Change to " + this.ytforceres);
+
+						this.lastWindowHeight = window.innerHeight;
+					}
+				}
+
+				if ( this.videoId != this.lastVideoId ) {
+					this.lastVideoId = this.videoId;
+					this.lastStartTime = this.startTime;
+				}
+
+				if ( !this.sentKissDuration && (typeof(this.player.getDuration) === "function") && this.player.getDuration() > 0 ) { // Wait until it's ready
+					console.log("RUNLUA: theater.SendKissDuration(" + this.player.getDuration() + ")");
+					this.sentKissDuration = true;
+				}
+
+				if ( (typeof(this.player.getPlayerState) === "function") && this.player.getPlayerState() != -1 ) {
+					// Since startSeconds isn't supported with the FMT Mode we're using...
+					if ( !this.initSeek ) {
+						this.seek( this.startTime + 3 ); // Assume 3 seconds of buffering
+						this.initSeek = true
+					}
+
+					if ( this.startTime != this.lastStartTime ) {
+						this.seek( this.startTime );
+						this.lastStartTime = this.startTime;
+					}
+
+					if ( this.volume != this.player.getVolume() ) {
+						this.player.setVolume( this.volume );
+						this.volume = this.player.getVolume();
+					}
+				}
+			}
+		};
+
+		this.onReady = function() {
+			this.player = document.getElementById('player');
+
+			if ( theater.isForceVideoRes() ) {
+				if ( window.innerHeight <= 1536 && window.innerHeight > 1440 ) {
+					this.ytforceres = "highres";
+				}
+				if ( window.innerHeight <= 1440 && window.innerHeight > 1080 ) {
+					this.ytforceres = "highres";
+				}
+				if ( window.innerHeight <= 1080 && window.innerHeight > 720 ) {
+					this.ytforceres = "hd1080";
+				}
+				if ( window.innerHeight <= 720 && window.innerHeight > 480 ) {
+					this.ytforceres = "hd720";
+				}
+				if ( window.innerHeight <= 480 && window.innerHeight > 360 ) {
+					this.ytforceres = "large";
+				}
+				if ( window.innerHeight <= 360 && window.innerHeight > 240 ) {
+					this.ytforceres = "medium";
+				}
+				if ( window.innerHeight <= 240 ) {
+					this.ytforceres = "small";
+				}
+
+				this.player.setPlaybackQuality(this.ytforceres);
+				console.log("Forcing Quality Change to " + this.ytforceres);
+
+				this.lastWindowHeight = window.innerHeight;
+			}
+
+			var self = this;
+			this.interval = setInterval( function() { self.think(self); }, 100 );
+		};
+	}
+	registerPlayer( "kissyoutube", KissYT );
+
 })();
 
 /*
@@ -1747,7 +1928,7 @@ function registerPlayer( type, object ) {
 function onYouTubePlayerReady( playerId ) {
 	var player = theater.getPlayer(),
 		type = player && player.getType();
-	if ( player && ((type == "youtube") || (type == "youtubelive")) || (type == "kissanime") || (type == "kissasian") || (type == "kisscartoon")) {
+	if ( player && ((type == "youtube") || (type == "youtubelive") || (type == "kissyoutube")) {
 		player.onReady();
 	}
 }
