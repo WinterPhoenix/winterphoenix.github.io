@@ -1911,7 +1911,7 @@ function registerPlayer( type, object ) {
 				console.log("Forcing Quality Change to " + this.ytforceres);
 
 				this.lastWindowHeight = window.innerHeight;
-			}
+			};
 
 			var self = this;
 			this.interval = setInterval( function() { self.think(self); }, 100 );
@@ -1928,7 +1928,7 @@ function registerPlayer( type, object ) {
 function onYouTubePlayerReady( playerId ) {
 	var player = theater.getPlayer(),
 		type = player && player.getType();
-	if ( player && ((type == "youtube") || (type == "youtubelive") || (type == "kissyoutube"))) {
+	if ( player && ((type == "youtube") || (type == "youtubelive") || (type == "kissyoutube")) ) {
 		player.onReady();
 	}
 }
