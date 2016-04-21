@@ -3,7 +3,7 @@ window.open = function() { return null; }; // prevent popups
 
 var theater = {
 
-	VERSION: '1.3.9-YukiTheater',
+	VERSION: '1.4.0-YukiTheater',
 
 	playerContainer: null,
 	playerContent: null,
@@ -1548,7 +1548,7 @@ function registerPlayer( type, object ) {
 		
 	};
 	registerPlayer( "yukirtmp", YukiTheaterRTMP );
-	
+
 	var Kiss = function() {
 		// JW7 Key
 		jwplayer.key="GBbtI9R8M4R2gQOTSs7m7AdoMdxpK3DD4IcgmQ==";
@@ -1685,8 +1685,11 @@ function registerPlayer( type, object ) {
 							this.player.load([{ file: vs }]); // Doesn't work because JWPlayer doesn't resolve 302 Redirects
 							vs = null;
 						}
+					} else if (this.videoId.lastIndexOf("jw_enc_", 0) === 0) {
+						// Encrypted thxa variable (AES+PBKDF2) -> String -> Array (I don't even know if encryption is used with JWPlayer stuff, but hey)
+						this.player.load([{ sources: eval($kissenc.decrypt(this.videoId.replace("jw_enc_", ""))) }]);
 					} else {
-						this.player.load([{ sources: eval(atob(this.videoId.replace("jw_", ""))) }]); // Base64 -> String -> Array *sigh*
+						this.player.load([{ sources: eval(atob(this.videoId.replace("jw_", ""))) }]); // Base64 -> String -> Array
 					}
 					this.lastVideoId = this.videoId;
 					this.lastStartTime = this.startTime;
@@ -1756,8 +1759,8 @@ function registerPlayer( type, object ) {
 			this.lastVideoId = null;
 			this.videoId = id;
 
-			//Base64 Decode for the flashvars
-			id = atob(id.replace("yt_", ""));
+			// Decrypt or Base64 Decode for the flashvars
+			id = id.lastIndexOf("yt_enc_", 0) === 0 ? $kissenc.decrypt(id.replace("yt_enc_", "")) : atob(id.replace("yt_", ""));
 
 			var flashvars = {};
 
