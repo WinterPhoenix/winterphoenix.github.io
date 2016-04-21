@@ -1,1 +1,1 @@
-"It doesn't really matter, but update the Lobby Banner." -Zep
+"Update Banner in Lobby" -Zep
