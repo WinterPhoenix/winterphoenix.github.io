@@ -1468,9 +1468,10 @@ function registerPlayer( type, object ) {
 		setTimeout(function(){self.onReady()}, 2000);
 	};
 	registerPlayer( "ustreamlive", UstreamLiveVideo );
-	
+
 	var YukiTheaterRTMP = function() {
-		
+		videojs.options.flash.swf = "video-js-5.9.2/video-js.swf"
+
 		var pre_player = document.createElement('video');
 		pre_player.className = "video-js vjs-default-skin";
 		pre_player.id = "player";
@@ -1479,13 +1480,10 @@ function registerPlayer( type, object ) {
 		var player_container = document.getElementById('player').parentNode;
 		player_container.removeChild(document.getElementById('player'));
 		player_container.appendChild(pre_player);
-		
+
 		var viewer = videojs('player');
-		viewer.src({ type: "rtmp/mp4", src: "rtmp://rtmp.yukitheater.org/live/bogus/" }); // bogus url
-		viewer.width(window.innerWidth);
-		viewer.height(window.innerHeight);
 		viewer.poster("http://www.yukitheater.org/theater/rtmp-thumbnail.png");
-		
+
 		/*
 			Standard Player Methods
 		*/
@@ -1509,32 +1507,31 @@ function registerPlayer( type, object ) {
 		this.think = function() {
 
 			if ( this.player != null ) {
-				// Resize the player dynamically since 100% as a size in CSS for Video.JS doesn't work
-				this.player.width(window.innerWidth, true);
-				this.player.height(window.innerHeight, true);
-				
-				if (this.player.paused()) {
-					this.player.play();
-				}
-				
 				if ( this.videoId != this.lastVideoId ) {
 					this.player.src({ type: "rtmp/mp4", src: "rtmp://rtmp.yukitheater.org/live/" + this.videoId + "/"});
-				
 					this.lastVideoId = this.videoId;
+					this.lastSrcChange = Math.round(Date.now()/1000) + 5; // Wait 5 seconds and then try again if it isn't working
 				}
-				
+
+				if (this.lastSrcChange != "undefined") {
+					var curTime = Math.round(Date.now()/1000)
+					if (curTime >= this.lastSrcChange && this.player.readyState() === 0) {
+						console.log("Attempt to load RTMP Stream Failed! Retrying...");
+						this.player.src({ type: "rtmp/mp4", src: "rtmp://rtmp.yukitheater.org/live/" + this.videoId + "/"});
+						this.lastSrcChange = Math.round(Date.now()/1000) + 5;
+					}
+				}
+
 				if ( this.volume != this.lastVolume ) {
 					this.player.volume( this.volume );
 					this.lastVolume = this.volume;
 				}
-				
 			}
-
 		};
-		
+
 		this.onReady = function() {
 			this.player = viewer;
-			
+
 			var self = this;
 			this.interval = setInterval( function() { self.think(self); }, 100 );
 		};
