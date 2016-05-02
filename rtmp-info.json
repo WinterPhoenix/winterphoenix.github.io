@@ -11,5 +11,6 @@
 	{"id":"recon", "title":"ReconZer0 - Stream", "live":true, "thumbnail":"http://www.yukitheater.org/theater/rtmp-thumbnail.png"},
 	{"id":"salty", "title":"salty bird - Stream", "live":true, "thumbnail":"http://www.yukitheater.org/theater/rtmp-thumbnail.png"},
 	{"id":"walker", "title":"TheWalker - Stream", "live":true, "thumbnail":"http://www.yukitheater.org/theater/rtmp-thumbnail.png"},
-	{"id":"zep", "title":"Zep - Stream", "live":true, "thumbnail":"http://www.yukitheater.org/theater/rtmp-thumbnail.png"}
+	{"id":"zep", "title":"Zep - Stream", "live":true, "thumbnail":"http://www.yukitheater.org/theater/rtmp-thumbnail.png"},
+	{"id":"pmon", "title":"PMONickpop123 - Stream", "live":true, "thumbnail":"http://www.yukitheater.org/theater/rtmp-thumbnail.png"}
 ]}
