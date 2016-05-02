@@ -5,12 +5,12 @@
 	{"id":"moose", "title":"Moose O' Crack - Stream", "live":true, "thumbnail":"https://winterphoenix96.github.io/rtmp-thumbnails/default.png"},
 	{"id":"ognik", "title":"ogniK - Stream", "live":true, "thumbnail":"https://winterphoenix96.github.io/rtmp-thumbnails/default.png"},
 	{"id":"nighthawk", "title":"Nighthawk - Stream", "live":true, "thumbnail":"https://winterphoenix96.github.io/rtmp-thumbnails/default.png"},
-	{"id":"brave", "title":"BraVe - Stream", "live":true, "thumbnail":"https://winterphoenix96.github.io/rtmp-thumbnails/default.png"},
+	{"id":"brave", "title":"BraVe - Weeaboo Wednesday", "live":true, "thumbnail":"https://winterphoenix96.github.io/rtmp-thumbnails/brave-weeb.jpg"},
 	{"id":"shima", "title":"iShimakaze - Stream", "live":true, "thumbnail":"https://winterphoenix96.github.io/rtmp-thumbnails/default.png"},
 	{"id":"pata", "title":"patanima - Stream", "live":true, "thumbnail":"https://winterphoenix96.github.io/rtmp-thumbnails/default.png"},
 	{"id":"recon", "title":"ReconZer0 - Stream", "live":true, "thumbnail":"https://winterphoenix96.github.io/rtmp-thumbnails/default.png"},
-	{"id":"salty", "title":"salty bird - Stream", "live":true, "thumbnail":"https://winterphoenix96.github.io/rtmp-thumbnails/default.png"},
+	{"id":"salty", "title":"salty bird - Stream", "live":true, "thumbnail":"https://winterphoenix96.github.io/rtmp-thumbnails/salty.jpg"},
 	{"id":"walker", "title":"TheWalker - Stream", "live":true, "thumbnail":"https://winterphoenix96.github.io/rtmp-thumbnails/default.png"},
-	{"id":"zep", "title":"Zep - Stream", "live":true, "thumbnail":"https://winterphoenix96.github.io/rtmp-thumbnails/default.png"},
+	{"id":"zep", "title":"Zep - Stream", "live":true, "thumbnail":"https://winterphoenix96.github.io/rtmp-thumbnails/zep.png"},
 	{"id":"pmon", "title":"PMONickpop123 - Stream", "live":true, "thumbnail":"https://winterphoenix96.github.io/rtmp-thumbnails/default.png"}
 ]}
