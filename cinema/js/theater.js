@@ -3,7 +3,7 @@ window.open = function() { return null; }; // prevent popups
 
 var theater = {
 
-	VERSION: '1.4.0-YukiTheater',
+	VERSION: '1.4.1-YukiTheater',
 
 	playerContainer: null,
 	playerContent: null,
@@ -282,7 +282,7 @@ function registerPlayer( type, object ) {
 			id: "player",
 		};
 		
-		var url = "http://www.youtube.com/get_player?enablejsapi=1&modestbranding=1&autohide=1&controls=1&autoplay=1&iv_load_policy=3";
+		var url = "https://www.youtube.com/get_player?enablejsapi=1&modestbranding=1&autohide=1&controls=1&autoplay=1&iv_load_policy=3";
 		if ( theater.isCCEnabled() ) {
 			url += "&cc_load_policy=1";
 			url += "&yt:cc=on";
@@ -624,7 +624,7 @@ function registerPlayer( type, object ) {
 				elem.parentNode.removeChild(elem);
 			}
 
-			var url = "http://player.vimeo.com/video/" + id + "?api=1&player_id=player1";
+			var url = "https://player.vimeo.com/video/" + id + "?api=1&player_id=player1";
 
 			var frame = document.createElement('iframe');
 			frame.setAttribute('id', 'player1');
@@ -746,7 +746,7 @@ function registerPlayer( type, object ) {
 				flashvars.archive_id = id;
 			}
 
-			var swfurl = "http://www.twitch.tv/swflibs/TwitchPlayer.swf";
+			var swfurl = "https://www.twitch.tv/swflibs/TwitchPlayer.swf";
 
 			var params = {
 				"allowFullScreen": "true",
@@ -880,7 +880,7 @@ function registerPlayer( type, object ) {
 				start_volume: (this.volume || theater.volume || 25)
 			};
 
-			var swfurl = "http://www.twitch.tv/swflibs/TwitchPlayer.swf";
+			var swfurl = "https://www.twitch.tv/swflibs/TwitchPlayer.swf";
 
 			var params = {
 				"allowFullScreen": "true",
@@ -1062,7 +1062,7 @@ function registerPlayer( type, object ) {
 
 		var flashvars = {};
 
-		var swfurl = "http://cdn.livestream.com/chromelessPlayer/wrappers/JSPlayer.swf";
+		var swfurl = "https://cdn.livestream.com/chromelessPlayer/wrappers/JSPlayer.swf";
 		// var swfurl = "http://cdn.livestream.com/chromelessPlayer/v20/playerapi.swf";
 
 		var params = {
@@ -1275,7 +1275,7 @@ function registerPlayer( type, object ) {
 			id: "player",
 		};
 
-		var url = "http://www.dailymotion.com/swf"
+		var url = "https://www.dailymotion.com/swf"
 
 		swfobject.embedSWF( url, "player", "100%", "100%", "9", null, null, params, attributes );
 		
@@ -1379,7 +1379,7 @@ function registerPlayer( type, object ) {
 	var UstreamLiveVideo = function() {
 		
 		var pre_player = document.createElement('iframe');
-		pre_player.src = "http://www.ustream.tv/embed/1?controls=false"; // bogus channel
+		pre_player.src = "https://www.ustream.tv/embed/1?controls=false"; // bogus channel
 		pre_player.id = "player";
 		pre_player.width = "100%";
 		pre_player.height = "100%";
@@ -1745,7 +1745,7 @@ function registerPlayer( type, object ) {
 			id: "player",
 		};
 
-		var url = "http://www.youtube.com/get_player?enablejsapi=1&modestbranding=1";
+		var url = "https://www.youtube.com/get_player?enablejsapi=1&modestbranding=1";
 
 		/*
 			Standard Player Methods
