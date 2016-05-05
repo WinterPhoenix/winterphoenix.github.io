@@ -1466,7 +1466,7 @@ function registerPlayer( type, object ) {
 							theater.getPlayerContainer().innerHTML = "<div id='player'><div style='color: red;'>ERROR: Kiss Video Sources Load Failure</div></div>";
 							return;
 						}
-					}, 3000);
+					}, 10000);
 
 					if ( this.videoId.lastIndexOf("ol_", 0) === 0 ) {
 						// Base64 -> UTF-8 String -> Load JS -> Grab vs variable -> XHR to get actual video -> Load Video *sigh*
@@ -1663,7 +1663,7 @@ function registerPlayer( type, object ) {
 							theater.getPlayerContainer().innerHTML = "<div id='player'><div style='color: red;'>ERROR: Kiss Video Sources Load Failure</div></div>";
 							return;
 						}
-					}, 5000);
+					}, 10000);
 				}
 
 				if ( !this.sentKissDuration && (typeof(this.player.getDuration) === "function") && this.player.getDuration() > 0 ) { // Wait until it's ready
