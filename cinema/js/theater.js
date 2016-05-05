@@ -1659,7 +1659,7 @@ function registerPlayer( type, object ) {
 
 					var self = this;
 					setTimeout(function(){
-						if (typeof(this.player.getPlayerState) === "function" && self.player.getPlayerState() == -1) { // Let's make sure it actually loaded...
+						if ((typeof(self.player.getPlayerState) === "function") && (self.player.getPlayerState() == -1)) { // Let's make sure it actually loaded...
 							theater.getPlayerContainer().innerHTML = "<div id='player'><div style='color: red;'>ERROR: Kiss Video Sources Load Failure</div></div>";
 							return;
 						}
