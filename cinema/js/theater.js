@@ -3,7 +3,7 @@ window.open = function() { return null; }; // prevent popups
 
 var theater = {
 
-	VERSION: '1.4.1-YukiTheater',
+	VERSION: '1.4.2-YukiTheater',
 
 	playerContainer: null,
 	playerContent: null,
@@ -1463,8 +1463,7 @@ function registerPlayer( type, object ) {
 					setTimeout(function(){
 						if (!self.player.getPlaylist()[0] || self.player.getPlaylist()[0].file == "example.mp4") { // Let's make sure it moved on with loading...
 							self.onRemove();
-							theater.getPlayerContainer().innerText = "ERROR: Kiss Video Sources Load Failure";
-							theater.getPlayerContainer().style.color = "red";
+							theater.getPlayerContainer().innerHTML = "<div id='player'><div style='color: red;'>ERROR: Kiss Video Sources Load Failure</div></div>";
 							return;
 						}
 					}, 3000);
@@ -1476,9 +1475,12 @@ function registerPlayer( type, object ) {
 							this.player.load([{ file: vs }]); // Doesn't work because JWPlayer doesn't resolve 302 Redirects
 							vs = null;
 						}
-					} else if (this.videoId.lastIndexOf("jw_enc_", 0) === 0) {
+					} else if (this.videoId.lastIndexOf("jw_aes_", 0) === 0) {
 						// Encrypted thxa variable (AES+PBKDF2) -> String -> Array (I don't even know if encryption is used with JWPlayer stuff, but hey)
-						this.player.load([{ sources: eval($kissenc.decrypt(this.videoId.replace("jw_enc_", ""))) }]);
+						this.player.load([{ sources: eval($kissenc_aes.decrypt(this.videoId.replace("jw_aes_", ""))) }]);
+					} else if (this.videoId.lastIndexOf("jw_sha256_", 0) === 0) {
+						// Encrypted thxa variable (SHA256+AES+Base64) -> String -> Array (I don't even know if encryption is used with JWPlayer stuff, but hey)
+						this.player.load([{ sources: eval($kissenc_sha256.decrypt(this.videoId.replace("jw_sha256_", ""))) }]);
 					} else {
 						this.player.load([{ sources: eval(atob(this.videoId.replace("jw_", ""))) }]); // Base64 -> String -> Array
 					}
@@ -1551,7 +1553,13 @@ function registerPlayer( type, object ) {
 			this.videoId = id;
 
 			// Decrypt or Base64 Decode for the flashvars
-			id = id.lastIndexOf("yt_enc_", 0) === 0 ? $kissenc.decrypt(id.replace("yt_enc_", "")) : atob(id.replace("yt_", ""));
+			if (id.lastIndexOf("yt_aes_", 0) === 0) {
+				id = $kissenc_aes.decrypt(id.replace("yt_aes_", ""));
+			} else if (id.lastIndexOf("yt_sha256_", 0) === 0) {
+				id = $kissenc_sha256.decrypt(id.replace("yt_sha256_", ""));
+			} else {
+				id = atob(id.replace("yt_", ""));
+			};
 
 			var flashvars = {};
 
@@ -1648,6 +1656,14 @@ function registerPlayer( type, object ) {
 				if ( this.videoId != this.lastVideoId ) {
 					this.lastVideoId = this.videoId;
 					this.lastStartTime = this.startTime;
+
+					var self = this;
+					setTimeout(function(){
+						if (self.player.getPlayerState() == -1) { // Let's make sure it actually loaded...
+							theater.getPlayerContainer().innerHTML = "<div id='player'><div style='color: red;'>ERROR: Kiss Video Sources Load Failure</div></div>";
+							return;
+						}
+					}, 5000);
 				}
 
 				if ( !this.sentKissDuration && (typeof(this.player.getDuration) === "function") && this.player.getDuration() > 0 ) { // Wait until it's ready
