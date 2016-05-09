@@ -263,6 +263,7 @@ function registerPlayer( type, object ) {
 	theater.loadVideo( "viooz", "", 0 )
 	thetaer.loadVideo( "dailymotion", "x1946tk", 0 )
 	theater.loadVideo( "ustreamlive", "1524" )
+	Livestream Support disabled 5-9-2016: Original API just stopped working
 
 */
 (function() {
@@ -1058,6 +1059,7 @@ function registerPlayer( type, object ) {
 	registerPlayer( "url", UrlVideo );
 
 	// Thanks to WinterPhoenix96 for helping with Livestream support
+	/*
 	var LivestreamVideo = function() {
 
 		var flashvars = {};
@@ -1085,9 +1087,7 @@ function registerPlayer( type, object ) {
 			params
 		);
 
-		/*
-			Standard Player Methods
-		*/
+		// Standard Player Methods
 		this.setVideo = function( id ) {
 			this.lastVideoId = null;
 			this.videoId = id;
@@ -1102,9 +1102,7 @@ function registerPlayer( type, object ) {
 			clearInterval( this.interval );
 		};
 
-		/*
-			Player Specific Methods
-		*/
+		// Player Specific Methods
 		this.think = function() {
 
 			if ( this.player != null ) {
@@ -1133,8 +1131,8 @@ function registerPlayer( type, object ) {
 		};
 		
 	};
-	registerPlayer( "livestream", LivestreamVideo );
-
+	registerPlayer( "livestream", LivestreamVideo )
+	*/
 
 	var HtmlVideo = function() {
 
