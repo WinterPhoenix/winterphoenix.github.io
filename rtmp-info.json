@@ -12,5 +12,6 @@
 	{"id":"salty", "title":"salty bird - Stream", "live":true, "thumbnail":"https://winterphoenix96.github.io/rtmp-thumbnails/salty.jpg"},
 	{"id":"walker", "title":"TheWalker - Stream", "live":true, "thumbnail":"https://winterphoenix96.github.io/rtmp-thumbnails/default.png"},
 	{"id":"zep", "title":"Zep - Stream", "live":true, "thumbnail":"https://winterphoenix96.github.io/rtmp-thumbnails/zep.png"},
-	{"id":"pmon", "title":"PMONickpop123 - Stream", "live":true, "thumbnail":"https://winterphoenix96.github.io/rtmp-thumbnails/default.png"}
+	{"id":"pmon", "title":"PMONickpop123 - Stream", "live":true, "thumbnail":"https://winterphoenix96.github.io/rtmp-thumbnails/default.png"},
+	{"id":"noire", "title":"Noire - Stream", "live":true, "thumbnail":"https://winterphoenix96.github.io/rtmp-thumbnails/default.png"}
 ]}

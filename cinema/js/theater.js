@@ -3,7 +3,7 @@ window.open = function() { return null; }; // prevent popups
 
 var theater = {
 
-	VERSION: '1.4.2-YukiTheater',
+	VERSION: '1.5.0-YukiTheater',
 
 	playerContainer: null,
 	playerContent: null,
@@ -1598,7 +1598,7 @@ function registerPlayer( type, object ) {
 			}
 		};
 
-				this.onRemove = function() {
+		this.onRemove = function() {
 			clearInterval( this.interval );
 		};
 
@@ -1727,6 +1727,271 @@ function registerPlayer( type, object ) {
 	}
 	registerPlayer( "kissyoutube", KissYT );
 
+	var Dailymotion = function() {
+		var viewer = DM.player(document.getElementById("player"), {
+			width: "100%",
+			height: "100%",
+			params: {
+				autoplay: true,
+				controls: true,
+			}
+		});
+
+		/*
+			Standard Player Methods
+		*/
+		this.setVideo = function( id ) {
+			this.lastStartTime = null;
+			this.lastVideoId = null;
+			this.videoId = id;
+		};
+
+		this.setVolume = function( volume ) {
+			this.lastVolume = null;
+			this.volume = volume / 100;
+		};
+
+		this.setStartTime = function( seconds ) {
+			this.lastStartTime = null;
+			this.startTime = seconds;
+		};
+
+		this.seek = function( seconds ) {
+			if ( this.player != null ) {
+				this.player.seek( seconds );
+
+				// Video isn't playing
+				if (this.player.paused) {
+					this.player.play();
+				}
+			}
+		};
+
+		this.onRemove = function() {
+			clearInterval( this.interval );
+		};
+
+		/*
+			Player Specific Methods
+		*/
+		this.getCurrentTime = function() {
+			if ( this.player != null ) {
+				return this.player.currentTime;
+			}
+		};
+
+		this.think = function() {
+			if ( this.player != null ) {
+				if ( this.videoId != this.lastVideoId ) {
+					this.player.load(this.videoId, {
+						autoplay: true,
+						start: this.startTime,
+					});
+					this.lastVideoId = this.videoId;
+					this.lastStartTime = this.startTime;
+				}
+
+				if ( this.startTime != this.lastStartTime ) {
+					this.seek( this.startTime );
+					this.lastStartTime = this.startTime;
+				}
+
+				if ( this.volume != this.lastVolume ) {
+					this.player.setVolume( this.volume );
+					this.lastVolume = this.player.volume;
+				}
+			}
+		};
+
+		this.onReady = function() {
+			this.player = viewer;
+
+			var self = this;
+			this.interval = setInterval( function() { self.think(self); }, 100 );
+		};
+
+		this.toggleControls = function( enabled ) {
+			//this.player.controls(enabled);
+		};
+
+		var self = this;
+		viewer.addEventListener("apiready", function(){self.onReady();});
+	};
+	registerPlayer( "dailymotion", Dailymotion );
+	registerPlayer( "dailymotionlive", Dailymotion );
+
+	var HitboxLive = function() {
+		videojs.options.flash.swf = "video-js-5.9.2/video-js.swf"
+
+		var pre_player = document.createElement('video');
+		pre_player.className = "video-js vjs-default-skin";
+		pre_player.id = "player";
+		pre_player.preload = "auto";
+		pre_player.autoplay = "true";
+		var player_container = document.getElementById('player').parentNode;
+		player_container.removeChild(document.getElementById('player'));
+		player_container.appendChild(pre_player);
+
+		var viewer = videojs('player');
+
+		/*
+			Standard Player Methods
+		*/
+		this.setVideo = function( id ) {
+			this.lastStartTime = null;
+			this.lastVideoId = null;
+			this.videoId = id;
+		};
+
+		this.setVolume = function( volume ) {
+			this.lastVolume = null;
+			this.volume = volume / 100;
+		};
+
+		this.onRemove = function() {
+			clearInterval( this.interval );
+		};
+
+		/*
+			Player Specific Methods
+		*/
+		this.think = function() {
+			if ( this.player != null ) {
+				if ( this.videoId != this.lastVideoId ) {
+					// https://www.hitbox.tv/api/player/config/live/{channel_id}?autoplay=true&embed=true&no_interruption=false&ssl=true
+					var playerJSON = new XMLHttpRequest();
+					var self = this;
+					playerJSON.onreadystatechange = function() {
+						if (playerJSON.readyState == 4 && playerJSON.status == 200) {
+							var parsedJSON = JSON.parse(playerJSON.responseText);
+							self.player.src({type: "application/x-mpegURL", src: parsedJSON["clip"]["url"]});
+						}
+					}
+					playerJSON.open("GET", "https://www.hitbox.tv/api/player/config/live/" + this.videoId + "?autoplay=true&embed=true&no_interruption=false&ssl=true", true);
+					playerJSON.send();
+
+					this.lastVideoId = this.videoId;
+					this.lastStartTime = this.startTime;
+				}
+
+				if ( this.volume != this.lastVolume ) {
+					this.player.volume( this.volume );
+					this.lastVolume = this.volume;
+				}
+			}
+		};
+
+		this.onReady = function() {
+			this.player = viewer;
+
+			var self = this;
+			this.interval = setInterval( function() { self.think(self); }, 100 );
+		};
+
+		this.toggleControls = function( enabled ) {
+			this.player.controls(enabled);
+		};
+
+		var self = this;
+		viewer.ready(function(){self.onReady();});
+	};
+	registerPlayer( "hitboxlive", HitboxLive );
+
+	var Hitbox = function() {
+		videojs.options.flash.swf = "video-js-5.9.2/video-js.swf"
+
+		var pre_player = document.createElement('video');
+		pre_player.className = "video-js vjs-default-skin";
+		pre_player.id = "player";
+		pre_player.preload = "auto";
+		pre_player.autoplay = "true";
+		var player_container = document.getElementById('player').parentNode;
+		player_container.removeChild(document.getElementById('player'));
+		player_container.appendChild(pre_player);
+
+		var viewer = videojs('player');
+
+		/*
+			Standard Player Methods
+		*/
+		this.setVideo = function( id ) {
+			this.lastStartTime = null;
+			this.lastVideoId = null;
+			this.videoId = id;
+		};
+
+		this.setVolume = function( volume ) {
+			this.lastVolume = null;
+			this.volume = volume / 100;
+		};
+
+		this.setStartTime = function( seconds ) {
+			this.lastStartTime = null;
+			this.startTime = seconds;
+		};
+
+		this.seek = function( seconds ) {
+			if ( this.player != null ) {
+				this.player.currentTime( seconds );
+
+				// Video isn't playing
+				if (this.player.paused()) {
+					this.player.play();
+				}
+			}
+		};
+
+		this.onRemove = function() {
+			clearInterval( this.interval );
+		};
+
+		/*
+			Player Specific Methods
+		*/
+		this.getCurrentTime = function() {
+			if ( this.player != null ) {
+				return this.player.currentTime();
+			}
+		};
+
+		this.think = function() {
+			if ( this.player != null ) {
+				if ( this.videoId != this.lastVideoId ) {
+					// https://www.hitbox.tv/api/player/config/video/{video_id}?autoplay=true&embed=true&no_interruption=false&ssl=true
+					// NOTE: Does not currently work due to their Access-Control-Allow-Origin Security Policy Header restricting it to hitbox.tv
+					this.player.src({type: "application/x-mpegURL", src: "http://www.hitbox.tv/api/player/hlsvod/" + this.videoId + ".m3u8"});
+
+					this.lastVideoId = this.videoId;
+					this.lastStartTime = this.startTime;
+				}
+
+				if ( this.startTime != this.lastStartTime ) {
+					this.seek( this.startTime );
+					this.lastStartTime = this.startTime;
+				}
+
+				if ( this.volume != this.lastVolume ) {
+					this.player.volume( this.volume );
+					this.lastVolume = this.volume;
+				}
+			}
+		};
+
+		this.onReady = function() {
+			this.player = viewer;
+
+			var self = this;
+			this.interval = setInterval( function() { self.think(self); }, 100 );
+		};
+
+		this.toggleControls = function( enabled ) {
+			this.player.controls(enabled);
+		};
+
+		var self = this;
+		viewer.ready(function(){self.onReady();});
+	};
+	registerPlayer( "hitbox", Hitbox );
 })();
 
 /*
@@ -1747,13 +2012,6 @@ function livestreamPlayerCallback( event, data ) {
 		if ( player && (player.getType() == "livestream") ) {
 			player.onReady();
 		}
-	}
-}
-
-function onDailymotionPlayerReady( playerId ) {
-	var player = theater.getPlayer();
-	if ( player && (player.getType() == "dailymotion") ) {
-		player.onReady();
 	}
 }
 
