@@ -14,25 +14,29 @@
 
 				<div style="text-align:center;font-size:0;">
 
-					<service style="background-image:url(logos/youtube.png);" onclick="selectService('YouTube','http://www.youtube.com/');" onmouseover="hoverService();">-</service>
+					<service style="background-image:url(logos/youtube.png);" onclick="selectService('YouTube','https://www.youtube.com');" onmouseover="hoverService();">-</service>
 
-					<service style="background-image:url(logos/vimeo.svg);background-size:90%;" onclick="selectService('Vimeo','http://www.vimeo.com/');" onmouseover="hoverService();">-</service>
+					<service style="background-image:url(logos/vimeo.svg);background-size:90%;" onclick="selectService('Vimeo','https://www.vimeo.com');" onmouseover="hoverService();">-</service>
 
-					<service style="background-image:url(logos/twitch.png);" onclick="selectService('Twitch','http://www.twitch.tv/');" onmouseover="hoverService();">-</service>
+					<service style="background-image:url(logos/twitch.png);" onclick="selectService('Twitch','https://www.twitch.tv');" onmouseover="hoverService();">-</service>
+
+					<service style="background-image:url(logos/hitbox.png);" onclick="selectService('Hitbox','https://www.hitbox.tv');" onmouseover="hoverService();">-</service>
 
 					<service style="background-image:url(logos/ustream.png);" onclick="selectService('Ustream','http://www.ustream.tv');" onmouseover="hoverService();">-</service>
 
-					<service class="subtext" style="background-image:url(logos/reddit.png);" onclick="selectService('Reddit/videos','http://www.reddit.com/r/videos/');" onmouseover="hoverService();">Videos</service>
+					<service style="background-image:url(logos/dailymotion.png);" onclick="selectService('Dailymotion','https://www.dailymotion.com');" onmouseover="hoverService();">-</service>
 
 					<br />
 
-					<service style="background-image:url(logos/kissanime.png);" onclick="selectService('KissAnime','https://kissanime.to/');" onmouseover="hoverService();">-</service>
+					<service style="background-image:url(logos/kissanime.png);" onclick="selectService('KissAnime','https://kissanime.to');" onmouseover="hoverService();">-</service>
 
-					<service style="background-image:url(logos/kissasian.png);" onclick="selectService('KissAsian','http://kissasian.com/');" onmouseover="hoverService();">-</service>
+					<service style="background-image:url(logos/kissasian.png);" onclick="selectService('KissAsian','http://kissasian.com');" onmouseover="hoverService();">-</service>
 
-					<service style="background-image:url(logos/kisscartoon.png);" onclick="selectService('KissCartoon','http://kisscartoon.me/');" onmouseover="hoverService();">-</service>
+					<service style="background-image:url(logos/kisscartoon.png);" onclick="selectService('KissCartoon','http://kisscartoon.me');" onmouseover="hoverService();">-</service>
 
-					<service class="subtext" style="background-image:url(logos/reddit.png);" onclick="selectService('Reddit/fullmoviesonyoutube','http://www.reddit.com/r/fullmoviesonyoutube/');" onmouseover="hoverService();">FullMoviesOnYouTube</service>
+					<service class="subtext" style="background-image:url(logos/reddit.png);" onclick="selectService('reddit/videos','https://www.reddit.com/r/videos/');" onmouseover="hoverService();">Videos</service>
+
+					<service class="subtext" style="background-image:url(logos/reddit.png);" onclick="selectService('reddit/fullmoviesonyoutube','https://www.reddit.com/r/fullmoviesonyoutube/');" onmouseover="hoverService();">FullMoviesOnYouTube</service>
 
 				</div>
 
@@ -65,13 +69,13 @@
 		document.addEventListener('DOMContentLoaded', function() {
 			var tips = [
 				'Did you know that YukiTheater is a fork of the open-source Cinema gamemode?<br /><a href="https://github.com/pixeltailgames/cinema">View Cinema\'s code on GitHub</a>',
-				'Need Help?<br />Check out the <a href="../help.html">YukiTheater Help Page</a>, <a href="http://steamcommunity.com/workshop/filedetails/discussion/118824086/828935672624191282/">Cinema FAQ</a>, or report it on the <a href="http://www.yukitheater.org/forum/help-and-support/">Forums</a>.',
-				'Have a Feature Request for YukiTheater?<br /><a href="http://www.yukitheater.org/forum/suggestions-box/">Post in the Suggestions Box</a>',
-				'Did you know that YukiTheater is entirely community-supported?<br />Please consider <a href="http://www.yukitheater.org/donate">Donating</a> if you like our work!',
+				'Need Help?<br />Check out the <a href="http://www.yukitheater.org/theater/help.html">Help Page</a>, <a href="https://www.solsticegamestudios.com/forums/forums/support/">Help and Support Board</a> on our Forums, or <a href="http://steamcommunity.com/workshop/filedetails/discussion/118824086/828935672624191282/">Cinema FAQ</a>.',
+				'Have a Feature Request for YukiTheater?<br /><a href="https://www.solsticegamestudios.com/forums/forums/yukitheater-suggestions/">Post a Suggestion</a>',
+				'Did you know that YukiTheater is entirely community-supported?<br />Please consider <a href="https://www.solsticegamestudios.com/donate.php">Donating</a> if you like our work!',
 				'YukiTheater is on social networks too!<br /><a href="http://steamcommunity.com/groups/YukiTheaterPublic">Steam Group</a>, <a href="https://twitter.com/yukitheater">Twitter</a>, <a href="https://www.facebook.com/YukiTheater">Facebook Page</a>',
-				'Found a Bug?<br /><a href="http://www.yukitheater.org/forum/bugs-glitches/">Report it on the Forums<a/>',
+				'Found a Bug?<br /><a href="https://www.solsticegamestudios.com/forums/forums/yukitheater-bugs/">Report it on the Forums<a/>',
 				'Want to keep up with YukiTheater\'s Development?<br /><a href="https://trello.com/b/TtHsb6mn/yukitheater-project">Check out the Trello</a>',
-				'Need to contact a Staff Member?<br /><a href="http://www.yukitheater.org/forum/general-discussion/current-staff-list/">View the Current Staff List</a>',
+				'Need to contact a Staff Member?<br /><a href="https://www.solsticegamestudios.com/forums/members/?type=staff">View the Current Staff List</a>',
 			];
 
 			return function() {
@@ -92,14 +96,5 @@
 			ga('create', 'UA-39404760-2', 'auto');
 			ga('send', 'pageview');
 		</script>
-		
-		<!--<div class="gofundme-widget">
-			<a target="_blank" style="border:none;" href="http://www.gofundme.com/winter-uni-year-1?utm_medium=wdgt" title="Winter Goes to University (Year 1)">
-				<img style="border:none;" width="149px" height="100px" src="https://funds.gofundme.com/css/3.0_donate/blue/widget.png">
-			</a>
-		</div>
-		<div class="gofundme-text">
-			<font size="4">Hi there! I'm Winter, the creator of YukiTheater.<br />Please take a moment to check out my GoFundMe for University, on the left.<br />I can't do it without you. <3</font>
-		</div>-->
 	</body>
 </html>
