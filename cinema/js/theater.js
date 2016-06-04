@@ -1457,31 +1457,37 @@ function registerPlayer( type, object ) {
 				}
 
 				if ( this.videoId != this.lastVideoId ) {
+					var decryptedSources = null;
+					if (this.videoId.lastIndexOf("jw_kisscartoon_", 0) === 0) {
+						// Encrypted thxa variable (SHA256+AES+Base64) -> String -> Array
+						decryptedSources = eval($kissenc_kisscartoon.decrypt(this.videoId.replace("jw_kisscartoon_", "")));
+					} else if (this.videoId.lastIndexOf("jw_kissasian_", 0) === 0) {
+						// Encrypted thxa variable (SHA256+AES+Base64) -> String -> Array
+						decryptedSources = eval($kissenc_kissasian.decrypt(this.videoId.replace("jw_kissasian_", "")));
+					} else {
+						// Base64 -> String -> Array
+						decryptedSources = eval(atob(this.videoId.replace("jw_", "")));
+					}
+
+					if (!decryptedSources || decryptedSources == "") {
+						theater.resetPlayer();
+						theater.getPlayerContainer().innerHTML = "<div id='player'><div style='color: red;'>ERROR: Kiss Video Sources Decryption Failure. Try Refreshing!</div></div>";
+						return;
+					};
+
 					var self = this;
 					setTimeout(function(){
-						if (!self.player.getPlaylist()[0] || self.player.getPlaylist()[0].file == "example.mp4") { // Let's make sure it moved on with loading...
-							self.onRemove();
-							theater.getPlayerContainer().innerHTML = "<div id='player'><div style='color: red;'>ERROR: Kiss Video Sources Load Failure.<br />Have you tried disabling IPv6 and then rebooting your PC?</div></div>";
-							return;
+						if (self.player != null) {
+							if (!self.player.getPlaylist()[0] || self.player.getPlaylist()[0].file == "example.mp4") { // Let's make sure it moved on with loading...
+								theater.resetPlayer();
+								theater.getPlayerContainer().innerHTML = "<div id='player'><div style='color: red;'>ERROR: Kiss Video Sources Load Failure.<br />Try disabling IPv6 and then rebooting your PC!</div></div>";
+								return;
+							}
 						}
 					}, 20000);
 
-					if ( this.videoId.lastIndexOf("ol_", 0) === 0 ) {
-						// Base64 -> UTF-8 String -> Load JS -> Grab vs variable -> XHR to get actual video -> Load Video *sigh*
-						eval(base64.decode(this.videoId.replace("ol_", "")));
-						if (typeof vs !== "undefined" && typeof vs !== "null") {
-							this.player.load([{ file: vs }]); // Doesn't work because JWPlayer doesn't resolve 302 Redirects
-							vs = null;
-						}
-					} else if (this.videoId.lastIndexOf("jw_kisscartoon_", 0) === 0) {
-						// Encrypted thxa variable (SHA256+AES+Base64) -> String -> Array
-						this.player.load([{ sources: eval($kissenc_kisscartoon.decrypt(this.videoId.replace("jw_kisscartoon_", ""))) }]);
-					} else if (this.videoId.lastIndexOf("jw_kissasian_", 0) === 0) {
-						// Encrypted thxa variable (SHA256+AES+Base64) -> String -> Array
-						this.player.load([{ sources: eval($kissenc_kissasian.decrypt(this.videoId.replace("jw_kissasian_", ""))) }]);
-					} else {
-						this.player.load([{ sources: eval(atob(this.videoId.replace("jw_", ""))) }]); // Base64 -> String -> Array
-					}
+					this.player.load([{ sources: decryptedSources }]);
+
 					this.lastVideoId = this.videoId;
 					this.lastStartTime = this.startTime;
 				}
@@ -1560,8 +1566,24 @@ function registerPlayer( type, object ) {
 				id = atob(id.replace("yt_", ""));
 			};
 
-			var flashvars = {};
+			if (!id || id == "") {
+				theater.resetPlayer();
+				theater.getPlayerContainer().innerHTML = "<div id='player'><div style='color: red;'>ERROR: Kiss Video Sources Decryption Failure. Try Refreshing!</div></div>";
+				return;
+			};
 
+			var self = this;
+			setTimeout(function(){
+				if (self.player != null) {
+					if ((typeof(self.player.getPlayerState) === "function") && (self.player.getPlayerState() == -1)) { // Let's make sure it actually loaded...
+						theater.resetPlayer();
+						theater.getPlayerContainer().innerHTML = "<div id='player'><div style='color: red;'>ERROR: Kiss Video Sources Load Failure.<br />Try disabling IPv6 and then rebooting your PC!</div></div>";
+						return;
+					}
+				}
+			}, 20000);
+
+			var flashvars = {};
 			var k;
 			var v;
 			for (k in id.split("&")) {
@@ -1655,14 +1677,6 @@ function registerPlayer( type, object ) {
 				if ( this.videoId != this.lastVideoId ) {
 					this.lastVideoId = this.videoId;
 					this.lastStartTime = this.startTime;
-
-					var self = this;
-					setTimeout(function(){
-						if ((typeof(self.player.getPlayerState) === "function") && (self.player.getPlayerState() == -1)) { // Let's make sure it actually loaded...
-							theater.getPlayerContainer().innerHTML = "<div id='player'><div style='color: red;'>ERROR: Kiss Video Sources Load Failure.<br />Have you tried disabling IPv6 and then rebooting your PC?</div></div>";
-							return;
-						}
-					}, 20000);
 				}
 
 				if ( !this.sentKissDuration && (typeof(this.player.getDuration) === "function") && this.player.getDuration() > 0 ) { // Wait until it's ready
