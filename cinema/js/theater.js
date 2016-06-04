@@ -3,7 +3,7 @@ window.open = function() { return null; }; // prevent popups
 
 var theater = {
 
-	VERSION: '1.5.0-YukiTheater',
+	VERSION: '1.5.1-YukiTheater',
 
 	playerContainer: null,
 	playerContent: null,
@@ -1461,10 +1461,10 @@ function registerPlayer( type, object ) {
 					setTimeout(function(){
 						if (!self.player.getPlaylist()[0] || self.player.getPlaylist()[0].file == "example.mp4") { // Let's make sure it moved on with loading...
 							self.onRemove();
-							theater.getPlayerContainer().innerHTML = "<div id='player'><div style='color: red;'>ERROR: Kiss Video Sources Load Failure</div></div>";
+							theater.getPlayerContainer().innerHTML = "<div id='player'><div style='color: red;'>ERROR: Kiss Video Sources Load Failure.<br />Have you tried disabling IPv6 and then rebooting your PC?</div></div>";
 							return;
 						}
-					}, 30000);
+					}, 20000);
 
 					if ( this.videoId.lastIndexOf("ol_", 0) === 0 ) {
 						// Base64 -> UTF-8 String -> Load JS -> Grab vs variable -> XHR to get actual video -> Load Video *sigh*
@@ -1473,12 +1473,12 @@ function registerPlayer( type, object ) {
 							this.player.load([{ file: vs }]); // Doesn't work because JWPlayer doesn't resolve 302 Redirects
 							vs = null;
 						}
-					} else if (this.videoId.lastIndexOf("jw_aes_", 0) === 0) {
-						// Encrypted thxa variable (AES+PBKDF2) -> String -> Array (I don't even know if encryption is used with JWPlayer stuff, but hey)
-						this.player.load([{ sources: eval($kissenc_aes.decrypt(this.videoId.replace("jw_aes_", ""))) }]);
-					} else if (this.videoId.lastIndexOf("jw_sha256_", 0) === 0) {
-						// Encrypted thxa variable (SHA256+AES+Base64) -> String -> Array (I don't even know if encryption is used with JWPlayer stuff, but hey)
-						this.player.load([{ sources: eval($kissenc_sha256.decrypt(this.videoId.replace("jw_sha256_", ""))) }]);
+					} else if (this.videoId.lastIndexOf("jw_kisscartoon_", 0) === 0) {
+						// Encrypted thxa variable (SHA256+AES+Base64) -> String -> Array
+						this.player.load([{ sources: eval($kissenc_kisscartoon.decrypt(this.videoId.replace("jw_kisscartoon_", ""))) }]);
+					} else if (this.videoId.lastIndexOf("jw_kissasian_", 0) === 0) {
+						// Encrypted thxa variable (SHA256+AES+Base64) -> String -> Array
+						this.player.load([{ sources: eval($kissenc_kissasian.decrypt(this.videoId.replace("jw_kissasian_", ""))) }]);
 					} else {
 						this.player.load([{ sources: eval(atob(this.videoId.replace("jw_", ""))) }]); // Base64 -> String -> Array
 					}
@@ -1551,10 +1551,11 @@ function registerPlayer( type, object ) {
 			this.videoId = id;
 
 			// Decrypt or Base64 Decode for the flashvars
-			if (id.lastIndexOf("yt_aes_", 0) === 0) {
-				id = $kissenc_aes.decrypt(id.replace("yt_aes_", ""));
-			} else if (id.lastIndexOf("yt_sha256_", 0) === 0) {
-				id = $kissenc_sha256.decrypt(id.replace("yt_sha256_", ""));
+			// They've changed encryption protocols 3 times now. Kiss's devs are fucking insane.
+			if (id.lastIndexOf("yt_kisscartoon_", 0) === 0) {
+				id = $kissenc_kisscartoon.decrypt(id.replace("yt_kisscartoon_", ""));
+			} else if (id.lastIndexOf("yt_kissasian_", 0) === 0) {
+				id = $kissenc_kissasian.decrypt(id.replace("yt_kissasian_", ""));
 			} else {
 				id = atob(id.replace("yt_", ""));
 			};
@@ -1658,10 +1659,10 @@ function registerPlayer( type, object ) {
 					var self = this;
 					setTimeout(function(){
 						if ((typeof(self.player.getPlayerState) === "function") && (self.player.getPlayerState() == -1)) { // Let's make sure it actually loaded...
-							theater.getPlayerContainer().innerHTML = "<div id='player'><div style='color: red;'>ERROR: Kiss Video Sources Load Failure</div></div>";
+							theater.getPlayerContainer().innerHTML = "<div id='player'><div style='color: red;'>ERROR: Kiss Video Sources Load Failure.<br />Have you tried disabling IPv6 and then rebooting your PC?</div></div>";
 							return;
 						}
-					}, 30000);
+					}, 20000);
 				}
 
 				if ( !this.sentKissDuration && (typeof(this.player.getDuration) === "function") && this.player.getDuration() > 0 ) { // Wait until it's ready
@@ -1726,6 +1727,13 @@ function registerPlayer( type, object ) {
 		};
 	}
 	registerPlayer( "kissyoutube", KissYT );
+
+	var KissOL = function() {
+		this.setVideo = function( id ) {
+			theater.getPlayerContainer().innerHTML = "<div id='player'><div style='color: red;'>ERROR: Kiss OpenLoad support not yet implemented.<br />OpenLoad ID: " + id.replace("ol_", "") + "<br />It's not me...it's them.</div></div>";
+		}
+	}
+	registerPlayer( "kissopenload", KissOL );
 
 	var Dailymotion = function() {
 		var viewer = DM.player(document.getElementById("player"), {
