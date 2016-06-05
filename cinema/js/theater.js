@@ -1339,6 +1339,10 @@ function registerPlayer( type, object ) {
 	registerPlayer( "yukirtmp", YukiTheaterRTMP );
 
 	var Kiss = function() {
+		// RSK Decryption Key prep
+		eval($kissenc_kissasian_init);
+		eval($kissenc_kisscartoon_init);
+
 		// JW7 Key
 		jwplayer.key="GBbtI9R8M4R2gQOTSs7m7AdoMdxpK3DD4IcgmQ==";
 
@@ -1532,6 +1536,10 @@ function registerPlayer( type, object ) {
 	registerPlayer( "kisscartoon", Kiss );
 
 	var KissYT = function() {
+		// RSK Decryption Key prep
+		eval($kissenc_kissasian_init);
+		eval($kissenc_kisscartoon_init);
+
 		/*
 			Embed Player Object
 		*/
