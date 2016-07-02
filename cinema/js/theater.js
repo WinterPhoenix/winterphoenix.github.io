@@ -3,7 +3,7 @@ window.open = function() { return null; }; // prevent popups
 
 var theater = {
 
-	VERSION: '1.5.1-YukiTheater',
+	VERSION: '1.6.0-YukiTheater',
 
 	playerContainer: null,
 	playerContent: null,
@@ -1367,7 +1367,7 @@ function registerPlayer( type, object ) {
 			this.lastStartTime = null;
 			this.lastVideoId = null;
 			this.videoId = id;
-			this.sentKissDuration = false;
+			this.sentAltDuration = false;
 			this.initSeek = false;
 		};
 
@@ -1496,9 +1496,9 @@ function registerPlayer( type, object ) {
 					this.lastStartTime = this.startTime;
 				}
 
-				if ( !this.sentKissDuration && this.player.getState() == "playing" && this.player.getDuration() > 0 ) { // Wait until it's ready
-					console.log("RUNLUA: theater.SendKissDuration(" + this.player.getDuration() + ")");
-					this.sentKissDuration = true;
+				if ( !this.sentAltDuration && this.player.getState() == "playing" && this.player.getDuration() > 0 ) { // Wait until it's ready
+					console.log("RUNLUA: theater.SendAltDuration(" + this.player.getDuration() + ")");
+					this.sentAltDuration = true;
 				}
 
 				if ( this.player.getState() != "idle" ) {
@@ -1604,7 +1604,7 @@ function registerPlayer( type, object ) {
 
 			swfobject.embedSWF( url, "player", "100%", "100%", "9", null, flashvars, params, attributes );
 
-			this.sentKissDuration = false;
+			this.sentAltDuration = false;
 			this.initSeek = false;
 		}
 
@@ -1687,9 +1687,9 @@ function registerPlayer( type, object ) {
 					this.lastStartTime = this.startTime;
 				}
 
-				if ( !this.sentKissDuration && (typeof(this.player.getDuration) === "function") && this.player.getDuration() > 0 ) { // Wait until it's ready
-					console.log("RUNLUA: theater.SendKissDuration(" + this.player.getDuration() + ")");
-					this.sentKissDuration = true;
+				if ( !this.sentAltDuration && (typeof(this.player.getDuration) === "function") && this.player.getDuration() > 0 ) { // Wait until it's ready
+					console.log("RUNLUA: theater.SendAltDuration(" + this.player.getDuration() + ")");
+					this.sentAltDuration = true;
 				}
 
 				if ( (typeof(this.player.getPlayerState) === "function") && this.player.getPlayerState() != -1 ) {
@@ -2022,6 +2022,178 @@ function registerPlayer( type, object ) {
 		viewer.ready(function(){self.onReady();});
 	};
 	registerPlayer( "hitbox", Hitbox );
+
+	var MoeTube = function() {
+		/*
+			Embed Player Object
+		*/
+		var params = {
+			allowScriptAccess: "always",
+			bgcolor: "#000000",
+			wmode: "opaque"
+		};
+
+		var attributes = {
+			id: "player",
+		};
+
+		/*
+			Standard Player Methods
+		*/
+		this.setVideo = function( id ) {
+			// We have to reinitialize the Flash Object everytime we change the video
+			this.lastStartTime = null;
+			this.lastVideoId = null;
+			this.videoId = id;
+
+			var url = 'https://video.google.com/get_player?enablejsapi=1&amp;docid=' + id + '&amp;ps=docs&amp;partnerid=30&amp;cc_load_policy=1&amp;vq=hd720&amp;autoplay=1&amp;fs=1&amp;hl=en&amp;modestbranding=1&amp;autohide=1&amp;showinfo=0';
+
+			swfobject.embedSWF(url, "player", "100%", "100%", "9", null, null, params, attributes);
+
+			this.sentAltDuration = false;
+			this.initSeek = false;
+		}
+
+		this.setVolume = function( volume ) {
+			this.lastVolume = null;
+			this.volume = volume;
+		};
+
+		this.setStartTime = function( seconds ) {
+			this.lastStartTime = null;
+			this.startTime = seconds;
+		};
+
+		this.seek = function( seconds ) {
+			if ( this.player != null ) {
+				this.player.seekTo( seconds, true );
+
+				// Video isn't playing
+				if ( this.player.getPlayerState() != 1 ) {
+					this.player.playVideo();
+				}
+			}
+		};
+
+		this.onRemove = function() {
+			clearInterval( this.interval );
+		};
+
+		/*
+			Player Specific Methods
+		*/
+		this.getCurrentTime = function() {
+			if ( this.player != null ) {
+				return this.player.getCurrentTime();
+			}
+		};
+
+		this.canChangeTime = function() {
+			if ( this.player != null ) {
+				//Is loaded and it is not buffering
+				return this.player.getVideoBytesTotal() != -1 && this.player.getPlayerState() != 3;
+			}
+		};
+
+		this.think = function() {
+			if ( this.player != null ) {
+				if ( theater.isForceVideoRes() ) {
+					if ( this.lastWindowHeight != window.innerHeight ) {
+						if ( window.innerHeight <= 1536 && window.innerHeight > 1440 ) {
+							this.ytforceres = "highres";
+						}
+						if ( window.innerHeight <= 1440 && window.innerHeight > 1080 ) {
+							this.ytforceres = "highres";
+						}
+						if ( window.innerHeight <= 1080 && window.innerHeight > 720 ) {
+							this.ytforceres = "hd1080";
+						}
+						if ( window.innerHeight <= 720 && window.innerHeight > 480 ) {
+							this.ytforceres = "hd720";
+						}
+						if ( window.innerHeight <= 480 && window.innerHeight > 360 ) {
+							this.ytforceres = "large";
+						}
+						if ( window.innerHeight <= 360 && window.innerHeight > 240 ) {
+							this.ytforceres = "medium";
+						}
+						if ( window.innerHeight <= 240 ) {
+							this.ytforceres = "small";
+						}
+
+						this.player.setPlaybackQuality(this.ytforceres);
+						console.log("Forcing Quality Change to " + this.ytforceres);
+
+						this.lastWindowHeight = window.innerHeight;
+					}
+				}
+
+				if ( this.videoId != this.lastVideoId ) {
+					this.lastVideoId = this.videoId;
+					this.lastStartTime = this.startTime;
+				}
+
+				if ( !this.sentAltDuration && (typeof(this.player.getDuration) === "function") && this.player.getDuration() > 0 ) { // Wait until it's ready
+					console.log("RUNLUA: theater.SendAltDuration(" + this.player.getDuration() + ")");
+					this.sentAltDuration = true;
+				}
+
+				if ( (typeof(this.player.getPlayerState) === "function") && this.player.getPlayerState() != -1 ) {
+					if ( !this.initSeek ) {
+						this.seek( this.startTime + 3 ); // Assume 3 seconds of buffering
+						this.initSeek = true
+					}
+
+					if ( this.startTime != this.lastStartTime ) {
+						this.seek( this.startTime );
+						this.lastStartTime = this.startTime;
+					}
+
+					if ( this.volume != this.player.getVolume() ) {
+						this.player.setVolume( this.volume );
+						this.volume = this.player.getVolume();
+					}
+				}
+			}
+		};
+
+		this.onReady = function() {
+			this.player = document.getElementById('player');
+
+			if ( theater.isForceVideoRes() ) {
+				if ( window.innerHeight <= 1536 && window.innerHeight > 1440 ) {
+					this.ytforceres = "highres";
+				}
+				if ( window.innerHeight <= 1440 && window.innerHeight > 1080 ) {
+					this.ytforceres = "highres";
+				}
+				if ( window.innerHeight <= 1080 && window.innerHeight > 720 ) {
+					this.ytforceres = "hd1080";
+				}
+				if ( window.innerHeight <= 720 && window.innerHeight > 480 ) {
+					this.ytforceres = "hd720";
+				}
+				if ( window.innerHeight <= 480 && window.innerHeight > 360 ) {
+					this.ytforceres = "large";
+				}
+				if ( window.innerHeight <= 360 && window.innerHeight > 240 ) {
+					this.ytforceres = "medium";
+				}
+				if ( window.innerHeight <= 240 ) {
+					this.ytforceres = "small";
+				}
+
+				this.player.setPlaybackQuality(this.ytforceres);
+				console.log("Forcing Quality Change to " + this.ytforceres);
+
+				this.lastWindowHeight = window.innerHeight;
+			};
+
+			var self = this;
+			this.interval = setInterval( function() { self.think(self); }, 100 );
+		};
+	}
+	registerPlayer( "moetube", MoeTube );
 })();
 
 /*
@@ -2031,7 +2203,7 @@ function registerPlayer( type, object ) {
 function onYouTubePlayerReady( playerId ) {
 	var player = theater.getPlayer(),
 		type = player && player.getType();
-	if ( player && ((type == "youtube") || (type == "youtubelive") || (type == "kissyoutube")) ) {
+	if ( player && ((type == "youtube") || (type == "youtubelive") || (type == "kissyoutube") || (type == "moetube")) ) {
 		player.onReady();
 	}
 }
