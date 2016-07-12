@@ -9,9 +9,8 @@
 	{"id":"shima", "title":"iShimakaze - Stream", "live":true, "thumbnail":"https://winterphoenix96.github.io/rtmp-thumbnails/shima.png"},
 	{"id":"pata", "title":"patanima - Stream", "live":true, "thumbnail":"https://winterphoenix96.github.io/rtmp-thumbnails/default.png"},
 	{"id":"recon", "title":"ReconZer0 - Stream", "live":true, "thumbnail":"https://winterphoenix96.github.io/rtmp-thumbnails/recon.png"},
-	{"id":"salty", "title":"salty bird - Stream", "live":true, "thumbnail":"https://winterphoenix96.github.io/rtmp-thumbnails/salty.jpg"},
-	{"id":"walker", "title":"TheWalker - Stream", "live":true, "thumbnail":"https://winterphoenix96.github.io/rtmp-thumbnails/default.png"},
 	{"id":"zep", "title":"Zep - Stream", "live":true, "thumbnail":"https://winterphoenix96.github.io/rtmp-thumbnails/zep.png"},
 	{"id":"pmon", "title":"PMONickpop123 - Stream", "live":true, "thumbnail":"https://winterphoenix96.github.io/rtmp-thumbnails/default.png"},
-	{"id":"noire", "title":"Noire - Stream", "live":true, "thumbnail":"https://winterphoenix96.github.io/rtmp-thumbnails/default.png"}
+	{"id":"noire", "title":"Noire - Stream", "live":true, "thumbnail":"https://winterphoenix96.github.io/rtmp-thumbnails/default.png"},
+	{"id":"half", "title":"Half - Stream", "live":true, "thumbnail":"https://winterphoenix96.github.io/rtmp-thumbnails/default.png"}
 ]}
