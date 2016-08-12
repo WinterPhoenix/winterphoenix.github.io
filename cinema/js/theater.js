@@ -3,7 +3,7 @@ window.open = function() { return null; }; // prevent popups
 
 var theater = {
 
-	VERSION: '1.6.0-YukiTheater',
+	VERSION: '1.6.1-YukiTheater',
 
 	playerContainer: null,
 	playerContent: null,
@@ -289,7 +289,7 @@ function registerPlayer( type, object ) {
 			url += "&yt:cc=on";
 		}
 		
-		swfobject.embedSWF( url, "player", "100%", "100%", "9", null, null, params, attributes );
+		swfobject.embedSWF( url, "player", "126.6%", "104.2%", "9", null, null, params, attributes );
 		
 		/*
 			Standard Player Methods
@@ -402,6 +402,7 @@ function registerPlayer( type, object ) {
 
 		this.onReady = function() {
 			this.player = document.getElementById('player');
+			this.player.style.marginLeft = "-24.2%"; // Screw you Garry. Awesomium sucks and you know it. I shouldn't have to deal with this!
 
 			if ( theater.isForceVideoRes() ) {
 				if ( window.innerHeight <= 1536 && window.innerHeight > 1440 ) {
@@ -1368,7 +1369,6 @@ function registerPlayer( type, object ) {
 			this.lastVideoId = null;
 			this.videoId = id;
 			this.sentAltDuration = false;
-			this.initSeek = false;
 		};
 
 		this.setVolume = function( volume ) {
@@ -1410,6 +1410,13 @@ function registerPlayer( type, object ) {
 				return this.player.getState() != "buffering";
 			}
 		};
+
+		this.returnJWPlayerSources = function(newSources) {
+			// Base64 -> String -> Array
+			var decryptedSources = eval(atob(newSources));
+
+			this.player.load([{ sources: decryptedSources }]);
+		}
 
 		this.think = function() {
 			if ( this.player != null ) {
@@ -1462,15 +1469,16 @@ function registerPlayer( type, object ) {
 
 				if ( this.videoId != this.lastVideoId ) {
 					var decryptedSources = null;
+
 					if (this.videoId.lastIndexOf("jw_kisscartoon_", 0) === 0) {
-						// Encrypted thxa variable (SHA256+AES+Base64) -> String -> Array
-						decryptedSources = eval($kissenc_kisscartoon.decrypt(this.videoId.replace("jw_kisscartoon_", "")));
+						// Encrypted thxa variable (SHA256+AES+Base64) -> String
+						decryptedSources = $kissenc_kisscartoon.decrypt(this.videoId.replace("jw_kisscartoon_", ""));
 					} else if (this.videoId.lastIndexOf("jw_kissasian_", 0) === 0) {
-						// Encrypted thxa variable (SHA256+AES+Base64) -> String -> Array
-						decryptedSources = eval($kissenc_kissasian.decrypt(this.videoId.replace("jw_kissasian_", "")));
+						// Encrypted thxa variable (SHA256+AES+Base64) -> String
+						decryptedSources = $kissenc_kissasian.decrypt(this.videoId.replace("jw_kissasian_", ""));
 					} else {
-						// Base64 -> String -> Array
-						decryptedSources = eval(atob(this.videoId.replace("jw_", "")));
+						// Base64 -> String
+						decryptedSources = atob(this.videoId.replace("jw_", ""));
 					}
 
 					if (!decryptedSources || decryptedSources == "") {
@@ -1478,6 +1486,12 @@ function registerPlayer( type, object ) {
 						theater.getPlayerContainer().innerHTML = "<div id='player'><div style='color: red;'>ERROR: Kiss Video Sources Decryption Failure. Try Refreshing!</div></div>";
 						return;
 					};
+
+					// Fix any googlevideo links that require HTTPS
+					decryptedSources = decryptedSources.replace("http://", "https://");
+
+					// Decrypted/Decoded String -> Array -> Proper JSON
+					decryptedSources = JSON.stringify(eval(decryptedSources));
 
 					var self = this;
 					setTimeout(function(){
@@ -1490,13 +1504,15 @@ function registerPlayer( type, object ) {
 						}
 					}, 20000);
 
-					this.player.load([{ sources: decryptedSources }]);
+					// Send it over to Lua to process any redirects
+					console.log("RUNLUA: theater.GetJWPlayerSources('" + btoa(decryptedSources) + "')");
 
 					this.lastVideoId = this.videoId;
 					this.lastStartTime = this.startTime;
 				}
 
-				if ( !this.sentAltDuration && this.player.getState() == "playing" && this.player.getDuration() > 0 ) { // Wait until it's ready
+				// Wait until it's ready before sending Duration
+				if ( this.player.getPlaylist()[0] && this.player.getPlaylist()[0].file != "example.mp4" && !this.sentAltDuration && this.player.getState() == "playing" && this.player.getDuration() > 0 ) {
 					console.log("RUNLUA: theater.SendAltDuration(" + this.player.getDuration() + ")");
 					this.sentAltDuration = true;
 				}
@@ -1602,7 +1618,7 @@ function registerPlayer( type, object ) {
 				};
 			};
 
-			swfobject.embedSWF( url, "player", "100%", "100%", "9", null, flashvars, params, attributes );
+			swfobject.embedSWF( url, "player", "126.6%", "104.2%", "9", null, flashvars, params, attributes );
 
 			this.sentAltDuration = false;
 			this.initSeek = false;
@@ -1714,6 +1730,7 @@ function registerPlayer( type, object ) {
 
 		this.onReady = function() {
 			this.player = document.getElementById('player');
+			this.player.style.marginLeft = "-24.2%";
 
 			if ( theater.isForceVideoRes() ) {
 				if ( window.innerHeight <= 1536 && window.innerHeight > 1440 ) {
@@ -2048,7 +2065,7 @@ function registerPlayer( type, object ) {
 
 			var url = 'https://video.google.com/get_player?enablejsapi=1&amp;docid=' + id + '&amp;ps=docs&amp;partnerid=30&amp;cc_load_policy=1&amp;vq=hd720&amp;autoplay=1&amp;fs=1&amp;hl=en&amp;modestbranding=1&amp;autohide=1&amp;showinfo=0';
 
-			swfobject.embedSWF(url, "player", "100%", "100%", "9", null, null, params, attributes);
+			swfobject.embedSWF(url, "player", "126.6%", "104.2%", "9", null, null, params, attributes);
 
 			this.sentAltDuration = false;
 			this.initSeek = false;
@@ -2159,6 +2176,7 @@ function registerPlayer( type, object ) {
 
 		this.onReady = function() {
 			this.player = document.getElementById('player');
+			this.player.style.marginLeft = "-24.2%";
 
 			if ( theater.isForceVideoRes() ) {
 				if ( window.innerHeight <= 1536 && window.innerHeight > 1440 ) {
