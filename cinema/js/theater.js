@@ -3,7 +3,7 @@ window.open = function() { return null; }; // prevent popups
 
 var theater = {
 
-	VERSION: '1.6.2-YukiTheater',
+	VERSION: '1.6.3-YukiTheater',
 
 	playerContainer: null,
 	playerContent: null,
@@ -716,7 +716,6 @@ function registerPlayer( type, object ) {
 	registerPlayer( "vimeo", VimeoVideo );
 
 	var TwitchVideo = function() {
-
 		var self = this;
 
 		this.videoInfo = {};
@@ -725,30 +724,30 @@ function registerPlayer( type, object ) {
 			Embed Player Object
 		*/
 		this.embed = function() {
-
 			if ( !this.videoInfo.channel ) return;
 			if ( !this.videoInfo.archive_id ) return;
 
 			var flashvars = {
+				eventsCallback: "onTwitchPlayerEvent",
 				hostname: "www.twitch.tv",
 				channel: this.videoInfo.channel,
 				auto_play: true,
-				start_volume: (this.videoInfo.volume || theater.volume),
+				start_volume: (this.volume != null ? this.volume : theater.volume != null ? theater.volume : 25),
 				initial_time: (this.videoInfo.initial_time || 0)
 			};
 
-			var id = this.videoInfo.archive_id.slice(1),
-				videoType = this.videoInfo.archive_id.substr(0,1);
-				
+			var id = this.videoInfo.archive_id.slice(1);
+			var videoType = this.videoInfo.archive_id.substr(0, 1);
+
 			flashvars.videoId = videoType + id;
-			
+
 			if (videoType == "c") {
 				flashvars.chapter_id = id;
 			} else {
 				flashvars.archive_id = id;
 			}
 
-			var swfurl = "https://www.twitch.tv/swflibs/TwitchPlayer.swf";
+			var swfurl = "https://www-cdn.jtvnw.net/swflibs/TwitchPlayer.swf";
 
 			var params = {
 				"allowFullScreen": "true",
@@ -763,13 +762,12 @@ function registerPlayer( type, object ) {
 				swfurl,
 				"player",
 				"100%",
-				"104%",
-				"9.0.0",
+				"100%",
+				"9",
 				false,
 				flashvars,
 				params
 			);
-
 		};
 
 		/*
@@ -784,26 +782,7 @@ function registerPlayer( type, object ) {
 			this.videoInfo.channel = info[0];
 			this.videoInfo.archive_id = info[1];
 
-			// Wait for player to be ready
-			if ( this.player == null ) {
-				this.lastVideoId = this.videoId;
-				this.embed();
-
-				var i = 0;
-				var interval = setInterval( function() {
-					var el = document.getElementById("player");
-					if(el.mute){
-						clearInterval(interval);
-						self.onReady();
-					}
-
-					i++;
-					if (i > 100) {
-						console.log("Error waiting for player to load");
-						clearInterval(interval);
-					}
-				}, 33);
-			}
+			this.embed();
 		};
 
 		this.setVolume = function( volume ) {
@@ -830,11 +809,8 @@ function registerPlayer( type, object ) {
 			Player Specific Methods
 		*/
 		this.think = function() {
-
-			if ( this.player ) {
-				
+			if ( this.player != null ) {
 				if ( this.videoId != this.lastVideoId ) {
-					this.embed();
 					this.lastVideoId = this.videoId;
 				}
 
@@ -844,45 +820,37 @@ function registerPlayer( type, object ) {
 				}
 
 				if ( this.volume != this.lastVolume ) {
-					// this.embed(); // volume doesn't change...
+					this.embed(); // Why does the old player suck so much? https://discuss.dev.twitch.tv/t/twitch-embed-volume-controls/1693
 					this.lastVolume = this.volume;
 				}
-
 			}
-
 		};
 
 		this.onReady = function() {
 			this.player = document.getElementById('player');
 			this.interval = setInterval( function() { self.think(self); }, 100 );
 		};
-
-		this.toggleControls = function( enabled ) {
-			this.player.height = enabled ? "100%" : "104%";
-		};
-
 	};
 	registerPlayer( "twitch", TwitchVideo );
 
 	var TwitchStreamVideo = function() {
-
 		var self = this;
 
 		/*
 			Embed Player Object
 		*/
 		this.embed = function() {
-
 			var flashvars = {
+				eventsCallback: "onTwitchPlayerEvent",
 				hostname: "www.twitch.tv",
 				hide_chat: true,
 				channel: this.videoId,
 				embed: 0,
 				auto_play: true,
-				start_volume: (this.volume || theater.volume || 25)
+				start_volume: (this.volume != null ? this.volume : theater.volume != null ? theater.volume : 25)
 			};
 
-			var swfurl = "https://www.twitch.tv/swflibs/TwitchPlayer.swf";
+			var swfurl = "https://www-cdn.jtvnw.net/swflibs/TwitchPlayer.swf";
 
 			var params = {
 				"allowFullScreen": "true",
@@ -897,13 +865,12 @@ function registerPlayer( type, object ) {
 				swfurl,
 				"player",
 				"100%",
-				"104%",
-				"9.0.0",
+				"100%",
+				"9",
 				false,
 				flashvars,
 				params
 			);
-
 		};
 
 		/*
@@ -912,34 +879,14 @@ function registerPlayer( type, object ) {
 		this.setVideo = function( id ) {
 			this.lastVideoId = null;
 			this.videoId = id;
-
-			// Wait for player to be ready
-			if ( this.player == null ) {
-				this.lastVideoId = this.videoId;
-				this.embed();
-
-				var i = 0;
-				var interval = setInterval( function() {
-					var el = document.getElementById("player");
-					if(el.mute){
-						clearInterval(interval);
-						self.onReady();
-					}
-
-					i++;
-					if (i > 100) {
-						console.log("Error waiting for player to load");
-						clearInterval(interval);
-					}
-				}, 33);
-			}
+			this.embed();
 		};
-		
+
 		this.setVolume = function( volume ) {
 			this.lastVolume = null;
 			this.volume = volume;
 		};
-		
+
 		this.onRemove = function() {
 			clearInterval( this.interval );
 		};
@@ -948,32 +895,53 @@ function registerPlayer( type, object ) {
 			Player Specific Methods
 		*/
 		this.think = function() {
-
-			if ( this.player ) {
-				
+			if ( this.player != null ) {
 				if ( this.videoId != this.lastVideoId ) {
-					this.embed();
 					this.lastVideoId = this.videoId;
 				}
-				
+
 				 if ( this.volume != this.lastVolume ) {
-					// this.embed(); // volume doesn't change...
+					this.embed(); // Why does the old player suck so much? https://discuss.dev.twitch.tv/t/twitch-embed-volume-controls/1693
 					this.lastVolume = this.volume;
 				}
-				
-			}
 
+				if ( theater.isForceVideoRes() ) {
+					if ( this.lastWindowHeight != window.innerHeight ) {
+						if ( window.innerHeight <= 1536 && window.innerHeight > 1440 ) {
+							this.forceResString = "Source";
+						}
+						if ( window.innerHeight <= 1440 && window.innerHeight > 1080 ) {
+							this.forceResString = "Source";
+						}
+						if ( window.innerHeight <= 1080 && window.innerHeight > 720 ) {
+							this.forceResString = "Source";
+						}
+						if ( window.innerHeight <= 720 && window.innerHeight > 480 ) {
+							this.forceResString = "High";
+						}
+						if ( window.innerHeight <= 480 && window.innerHeight > 360 ) {
+							this.forceResString = "Medium";
+						}
+						if ( window.innerHeight <= 360 && window.innerHeight > 240 ) {
+							this.forceResString = "Low";
+						}
+						if ( window.innerHeight <= 240 ) {
+							this.forceResString = "Mobile";
+						}
+
+						//this.player.setQuality(this.forceResString);
+						//console.log("Forcing Quality Change to " + this.forceResString);
+
+						this.lastWindowHeight = window.innerHeight;
+					}
+				}
+			}
 		};
 
 		this.onReady = function() {
 			this.player = document.getElementById('player');
 			this.interval = setInterval( function() { self.think(self); }, 100 );
 		};
-
-		this.toggleControls = function( enabled ) {
-			this.player.height = enabled ? "100%" : "104%";
-		};
-
 	};
 	registerPlayer( "twitchstream", TwitchStreamVideo );
 
@@ -1205,13 +1173,12 @@ function registerPlayer( type, object ) {
 		this.think = function() {
 
 			if ( this.player != null ) {
-				
 				if ( this.videoId != this.lastVideoId ) {
 					this.player.callMethod( 'load', 'channel', this.videoId );
-					
+
 					var self = this;
 					setTimeout(function(){self.player.callMethod('play');}, 3000);
-					
+
 					setTimeout(function(){
 						if ( theater.isForceVideoRes() ) {
 							if ( window.innerHeight <= 1536 && window.innerHeight > 1440 ) {
@@ -1237,15 +1204,14 @@ function registerPlayer( type, object ) {
 							}
 						};
 					}, 5000);
-					
+
 					this.lastVideoId = this.videoId;
 				}
-				
+
 				if ( this.volume != this.lastVolume ) {
 					this.player.callMethod( 'volume', (this.volume < 100) ? this.volume : 99); // 100% Volume on this Player mutes it
 					this.lastVolume = this.volume;
 				}
-				
 			}
 
 		};
@@ -2255,6 +2221,15 @@ function livestreamPlayerCallback( event, data ) {
 		}
 	}
 }
+
+function onTwitchPlayerEvent(event) {
+	if (event[0].event == "playerInit") {
+		var player = theater.getPlayer();
+		if ( player && (player.getType() == "twitch" || player.getType() == "twitchstream") ) {
+			player.onReady();
+		}
+	}
+};
 
 if (window.onTheaterReady) {
 	onTheaterReady();
