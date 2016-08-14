@@ -3,7 +3,7 @@ window.open = function() { return null; }; // prevent popups
 
 var theater = {
 
-	VERSION: '1.6.1-YukiTheater',
+	VERSION: '1.6.2-YukiTheater',
 
 	playerContainer: null,
 	playerContent: null,
@@ -1341,8 +1341,13 @@ function registerPlayer( type, object ) {
 
 	var Kiss = function() {
 		// RSK Decryption Key prep
-		eval($kissenc_kissasian_init);
-		eval($kissenc_kisscartoon_init);
+		var rskCount = 0;
+		$kissenc_kissasian_init(window, function() {
+			rskCount++;
+		});
+		$kissenc_kisscartoon_init(window, function() {
+			rskCount++;
+		});
 
 		// JW7 Key
 		jwplayer.key="GBbtI9R8M4R2gQOTSs7m7AdoMdxpK3DD4IcgmQ==";
@@ -1533,10 +1538,15 @@ function registerPlayer( type, object ) {
 		};
 
 		this.onReady = function() {
-			this.player = viewer;
+			if (rskCount >= 2) {
+				this.player = viewer;
 
-			var self = this;
-			this.interval = setInterval( function() { self.think(self); }, 100 );
+				var self = this;
+				this.interval = setInterval( function() { self.think(self); }, 100 );
+			} else {
+				var self = this;
+				setTimeout(function() {self.onReady();}, 100);
+			}
 		};
 
 		this.toggleControls = function( enabled ) {
@@ -1553,8 +1563,14 @@ function registerPlayer( type, object ) {
 
 	var KissYT = function() {
 		// RSK Decryption Key prep
-		eval($kissenc_kissasian_init);
-		eval($kissenc_kisscartoon_init);
+		var rskComplete = false;
+		var rskCount = 0;
+		$kissenc_kissasian_init(window, function() {
+			rskCount++;
+		});
+		$kissenc_kisscartoon_init(window, function() {
+			rskCount++;
+		});
 
 		/*
 			Embed Player Object
@@ -1729,40 +1745,45 @@ function registerPlayer( type, object ) {
 		};
 
 		this.onReady = function() {
-			this.player = document.getElementById('player');
-			this.player.style.marginLeft = "-24.2%";
+			if (rskCount >= 2) {
+				this.player = document.getElementById('player');
+				this.player.style.marginLeft = "-24.2%";
 
-			if ( theater.isForceVideoRes() ) {
-				if ( window.innerHeight <= 1536 && window.innerHeight > 1440 ) {
-					this.ytforceres = "highres";
-				}
-				if ( window.innerHeight <= 1440 && window.innerHeight > 1080 ) {
-					this.ytforceres = "highres";
-				}
-				if ( window.innerHeight <= 1080 && window.innerHeight > 720 ) {
-					this.ytforceres = "hd1080";
-				}
-				if ( window.innerHeight <= 720 && window.innerHeight > 480 ) {
-					this.ytforceres = "hd720";
-				}
-				if ( window.innerHeight <= 480 && window.innerHeight > 360 ) {
-					this.ytforceres = "large";
-				}
-				if ( window.innerHeight <= 360 && window.innerHeight > 240 ) {
-					this.ytforceres = "medium";
-				}
-				if ( window.innerHeight <= 240 ) {
-					this.ytforceres = "small";
-				}
+				if ( theater.isForceVideoRes() ) {
+					if ( window.innerHeight <= 1536 && window.innerHeight > 1440 ) {
+						this.ytforceres = "highres";
+					}
+					if ( window.innerHeight <= 1440 && window.innerHeight > 1080 ) {
+						this.ytforceres = "highres";
+					}
+					if ( window.innerHeight <= 1080 && window.innerHeight > 720 ) {
+						this.ytforceres = "hd1080";
+					}
+					if ( window.innerHeight <= 720 && window.innerHeight > 480 ) {
+						this.ytforceres = "hd720";
+					}
+					if ( window.innerHeight <= 480 && window.innerHeight > 360 ) {
+						this.ytforceres = "large";
+					}
+					if ( window.innerHeight <= 360 && window.innerHeight > 240 ) {
+						this.ytforceres = "medium";
+					}
+					if ( window.innerHeight <= 240 ) {
+						this.ytforceres = "small";
+					}
 
-				this.player.setPlaybackQuality(this.ytforceres);
-				console.log("Forcing Quality Change to " + this.ytforceres);
+					this.player.setPlaybackQuality(this.ytforceres);
+					console.log("Forcing Quality Change to " + this.ytforceres);
 
-				this.lastWindowHeight = window.innerHeight;
-			};
+					this.lastWindowHeight = window.innerHeight;
+				};
 
-			var self = this;
-			this.interval = setInterval( function() { self.think(self); }, 100 );
+				var self = this;
+				this.interval = setInterval( function() { self.think(self); }, 100 );
+			} else {
+				var self = this;
+				setTimeout(function() {self.onReady();}, 100);
+			}
 		};
 	}
 	registerPlayer( "kissyoutube", KissYT );
