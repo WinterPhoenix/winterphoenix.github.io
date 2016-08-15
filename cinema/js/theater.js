@@ -904,37 +904,6 @@ function registerPlayer( type, object ) {
 					this.embed(); // Why does the old player suck so much? https://discuss.dev.twitch.tv/t/twitch-embed-volume-controls/1693
 					this.lastVolume = this.volume;
 				}
-
-				if ( theater.isForceVideoRes() ) {
-					if ( this.lastWindowHeight != window.innerHeight ) {
-						if ( window.innerHeight <= 1536 && window.innerHeight > 1440 ) {
-							this.forceResString = "Source";
-						}
-						if ( window.innerHeight <= 1440 && window.innerHeight > 1080 ) {
-							this.forceResString = "Source";
-						}
-						if ( window.innerHeight <= 1080 && window.innerHeight > 720 ) {
-							this.forceResString = "Source";
-						}
-						if ( window.innerHeight <= 720 && window.innerHeight > 480 ) {
-							this.forceResString = "High";
-						}
-						if ( window.innerHeight <= 480 && window.innerHeight > 360 ) {
-							this.forceResString = "Medium";
-						}
-						if ( window.innerHeight <= 360 && window.innerHeight > 240 ) {
-							this.forceResString = "Low";
-						}
-						if ( window.innerHeight <= 240 ) {
-							this.forceResString = "Mobile";
-						}
-
-						//this.player.setQuality(this.forceResString);
-						//console.log("Forcing Quality Change to " + this.forceResString);
-
-						this.lastWindowHeight = window.innerHeight;
-					}
-				}
 			}
 		};
 
