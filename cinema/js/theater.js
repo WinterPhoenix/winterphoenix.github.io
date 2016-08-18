@@ -3,7 +3,7 @@ window.open = function() { return null; }; // prevent popups
 
 var theater = {
 
-	VERSION: '1.6.3-YukiTheater',
+	VERSION: '1.6.4-YukiTheater',
 
 	playerContainer: null,
 	playerContent: null,
@@ -283,7 +283,7 @@ function registerPlayer( type, object ) {
 			id: "player",
 		};
 		
-		var url = "https://www.youtube.com/get_player?enablejsapi=1&modestbranding=1&autohide=1&controls=1&autoplay=1&iv_load_policy=3";
+		var url = "https://www.youtube.com/apiplayer?enablejsapi=1&modestbranding=1&autohide=1&controls=1&autoplay=1&iv_load_policy=3";
 		if ( theater.isCCEnabled() ) {
 			url += "&cc_load_policy=1";
 			url += "&yt:cc=on";
