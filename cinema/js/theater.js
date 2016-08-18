@@ -2078,7 +2078,7 @@ function registerPlayer( type, object ) {
 
 			var url = 'https://video.google.com/get_player?enablejsapi=1&amp;docid=' + id + '&amp;ps=docs&amp;partnerid=30&amp;cc_load_policy=1&amp;vq=hd720&amp;autoplay=1&amp;fs=1&amp;hl=en&amp;modestbranding=1&amp;autohide=1&amp;showinfo=0';
 
-			swfobject.embedSWF(url, "player", "126.6%", "104.2%", "9", null, null, params, attributes);
+			swfobject.embedSWF(url, "player", "100%", "100%", "9", null, null, params, attributes);
 
 			this.sentAltDuration = false;
 			this.initSeek = false;
@@ -2189,7 +2189,6 @@ function registerPlayer( type, object ) {
 
 		this.onReady = function() {
 			this.player = document.getElementById('player');
-			this.player.style.marginLeft = "-24.2%";
 
 			if ( theater.isForceVideoRes() ) {
 				if ( window.innerHeight <= 1536 && window.innerHeight > 1440 ) {
