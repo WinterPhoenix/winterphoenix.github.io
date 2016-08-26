@@ -1439,7 +1439,7 @@ function registerPlayer( type, object ) {
 					// Decrypted/Decoded String -> Array
 					decryptedSources = eval(decryptedSources);
 
-					var self = this;
+					/*var self = this;
 					setTimeout(function(){
 						if (self.player != null) {
 							if (!self.player.getPlaylist()[0] || self.player.getPlaylist()[0].file == "example.mp4") { // Let's make sure it moved on with loading...
@@ -1451,9 +1451,9 @@ function registerPlayer( type, object ) {
 					}, 20000);
 
 					// Send it over to Lua to process any redirects
-					console.log("RUNLUA: theater.GetJWPlayerSources('" + btoa(JSON.stringify(decryptedSources)) + "')");
+					console.log("RUNLUA: theater.GetJWPlayerSources('" + btoa(JSON.stringify(decryptedSources)) + "')");*/
 
-					/*var isActuallyYouTubeCompatible = false;
+					var isActuallyYouTubeCompatible = false;
 					for (var sourceKey in decryptedSources) {
 						if (decryptedSources[sourceKey].file.search("googlevideo") != -1) {
 							isActuallyYouTubeCompatible = true
@@ -1501,7 +1501,7 @@ function registerPlayer( type, object ) {
 						}, 20000);
 
 						this.player.load([{ sources: decryptedSources }]);
-					}*/
+					}
 
 					this.lastVideoId = this.videoId;
 					this.lastStartTime = this.startTime;
