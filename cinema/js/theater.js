@@ -283,13 +283,13 @@ function registerPlayer( type, object ) {
 			id: "player",
 		};
 		
-		var url = "https://www.youtube.com/get_player?enablejsapi=1&modestbranding=1&autohide=1&controls=1&autoplay=1&iv_load_policy=3";
+		var url = "https://www.youtube.com/apiplayer?enablejsapi=1&modestbranding=1&autohide=1&controls=1&autoplay=1&iv_load_policy=3";
 		if ( theater.isCCEnabled() ) {
 			url += "&cc_load_policy=1";
 			url += "&yt:cc=on";
 		}
 		
-		swfobject.embedSWF( url, "player", "100%", "100%", "9", null, null, params, attributes );
+		swfobject.embedSWF( url, "player", "126.6%", "104.2%", "9", null, null, params, attributes );
 		
 		/*
 			Standard Player Methods
@@ -402,6 +402,7 @@ function registerPlayer( type, object ) {
 
 		this.onReady = function() {
 			this.player = document.getElementById('player');
+			this.player.style.marginLeft = "-24.2%";
 
 			if ( theater.isForceVideoRes() ) {
 				if ( window.innerHeight <= 1536 && window.innerHeight > 1440 ) {
@@ -1475,8 +1476,9 @@ function registerPlayer( type, object ) {
 							});
 
 							var itag = /itag=(\d+)/.exec(mapEntry)[1];
+							var itagMatch = googleVideoITAG[itag] ? googleVideoITAG[itag] : 0;
 
-							fmt_list = fmt_list + encodeURIComponent(itag + "/" + googleVideoITAG[itag] + ",");
+							fmt_list = fmt_list + encodeURIComponent(itag + "/" + itagMatch + ",");
 							fmt_stream_map = fmt_stream_map + encodeURIComponent(itag + "|" + mapEntry + ",");
 						};
 
@@ -1484,7 +1486,7 @@ function registerPlayer( type, object ) {
 						fmt_list = fmt_list.slice(0, -3);
 						fmt_stream_map = fmt_stream_map.slice(0, -3);
 
-						var ytPlayerFlashvars = fmt_list + "&" + fmt_stream_map + "&video_id=non&fs=1&hl=en&autoplay=1&ps=picasaweb&playerapiid=uniquePlayerId&t=1&auth_timeout=86400000000";
+						var ytPlayerFlashvars = fmt_list + "&" + fmt_stream_map + "&video_id=non&autoplay=1&t=1&vq=hd720";
 						//var ytPlayerFlashvars = "fmt_list=37%2F1920x1080%2C22%2F1280x720%2C59%2F854x480%2C18%2F640x360&amp;fmt_stream_map=37%7Chttps%3a%2f%2fredirector.googlevideo.com%2fvideoplayback%3frequiressl%3dyes%26id%3dbfae21f003b4fb47%26itag%3d37%26source%3dwebdrive%26ttl%3dtransient%26app%3dtexmex%26ip%3d2001%3a19f0%3a6000%3a9ad4%3a5400%3aff%3afe20%3a66ec%26ipbits%3d32%26expire%3d1470980755%26sparams%3drequiressl%252Cid%252Citag%252Csource%252Cttl%252Cip%252Cipbits%252Cexpire%26signature%3d73CB5EAE755DD25E091BADD4C7E5EB35E1096AFD.930A476D066A9A001215A337080E49E733DEAF83%26key%3dck2%26mm%3d30%26mn%3dsn-a5m7lne7%26ms%3dnxu%26mt%3d1470966201%26mv%3du%26nh%3dIgpwcjAyLmxheDAyKgkxMjcuMC4wLjE%26pl%3d38%26sc%3dyes%2C22%7Chttps%3a%2f%2fredirector.googlevideo.com%2fvideoplayback%3frequiressl%3dyes%26id%3dbfae21f003b4fb47%26itag%3d22%26source%3dwebdrive%26ttl%3dtransient%26app%3dtexmex%26ip%3d2001%3a19f0%3a6000%3a9ad4%3a5400%3aff%3afe20%3a66ec%26ipbits%3d32%26expire%3d1470980755%26sparams%3drequiressl%252Cid%252Citag%252Csource%252Cttl%252Cip%252Cipbits%252Cexpire%26signature%3dAA09264426A0CA6FB0B22A538AC14A9BCD50267C.3FCA5E18F4D046B9D761156185C565C423E5D098%26key%3dck2%26mm%3d30%26mn%3dsn-a5m7lne7%26ms%3dnxu%26mt%3d1470966201%26mv%3du%26nh%3dIgpwcjAyLmxheDAyKgkxMjcuMC4wLjE%26pl%3d38%26sc%3dyes%2C59%7Chttps%3a%2f%2fredirector.googlevideo.com%2fvideoplayback%3frequiressl%3dyes%26id%3dbfae21f003b4fb47%26itag%3d59%26source%3dwebdrive%26ttl%3dtransient%26app%3dtexmex%26ip%3d2001%3a19f0%3a6000%3a9ad4%3a5400%3aff%3afe20%3a66ec%26ipbits%3d32%26expire%3d1470980755%26sparams%3drequiressl%252Cid%252Citag%252Csource%252Cttl%252Cip%252Cipbits%252Cexpire%26signature%3d3C4F628478F98E9881E00C9E5A339FF2F2F1ADB7.11317BB4595D96F80FDAEDC3DF87F5EA31110189%26key%3dck2%26mm%3d30%26mn%3dsn-a5m7lne7%26ms%3dnxu%26mt%3d1470966201%26mv%3du%26nh%3dIgpwcjAyLmxheDAyKgkxMjcuMC4wLjE%26pl%3d38%26sc%3dyes%2C18%7Chttps%3a%2f%2fredirector.googlevideo.com%2fvideoplayback%3frequiressl%3dyes%26id%3dbfae21f003b4fb47%26itag%3d18%26source%3dwebdrive%26ttl%3dtransient%26app%3dtexmex%26ip%3d2001%3a19f0%3a6000%3a9ad4%3a5400%3aff%3afe20%3a66ec%26ipbits%3d32%26expire%3d1470980755%26sparams%3drequiressl%252Cid%252Citag%252Csource%252Cttl%252Cip%252Cipbits%252Cexpire%26signature%3dF3AAE46B46F688BCB4B5FCC4C9217BE92CA728.8AE330008C22881FBAADC7CA11E3BCC679DE0B7C%26key%3dck2%26mm%3d30%26mn%3dsn-a5m7lne7%26ms%3dnxu%26mt%3d1470966201%26mv%3du%26nh%3dIgpwcjAyLmxheDAyKgkxMjcuMC4wLjE%26pl%3d38%26sc%3dyes&amp;video_id=non&amp;fs=1&amp;hl=en&amp;autoplay=1&amp;ps=picasaweb&amp;playerapiid=uniquePlayerId&amp;t=1&amp;auth_timeout=86400000000";
 
 						theater.loadVideo("kissyoutube", "yt_" + btoa(ytPlayerFlashvars), this.startTime);
@@ -1576,7 +1578,7 @@ function registerPlayer( type, object ) {
 			id: "player",
 		};
 
-		var url = "https://youtube.googleapis.com/get_player?enablejsapi=1&modestbranding=1";
+		var url = "https://www.youtube.com/get_player?enablejsapi=1&modestbranding=1";
 
 		/*
 			Standard Player Methods
