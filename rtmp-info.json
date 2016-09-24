@@ -15,5 +15,6 @@
 	{"id":"half", "title":"Half - Stream", "live":true, "thumbnail":"https://winterphoenix96.github.io/rtmp-thumbnails/default.png"},
 	{"id":"hug", "title":"Hugbeez - Stream", "live":true, "thumbnail":"https://winterphoenix96.github.io/rtmp-thumbnails/default.png"},
 	{"id":"pro", "title":"PRO15699 - Stream", "live":true, "thumbnail":"https://winterphoenix96.github.io/rtmp-thumbnails/default.png"},
-	{"id":"keero", "title":"Keero Kyubey - Stream", "live":true, "thumbnail":"https://winterphoenix96.github.io/rtmp-thumbnails/default.png"}
+	{"id":"keero", "title":"Keero Kyubey - Stream", "live":true, "thumbnail":"https://winterphoenix96.github.io/rtmp-thumbnails/default.png"},
+	{"id":"funk", "title":"Funkmasterg4 - Stream", "live":true, "thumbnail":"https://winterphoenix96.github.io/rtmp-thumbnails/default.png"}
 ]}
