@@ -555,17 +555,15 @@ function registerPlayer( type, object ) {
 				}
 
 				if ( this.player.getPlayerState() != -1 ) {
-
 					if ( this.startTime != this.lastStartTime ) {
 						this.seek( this.startTime );
 						this.lastStartTime = this.startTime;
 					}
-					
+
 					if ( this.volume != this.lastVolume ) {
 						this.player.setVolume( this.volume );
 						this.lastVolume = this.volume;
 					}
-
 				}
 			}
 
@@ -573,6 +571,8 @@ function registerPlayer( type, object ) {
 
 		this.onReady = function() {
 			this.player = player;
+
+			this.player.setVolume(this.volume != null ? this.volume : theater.volume != null ? theater.volume : 25);
 
 			if ( theater.isForceVideoRes() ) {
 				if ( window.innerHeight <= 1536 && window.innerHeight > 1440 ) {
