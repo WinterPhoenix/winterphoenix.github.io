@@ -1211,7 +1211,7 @@ function registerPlayer( type, object ) {
 		player_container.appendChild(pre_player);
 
 		var viewer = videojs('player');
-		viewer.poster("http://www.yukitheater.org/theater/rtmp-thumbnail.png");
+		viewer.poster("https://winterphoenix96.github.io/rtmp-thumbnails/default.png");
 
 		/*
 			Standard Player Methods
