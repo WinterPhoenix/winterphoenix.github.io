@@ -607,15 +607,13 @@ function registerPlayer( type, object ) {
 	};
 	registerPlayer( "youtubelive", YouTubeLiveVideo );
 
+	/*
 	var VimeoVideo = function() {
-
 		var self = this;
 
 		this.froogaloop = null;
 
-		/*
-			Standard Player Methods
-		*/
+		// Standard Player Methods
 		this.setVideo = function( id ) {
 			this.videoId = id;
 
@@ -667,9 +665,7 @@ function registerPlayer( type, object ) {
 			clearInterval( this.interval );
 		};
 
-		/*
-			Player Specific Methods
-		*/
+		// Player Specific Methods
 		this.getCurrentTime = function() {
 			if ( this.froogaloop != null ) {
 				return self.currentTime || 1;
@@ -715,7 +711,6 @@ function registerPlayer( type, object ) {
 	};
 	registerPlayer( "vimeo", VimeoVideo );
 
-	/*
 	var TwitchVideo = function() {
 		var self = this;
 
@@ -1871,6 +1866,7 @@ function registerPlayer( type, object ) {
 	registerPlayer( "dailymotion", Dailymotion );
 	registerPlayer( "dailymotionlive", Dailymotion );
 
+	/*
 	var HitboxLive = function() {
 		videojs.options.flash.swf = "video-js-5.9.2/video-js.swf"
 
@@ -1885,9 +1881,7 @@ function registerPlayer( type, object ) {
 
 		var viewer = videojs('player');
 
-		/*
-			Standard Player Methods
-		*/
+		// Standard Player Methods
 		this.setVideo = function( id ) {
 			this.lastStartTime = null;
 			this.lastVideoId = null;
@@ -1903,9 +1897,7 @@ function registerPlayer( type, object ) {
 			clearInterval( this.interval );
 		};
 
-		/*
-			Player Specific Methods
-		*/
+		// Player Specific Methods
 		this.think = function() {
 			if ( this.player != null ) {
 				if ( this.videoId != this.lastVideoId ) {
@@ -1915,7 +1907,8 @@ function registerPlayer( type, object ) {
 					playerJSON.onreadystatechange = function() {
 						if (playerJSON.readyState == 4 && playerJSON.status == 200) {
 							var parsedJSON = JSON.parse(playerJSON.responseText);
-							self.player.src({type: "application/x-mpegURL", src: parsedJSON["clip"]["url"]});
+							console.log(parsedJSON);
+							self.player.src({type: "application/x-mpegURL", src: "https://www.hitbox.tv" + parsedJSON["clip"]["url"]});
 						}
 					}
 					playerJSON.open("GET", "https://www.hitbox.tv/api/player/config/live/" + this.videoId + "?autoplay=true&embed=true&no_interruption=false&ssl=true", true);
@@ -1962,9 +1955,7 @@ function registerPlayer( type, object ) {
 
 		var viewer = videojs('player');
 
-		/*
-			Standard Player Methods
-		*/
+		// Standard Player Methods
 		this.setVideo = function( id ) {
 			this.lastStartTime = null;
 			this.lastVideoId = null;
@@ -1996,9 +1987,7 @@ function registerPlayer( type, object ) {
 			clearInterval( this.interval );
 		};
 
-		/*
-			Player Specific Methods
-		*/
+		// Player Specific Methods
 		this.getCurrentTime = function() {
 			if ( this.player != null ) {
 				return this.player.currentTime();
@@ -2043,6 +2032,7 @@ function registerPlayer( type, object ) {
 		viewer.ready(function(){self.onReady();});
 	};
 	registerPlayer( "hitbox", Hitbox );
+	*/
 
 	var MoeTube = function() {
 		// JW7 Key
