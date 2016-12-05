@@ -3,7 +3,7 @@ window.open = function() { return null; }; // prevent popups
 
 var theater = {
 
-	VERSION: '1.6.7-YukiTheater',
+	VERSION: '1.6.8-YukiTheater',
 
 	playerContainer: null,
 	playerContent: null,
@@ -715,14 +715,13 @@ function registerPlayer( type, object ) {
 	};
 	registerPlayer( "vimeo", VimeoVideo );
 
+	/*
 	var TwitchVideo = function() {
 		var self = this;
 
 		this.videoInfo = {};
 
-		/*
-			Embed Player Object
-		*/
+		// Embed Player Object
 		this.embed = function() {
 			if ( !this.videoInfo.channel ) return;
 			if ( !this.videoInfo.archive_id ) return;
@@ -770,9 +769,7 @@ function registerPlayer( type, object ) {
 			);
 		};
 
-		/*
-			Standard Player Methods
-		*/
+		// Standard Player Methods
 		this.setVideo = function( id ) {
 			this.lastVideoId = null;
 			this.videoId = id;
@@ -805,9 +802,7 @@ function registerPlayer( type, object ) {
 			clearInterval( this.interval );
 		};
 
-		/*
-			Player Specific Methods
-		*/
+		// Player Specific Methods
 		this.think = function() {
 			if ( this.player != null ) {
 				if ( this.videoId != this.lastVideoId ) {
@@ -836,9 +831,7 @@ function registerPlayer( type, object ) {
 	var TwitchStreamVideo = function() {
 		var self = this;
 
-		/*
-			Embed Player Object
-		*/
+		// Embed Player Object
 		this.embed = function() {
 			var flashvars = {
 				eventsCallback: "onTwitchPlayerEvent",
@@ -873,9 +866,7 @@ function registerPlayer( type, object ) {
 			);
 		};
 
-		/*
-			Standard Player Methods
-		*/
+		// Standard Player Methods
 		this.setVideo = function( id ) {
 			this.lastVideoId = null;
 			this.videoId = id;
@@ -891,9 +882,7 @@ function registerPlayer( type, object ) {
 			clearInterval( this.interval );
 		};
 
-		/*
-			Player Specific Methods
-		*/
+		// Player Specific Methods
 		this.think = function() {
 			if ( this.player != null ) {
 
@@ -914,6 +903,7 @@ function registerPlayer( type, object ) {
 		};
 	};
 	registerPlayer( "twitchstream", TwitchStreamVideo );
+	*/
 
 	var UrlVideo = function() {
 
@@ -2240,6 +2230,7 @@ function livestreamPlayerCallback( event, data ) {
 	}
 }
 
+/*
 function onTwitchPlayerEvent(event) {
 	if (event[0].event == "playerInit") {
 		var player = theater.getPlayer();
@@ -2248,6 +2239,7 @@ function onTwitchPlayerEvent(event) {
 		}
 	}
 };
+*/
 
 if (window.onTheaterReady) {
 	onTheaterReady();
