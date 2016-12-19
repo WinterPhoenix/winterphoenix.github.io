@@ -105,7 +105,7 @@ service {
 	border-radius: 8pt;
 
 	font-size: 8pt;
-	line-height: 194px;
+	line-height: 198px;
 
 	cursor: hand;
 	color: transparent;
@@ -117,6 +117,29 @@ service:hover {
 
 service.subtext {
 	color: #666;
+}
+
+service.monitorPending {
+	color: gray;
+}
+
+service.monitorDown {
+	color: #DB6464;
+}
+
+service.monitorUp {
+	color: #4da74d;
+}
+
+.monitorUnknown {
+	display: inline;
+	margin: auto;
+	width: 10px;
+	height: 10px;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	background: yellow;
 }
 
 .notice {

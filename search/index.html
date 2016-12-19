@@ -20,17 +20,17 @@
 
 					<service style="background-image:url(logos/dailymotion.png);" onclick="selectService('Dailymotion','https://www.dailymotion.com');" onmouseover="hoverService();">-</service>
 
-					<service style="background-image:url(logos/kissanime.png);" onclick="selectService('KissAnime','https://kissanime.ru');" onmouseover="hoverService();">-</service>
-
-					<service style="background-image:url(logos/9anime.png);" onclick="selectService('9Anime','http://9anime.to');" onmouseover="hoverService();">-</service>
-
-					<br />
+					<service id="9AnimeMonitor" style="background-image:url(logos/9anime.png);" onclick="selectService('9Anime','http://9anime.to');" onmouseover="hoverService();">-</service>
 
 					<service class="subtext" style="background-image:url(logos/animetwist.png);" onclick="selectService('AnimeTwist','https://twist.moe');" onmouseover="hoverService();">Anime Twist</service>
 
-					<service style="background-image:url(logos/kissasian.png);" onclick="selectService('KissAsian','http://kissasian.com');" onmouseover="hoverService();">-</service>
+					<br />
 
-					<service style="background-image:url(logos/kisscartoon.png);" onclick="selectService('KissCartoon','http://kisscartoon.me');" onmouseover="hoverService();">-</service>
+					<service id="kissanimeMonitor" style="background-image:url(logos/kissanime.png);" onclick="selectService('KissAnime','https://kissanime.ru');" onmouseover="hoverService();">Pending</service>
+
+					<service id="kissasianMonitor" style="background-image:url(logos/kissasian.png);" onclick="selectService('KissAsian','http://kissasian.com');" onmouseover="hoverService();">Pending</service>
+
+					<service id="kisscartoonMonitor" style="background-image:url(logos/kisscartoon.png);" onclick="selectService('KissCartoon','http://kisscartoon.me');" onmouseover="hoverService();">Pending</service>
 
 					<service class="subtext" style="background-image:url(logos/reddit.png);" onclick="selectService('reddit/videos','https://www.reddit.com/r/videos/');" onmouseover="hoverService();">Videos</service>
 
@@ -44,53 +44,91 @@
 		</div>
 
 		<script type="text/javascript">
-		// Navigation sounds
-		var hoverSound = new Audio('sounds/00.wav');
-		var selectSound = new Audio('sounds/05.wav');
-		
-		// Event called when a service is hovered
-		function hoverService() {
-			hoverSound.play();
-		}
+			// Navigation sounds
+			var hoverSound = new Audio('sounds/00.wav');
+			var selectSound = new Audio('sounds/05.wav');
 
-		// Event called when a service is selected
-		function selectService(name, url) {
-			selectSound.play();
-			
-			ga('send', 'event', 'services', 'visit', name);
-			setTimeout(function(){
-				window.location.href = url;
-			}, 800);
-		}
+			// Event called when a service is hovered
+			function hoverService() {
+				hoverSound.play();
+			}
 
-		// Set a random tip on DOM load
-		document.addEventListener('DOMContentLoaded', function() {
-			var tips = [
-				'Did you know that YukiTheater is a fork of the open-source Cinema gamemode?<br /><a href="https://github.com/pixeltailgames/cinema">View Cinema\'s code on GitHub</a>',
-				'Need Help?<br />Check out the <a href="https://www.yukitheater.org/theater/help.html">Help Page</a>, <a href="https://www.solsticegamestudios.com/forums/forums/support/">Help and Support Board</a> on our Forums, or <a href="http://steamcommunity.com/workshop/filedetails/discussion/118824086/828935672624191282/">Cinema FAQ</a>.',
-				'Have a Feature Request for YukiTheater?<br /><a href="https://www.solsticegamestudios.com/forums/forums/yukitheater-suggestions/">Post a Suggestion</a>',
-				'Did you know that YukiTheater is entirely community-supported?<br />Please consider <a href="https://www.solsticegamestudios.com/donate.php">Donating</a> if you like our work!',
-				'YukiTheater is on social networks too!<br /><a href="http://steamcommunity.com/groups/YukiTheaterPublic">Steam Group</a>, <a href="https://twitter.com/yukitheater">Twitter</a>, <a href="https://www.facebook.com/YukiTheater">Facebook Page</a>',
-				'Found a Bug?<br /><a href="https://www.solsticegamestudios.com/forums/forums/yukitheater-bugs/">Report it on the Forums<a/>',
-				'Want to keep up with YukiTheater\'s Development?<br /><a href="https://trello.com/b/TtHsb6mn/yukitheater-project">Check out the Trello</a>',
-				'Need to contact a Staff Member?<br /><a href="https://www.solsticegamestudios.com/forums/members/?type=staff">View the Current Staff List</a>',
-			];
+			// Event called when a service is selected
+			function selectService(name, url) {
+				selectSound.play();
+				
+				ga('send', 'event', 'services', 'visit', name);
+				setTimeout(function(){
+					window.location.href = url;
+				}, 800);
+			}
 
-			return function() {
-				var node = document.getElementById('tip'),
-					tip = tips[Math.floor(Math.random() * tips.length)];
+			// Set a random tip on DOM load
+			document.addEventListener('DOMContentLoaded', function() {
+				var tips = [
+					'Did you know that YukiTheater is a fork of the open-source Cinema gamemode?<br /><a href="https://github.com/pixeltailgames/cinema">View Cinema\'s code on GitHub</a>',
+					'Need Help?<br />Check out the <a href="https://www.yukitheater.org/theater/help.html">Help Page</a>, <a href="https://www.solsticegamestudios.com/forums/forums/support/">Help and Support Board</a> on our Forums, or <a href="http://steamcommunity.com/workshop/filedetails/discussion/118824086/828935672624191282/">Cinema FAQ</a>.',
+					'Have a Feature Request for YukiTheater?<br /><a href="https://www.solsticegamestudios.com/forums/forums/yukitheater-suggestions/">Post a Suggestion</a>',
+					'Did you know that YukiTheater is entirely community-supported?<br />Please consider <a href="https://www.solsticegamestudios.com/donate.php">Donating</a> if you like our work!',
+					'YukiTheater is on social networks too!<br /><a href="http://steamcommunity.com/groups/YukiTheaterPublic">Steam Group</a>, <a href="https://twitter.com/yukitheater">Twitter</a>, <a href="https://www.facebook.com/YukiTheater">Facebook Page</a>',
+					'Found a Bug?<br /><a href="https://www.solsticegamestudios.com/forums/forums/yukitheater-bugs/">Report it on the Forums<a/>',
+					'Want to keep up with YukiTheater\'s Development?<br /><a href="https://trello.com/b/TtHsb6mn/yukitheater-project">Check out the Trello</a>',
+					'Need to contact a Staff Member?<br /><a href="https://www.solsticegamestudios.com/forums/members/?type=staff">View the Current Staff List</a>',
+				];
 
-				node.innerHTML = tip;
-			};
-		}());
+				return function() {
+					var node = document.getElementById('tip'),
+						tip = tips[Math.floor(Math.random() * tips.length)];
+
+					node.innerHTML = tip;
+				};
+			}());
+
+			// Grab KissProxy Statuses and display them
+			var serviceAPIMatch = {
+				"kissanime": "m776892256-4c8c726cf402855cb155efc6",
+				"kissasian": "m777082583-d9ffe7f8ac9aa457bbfdfbd1",
+				"kisscartoon": "m777082588-d5a130d00fb71e067070740a"
+			}
+
+			for (var serviceName in serviceAPIMatch) {
+				var serviceAPIKey = serviceAPIMatch[serviceName];
+
+				var uptimeRobotJSON = new XMLHttpRequest();
+				uptimeRobotJSON.serviceName = serviceName;
+				uptimeRobotJSON.onreadystatechange = function() {
+					if (this.readyState == 4 && this.status == 200) {
+						var parsedJSON = JSON.parse(this.responseText);
+
+						var monitorDiv = document.getElementById(this.serviceName + "Monitor");
+						monitorDiv.innerHTML = parsedJSON["monitors"]["monitor"][0]["status"] == 2 ? "Proxy Online" : parsedJSON["monitors"]["monitor"][0]["status"] == 8 ? "Proxy Offline" : "Proxy Unknown";
+						monitorDiv.className = parsedJSON["monitors"]["monitor"][0]["status"] == 2 ? "monitorUp" : parsedJSON["monitors"]["monitor"][0]["status"] == 8 ? "monitorDown" : "monitorUnknown";
+					}
+				}
+				uptimeRobotJSON.open("GET", "https://api.uptimerobot.com/getMonitors?apiKey=" + serviceAPIKey + "&format=json&noJsonCallback=1");
+				uptimeRobotJSON.send();
+			}
+
+			// Grab 9Anime Online Status
+			var nineAnimeStatus = new XMLHttpRequest();
+				nineAnimeStatus.serviceName = serviceName;
+				nineAnimeStatus.onreadystatechange = function() {
+					if (this.readyState == 4) {
+						var monitorDiv = document.getElementById("9AnimeMonitor");
+						monitorDiv.innerHTML = this.status == 200 ? "Online" : "Offline";
+						monitorDiv.className = this.status == 200 ? "monitorUp" : "monitorDown";
+					}
+				}
+				nineAnimeStatus.open("GET", "http://9anime.to");
+				nineAnimeStatus.send();
 		</script>
-		
+
 		<script>
 			(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 			(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
 			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
 			})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-			
+
 			ga('create', 'UA-39404760-2', 'auto');
 			ga('send', 'pageview');
 		</script>
