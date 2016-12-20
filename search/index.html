@@ -20,7 +20,7 @@
 
 					<service style="background-image:url(logos/dailymotion.png);" onclick="selectService('Dailymotion','https://www.dailymotion.com');" onmouseover="hoverService();">-</service>
 
-					<service id="9AnimeMonitor" style="background-image:url(logos/9anime.png);" onclick="selectService('9Anime','http://9anime.to');" onmouseover="hoverService();">-</service>
+					<service style="background-image:url(logos/9anime.png);" onclick="selectService('9Anime','http://9anime.to');" onmouseover="hoverService();">-</service>
 
 					<service class="subtext" style="background-image:url(logos/animetwist.png);" onclick="selectService('AnimeTwist','https://twist.moe');" onmouseover="hoverService();">Anime Twist</service>
 
@@ -108,19 +108,6 @@
 				uptimeRobotJSON.open("GET", "https://api.uptimerobot.com/getMonitors?apiKey=" + serviceAPIKey + "&format=json&noJsonCallback=1");
 				uptimeRobotJSON.send();
 			}
-
-			// Grab 9Anime Online Status
-			var nineAnimeStatus = new XMLHttpRequest();
-				nineAnimeStatus.serviceName = serviceName;
-				nineAnimeStatus.onreadystatechange = function() {
-					if (this.readyState == 4) {
-						var monitorDiv = document.getElementById("9AnimeMonitor");
-						monitorDiv.innerHTML = this.status == 200 ? "Online" : "Offline";
-						monitorDiv.className = this.status == 200 ? "monitorUp" : "monitorDown";
-					}
-				}
-				nineAnimeStatus.open("GET", "http://9anime.to");
-				nineAnimeStatus.send();
 		</script>
 
 		<script>
