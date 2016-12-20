@@ -3,13 +3,11 @@
 	{"id":"sophie", "title":"Sophie-bear - Stream", "live":true, "thumbnail":"https://winterphoenix96.github.io/rtmp-thumbnails/default.png"},
 	{"id":"liquidus", "title":"Liquidus - Stream", "live":true, "thumbnail":"https://winterphoenix96.github.io/rtmp-thumbnails/default.png"},
 	{"id":"moose", "title":"Moose O' Crack - Stream", "live":true, "thumbnail":"https://winterphoenix96.github.io/rtmp-thumbnails/default.png"},
-	{"id":"ognik", "title":"ogniK - Stream", "live":true, "thumbnail":"https://winterphoenix96.github.io/rtmp-thumbnails/default.png"},
 	{"id":"nighthawk", "title":"Nighthawk - Stream", "live":true, "thumbnail":"https://winterphoenix96.github.io/rtmp-thumbnails/default.png"},
 	{"id":"brave", "title":"BraVe - Weeaboo Wednesday", "live":true, "thumbnail":"https://winterphoenix96.github.io/rtmp-thumbnails/brave-weeb.jpg"},
 	{"id":"shima", "title":"iShimakaze - Stream", "live":true, "thumbnail":"https://winterphoenix96.github.io/rtmp-thumbnails/shima.png"},
 	{"id":"pata", "title":"patanima - Stream", "live":true, "thumbnail":"https://winterphoenix96.github.io/rtmp-thumbnails/default.png"},
 	{"id":"recon", "title":"ReconZer0 - Stream", "live":true, "thumbnail":"https://winterphoenix96.github.io/rtmp-thumbnails/recon.png"},
-	{"id":"zep", "title":"Zep - Stream", "live":true, "thumbnail":"https://winterphoenix96.github.io/rtmp-thumbnails/zep.png"},
 	{"id":"pmon", "title":"PMONickpop123 - Stream", "live":true, "thumbnail":"https://winterphoenix96.github.io/rtmp-thumbnails/default.png"},
 	{"id":"noire", "title":"Noire - Stream", "live":true, "thumbnail":"https://winterphoenix96.github.io/rtmp-thumbnails/default.png"},
 	{"id":"half", "title":"Half - Stream", "live":true, "thumbnail":"https://winterphoenix96.github.io/rtmp-thumbnails/default.png"},
@@ -17,5 +15,5 @@
 	{"id":"pro", "title":"PRO15699 - Stream", "live":true, "thumbnail":"https://winterphoenix96.github.io/rtmp-thumbnails/default.png"},
 	{"id":"keero", "title":"Keero Kyubey - Stream", "live":true, "thumbnail":"https://winterphoenix96.github.io/rtmp-thumbnails/default.png"},
 	{"id":"funk", "title":"Funkmasterg4 - Stream", "live":true, "thumbnail":"https://winterphoenix96.github.io/rtmp-thumbnails/default.png"},
-	{"id":"mcmoofin", "title":"McMoofin - Stream", "live":true, "thumbnail":"https://winterphoenix96.github.io/rtmp-thumbnails/default.png"}
+	{"id":"zerac", "title":"Zerac - Stream", "live":true, "thumbnail":"https://winterphoenix96.github.io/rtmp-thumbnails/default.png"}
 ]}
