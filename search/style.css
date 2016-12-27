@@ -131,15 +131,8 @@ service.monitorUp {
 	color: #4da74d;
 }
 
-.monitorUnknown {
-	display: inline;
-	margin: auto;
-	width: 10px;
-	height: 10px;
-	-webkit-border-radius: 5px;
-	-moz-border-radius: 5px;
-	border-radius: 5px;
-	background: yellow;
+service.monitorUnknown {
+	color: yellow;
 }
 
 .notice {
