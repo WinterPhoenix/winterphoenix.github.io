@@ -101,8 +101,8 @@
 						var parsedJSON = JSON.parse(this.responseText);
 
 						var monitorDiv = document.getElementById(this.serviceName + "Monitor");
-						monitorDiv.innerHTML = parsedJSON["monitors"]["monitor"][0]["status"] == 2 ? "Proxy Online" : parsedJSON["monitors"]["monitor"][0]["status"] == 8 ? "Proxy Offline" : "Proxy Unknown";
-						monitorDiv.className = parsedJSON["monitors"]["monitor"][0]["status"] == 2 ? "monitorUp" : parsedJSON["monitors"]["monitor"][0]["status"] == 8 ? "monitorDown" : "monitorUnknown";
+						monitorDiv.innerHTML = parsedJSON["monitors"]["monitor"][0]["status"] == 2 ? "Proxy Online" : (parsedJSON["monitors"]["monitor"][0]["status"] == 8 || parsedJSON["monitors"]["monitor"][0]["status"] == 9) ? "Proxy Offline" : "Proxy Unknown";
+						monitorDiv.className = parsedJSON["monitors"]["monitor"][0]["status"] == 2 ? "monitorUp" : (parsedJSON["monitors"]["monitor"][0]["status"] == 8 || parsedJSON["monitors"]["monitor"][0]["status"] == 9) ? "monitorDown" : "monitorUnknown";
 					}
 				}
 				uptimeRobotJSON.open("GET", "https://api.uptimerobot.com/getMonitors?apiKey=" + serviceAPIKey + "&format=json&noJsonCallback=1");
