@@ -22,17 +22,11 @@
 
 					<service style="background-image:url(logos/9anime.png);" onclick="selectService('9Anime','http://9anime.to');" onmouseover="hoverService();">-</service>
 
+					<br />
+
 					<service class="subtext" style="background-image:url(logos/animetwist.png);" onclick="selectService('AnimeTwist','https://twist.moe');" onmouseover="hoverService();">Anime Twist</service>
 
 					<service class="subtext" style="background-image:url(logos/moetube.png);" onclick="selectService('MoeTube','http://moetube.net');" onmouseover="hoverService();">MoeTube</service>
-
-					<br />
-
-					<service id="kissanimeMonitor" style="background-image:url(logos/kissanime.png);" onclick="selectService('KissAnime','https://kissanime.ru');" onmouseover="hoverService();">Pending</service>
-
-					<service id="kissasianMonitor" style="background-image:url(logos/kissasian.png);" onclick="selectService('KissAsian','http://kissasian.com');" onmouseover="hoverService();">Pending</service>
-
-					<service id="kisscartoonMonitor" style="background-image:url(logos/kisscartoon.png);" onclick="selectService('KissCartoon','http://kisscartoon.me');" onmouseover="hoverService();">Pending</service>
 
 					<service class="subtext" style="background-image:url(logos/reddit.png);" onclick="selectService('reddit/videos','https://www.reddit.com/r/videos/');" onmouseover="hoverService();">Videos</service>
 
@@ -86,7 +80,7 @@
 				};
 			}());
 
-			// Grab KissProxy Statuses and display them
+			/* Grab KissProxy Statuses and display them
 			var serviceAPIMatch = {
 				"kissanime": "m776892256-4c8c726cf402855cb155efc6",
 				"kissasian": "m777082583-d9ffe7f8ac9aa457bbfdfbd1",
@@ -110,6 +104,7 @@
 				uptimeRobotJSON.open("GET", "https://api.uptimerobot.com/getMonitors?apiKey=" + serviceAPIKey + "&format=json&noJsonCallback=1");
 				uptimeRobotJSON.send();
 			}
+			*/
 		</script>
 
 		<script>
