@@ -3,7 +3,7 @@ window.open = function() { return null; }; // prevent popups
 
 var theater = {
 
-	VERSION: '1.7.2-YukiTheater',
+	VERSION: '1.7.3-YukiTheater',
 
 	playerContainer: null,
 	playerContent: null,
@@ -273,175 +273,6 @@ function registerPlayer( type, object ) {
 		/*
 			Embed Player Object
 		*/
-		var params = {
-			allowScriptAccess: "always",
-			bgcolor: "#000000",
-			wmode: "opaque"
-		};
-		
-		var attributes = {
-			id: "player",
-		};
-		
-		var url = "https://youtube.googleapis.com/apiplayer?enablejsapi=1&modestbranding=1&autohide=1&controls=1&autoplay=1&iv_load_policy=3";
-		if ( theater.isCCEnabled() ) {
-			url += "&cc_load_policy=1";
-			url += "&yt:cc=on";
-		}
-		
-		swfobject.embedSWF( url, "player", "126.6%", "104.2%", "9", null, null, params, attributes );
-		
-		/*
-			Standard Player Methods
-		*/
-		this.setVideo = function( id ) {
-			this.lastStartTime = null;
-			this.lastVideoId = null;
-			this.videoId = id;
-		};
-
-		this.setVolume = function( volume ) {
-			this.lastVolume = null;
-			this.volume = volume;
-		};
-
-		this.setStartTime = function( seconds ) {
-			this.lastStartTime = null;
-			this.startTime = seconds;
-		};
-
-		this.seek = function( seconds ) {
-			if ( this.player != null ) {
-				this.player.seekTo( seconds, true );
-
-				// Video isn't playing
-				if ( this.player.getPlayerState() != 1 ) {
-					this.player.playVideo();
-				}
-			}
-		};
-
-		this.onRemove = function() {
-			clearInterval( this.interval );
-		};
-
-		/*
-			Player Specific Methods
-		*/
-		this.getCurrentTime = function() {
-			if ( this.player != null ) {
-				return this.player.getCurrentTime();
-			}
-		};
-
-		this.canChangeTime = function() {
-			if ( this.player != null ) {
-				//Is loaded and it is not buffering
-				return this.player.getVideoBytesTotal() != -1 &&
-				this.player.getPlayerState() != 3;
-			}
-		};
-
-		this.think = function() {
-
-			if ( this.player != null ) {
-				
-				if ( theater.isForceVideoRes() ) {
-					if ( this.lastWindowHeight != window.innerHeight ) {
-						if ( window.innerHeight <= 1536 && window.innerHeight > 1440 ) {
-							this.ytforceres = "highres";
-						}
-						if ( window.innerHeight <= 1440 && window.innerHeight > 1080 ) {
-							this.ytforceres = "highres";
-						}
-						if ( window.innerHeight <= 1080 && window.innerHeight > 720 ) {
-							this.ytforceres = "hd1080";
-						}
-						if ( window.innerHeight <= 720 && window.innerHeight > 480 ) {
-							this.ytforceres = "hd720";
-						}
-						if ( window.innerHeight <= 480 && window.innerHeight > 360 ) {
-							this.ytforceres = "large";
-						}
-						if ( window.innerHeight <= 360 && window.innerHeight > 240 ) {
-							this.ytforceres = "medium";
-						}
-						if ( window.innerHeight <= 240 ) {
-							this.ytforceres = "small";
-						}
-						
-						this.player.setPlaybackQuality(this.ytforceres);
-						console.log("Forcing Quality Change to " + this.ytforceres);
-						
-						this.lastWindowHeight = window.innerHeight;
-					}
-				}
-				
-				if ( this.videoId != this.lastVideoId ) {
-					this.player.loadVideoById( this.videoId, this.startTime, this.ytforceres ? this.ytforceres : "default");
-					this.lastVideoId = this.videoId;
-					this.lastStartTime = this.startTime;
-				}
-
-				if ( this.player.getPlayerState() != -1 ) {
-
-					if ( this.startTime != this.lastStartTime ) {
-						this.seek( this.startTime );
-						this.lastStartTime = this.startTime;
-					}
-					
-					if ( this.volume != this.lastVolume ) {
-						this.player.setVolume( this.volume );
-						this.lastVolume = this.volume;
-					}
-
-				}
-			}
-
-		};
-
-		this.onReady = function() {
-			this.player = document.getElementById('player');
-			this.player.style.marginLeft = "-24.2%";
-
-			if ( theater.isForceVideoRes() ) {
-				if ( window.innerHeight <= 1536 && window.innerHeight > 1440 ) {
-					this.ytforceres = "highres";
-				}
-				if ( window.innerHeight <= 1440 && window.innerHeight > 1080 ) {
-					this.ytforceres = "highres";
-				}
-				if ( window.innerHeight <= 1080 && window.innerHeight > 720 ) {
-					this.ytforceres = "hd1080";
-				}
-				if ( window.innerHeight <= 720 && window.innerHeight > 480 ) {
-					this.ytforceres = "hd720";
-				}
-				if ( window.innerHeight <= 480 && window.innerHeight > 360 ) {
-					this.ytforceres = "large";
-				}
-				if ( window.innerHeight <= 360 && window.innerHeight > 240 ) {
-					this.ytforceres = "medium";
-				}
-				if ( window.innerHeight <= 240 ) {
-					this.ytforceres = "small";
-				}
-				
-				this.player.setPlaybackQuality(this.ytforceres);
-				console.log("Forcing Quality Change to " + this.ytforceres);
-			}
-
-			this.interval = setInterval( this.think.bind(this), 100 );
-		};
-
-	};
-	registerPlayer( "youtube", YouTubeVideo );
-
-	var YouTubeLiveVideo = function() {
-
-		/*
-			Embed Player Object
-		*/
 		var player;
 
 		/*
@@ -605,7 +436,8 @@ function registerPlayer( type, object ) {
 		};
 
 	};
-	registerPlayer( "youtubelive", YouTubeLiveVideo );
+	registerPlayer( "youtube", YouTubeVideo );
+	registerPlayer( "youtubelive", YouTubeVideo );
 
 	/*
 	var VimeoVideo = function() {
