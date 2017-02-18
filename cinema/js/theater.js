@@ -3,7 +3,7 @@ window.open = function() { return null; }; // prevent popups
 
 var theater = {
 
-	VERSION: '1.7.3-YukiTheater',
+	VERSION: '1.7.4-YukiTheater',
 
 	playerContainer: null,
 	playerContent: null,
@@ -1099,6 +1099,7 @@ function registerPlayer( type, object ) {
 		59: "854x480"
 	};
 
+	/*
 	var Kiss = function() {
 		// RSK Decryption Key prep
 		var rskCount = 0;
@@ -1112,9 +1113,7 @@ function registerPlayer( type, object ) {
 		// JW7 Key
 		jwplayer.key="GBbtI9R8M4R2gQOTSs7m7AdoMdxpK3DD4IcgmQ==";
 
-		/*
-			Embed Player Object
-		*/
+		// Embed Player Object
 		var viewer = jwplayer("player");
 		viewer.setup({
 			height: "100%",
@@ -1126,9 +1125,7 @@ function registerPlayer( type, object ) {
 			file: "example.mp4"
 		});
 
-		/*
-			Standard Player Methods
-		*/
+		// Standard Player Methods
 		this.setVideo = function( id ) {
 			this.lastStartTime = null;
 			this.lastVideoId = null;
@@ -1160,9 +1157,7 @@ function registerPlayer( type, object ) {
 			clearInterval( this.interval );
 		};
 
-		/*
-			Player Specific Methods
-		*/
+		// Player Specific Methods
 		this.getCurrentTime = function() {
 			if ( this.player != null ) {
 				return this.player.getPosition();
@@ -1272,7 +1267,7 @@ function registerPlayer( type, object ) {
 					// Send it over to Lua to process any redirects
 					console.log("RUNLUA: theater.GetJWPlayerSources('" + btoa(JSON.stringify(decryptedSources)) + "')");
 
-					/*var isActuallyYouTubeCompatible = false;
+					*//*var isActuallyYouTubeCompatible = false;
 					for (var sourceKey in decryptedSources) {
 						if (decryptedSources[sourceKey].file.search("googlevideo") != -1) {
 							isActuallyYouTubeCompatible = true
@@ -1321,7 +1316,7 @@ function registerPlayer( type, object ) {
 						}, 20000);
 
 						this.player.load([{ sources: decryptedSources }]);
-					}*/
+					}*//*
 
 					this.lastVideoId = this.videoId;
 					this.lastStartTime = this.startTime;
@@ -1371,7 +1366,9 @@ function registerPlayer( type, object ) {
 	registerPlayer( "kissanime", Kiss );
 	registerPlayer( "kissasian", Kiss );
 	registerPlayer( "kisscartoon", Kiss );
+	*/
 
+	/*
 	var KissYT = function() {
 		// RSK Decryption Key prep
 		var rskComplete = false;
@@ -1383,9 +1380,7 @@ function registerPlayer( type, object ) {
 			rskCount++;
 		});
 
-		/*
-			Embed Player Object
-		*/
+		// Embed Player Object
 		var params = {
 			allowScriptAccess: "always",
 			bgcolor: "#000000",
@@ -1398,9 +1393,7 @@ function registerPlayer( type, object ) {
 
 		var url = "https://youtube.googleapis.com/get_player?enablejsapi=1&modestbranding=1";
 
-		/*
-			Standard Player Methods
-		*/
+		// Standard Player Methods
 		this.setVideo = function( id ) {
 			// We have to reinitialize the Flash Object everytime we change the video
 			this.lastStartTime = null;
@@ -1476,9 +1469,7 @@ function registerPlayer( type, object ) {
 			clearInterval( this.interval );
 		};
 
-		/*
-			Player Specific Methods
-		*/
+		// Player Specific Methods
 		this.getCurrentTime = function() {
 			if ( this.player != null ) {
 				return this.player.getCurrentTime();
@@ -1597,13 +1588,16 @@ function registerPlayer( type, object ) {
 		};
 	}
 	registerPlayer( "kissyoutube", KissYT );
+	*/
 
+	/*
 	var KissOL = function() {
 		this.setVideo = function( id ) {
 			theater.getPlayerContainer().innerHTML = "<div id='player'><div style='color: red;'>ERROR: Kiss OpenLoad support not yet implemented.<br />OpenLoad ID: " + id.replace("ol_", "") + "<br />It's not me...it's them.</div></div>";
 		}
 	}
 	registerPlayer( "kissopenload", KissOL );
+	*/
 
 	var Dailymotion = function() {
 		var viewer = DM.player(document.getElementById("player"), {
@@ -1867,35 +1861,32 @@ function registerPlayer( type, object ) {
 	*/
 
 	var MoeTube = function() {
+		// JW7 Key
+		jwplayer.key="GBbtI9R8M4R2gQOTSs7m7AdoMdxpK3DD4IcgmQ==";
+
 		/*
 			Embed Player Object
 		*/
-		var params = {
-			allowScriptAccess: "always",
-			bgcolor: "#000000",
-			wmode: "opaque"
-		};
-
-		var attributes = {
-			id: "player",
-		};
+		var viewer = jwplayer("player");
+		viewer.setup({
+			height: "100%",
+			width: "100%",
+			controls: false,
+			autostart: true,
+			primary: 'flash',
+			displaytitle: true,
+			file: "example.mp4"
+		});
 
 		/*
 			Standard Player Methods
 		*/
 		this.setVideo = function( id ) {
-			// We have to reinitialize the Flash Object everytime we change the video
 			this.lastStartTime = null;
 			this.lastVideoId = null;
 			this.videoId = id;
-
-			var url = 'https://youtube.googleapis.com/apiplayer?enablejsapi=1&amp;docid=' + id + '&amp;ps=docs&amp;partnerid=30&amp;cc_load_policy=1&amp;vq=hd720&amp;autoplay=1&amp;fs=1&amp;hl=en&amp;modestbranding=1&amp;autohide=1&amp;showinfo=0';
-
-			swfobject.embedSWF(url, "player", "126.6%", "104.2%", "9", null, null, params, attributes);
-
 			this.sentAltDuration = false;
-			this.initSeek = false;
-		}
+		};
 
 		this.setVolume = function( volume ) {
 			this.lastVolume = null;
@@ -1909,11 +1900,10 @@ function registerPlayer( type, object ) {
 
 		this.seek = function( seconds ) {
 			if ( this.player != null ) {
-				this.player.seekTo( seconds, true );
+				this.player.seek( seconds );
 
-				// Video isn't playing
-				if ( this.player.getPlayerState() != 1 ) {
-					this.player.playVideo();
+				if ( this.player.getState() == "paused" || this.player.getState() == "idle" ) {
+					this.player.play(true);
 				}
 			}
 		};
@@ -1927,65 +1917,82 @@ function registerPlayer( type, object ) {
 		*/
 		this.getCurrentTime = function() {
 			if ( this.player != null ) {
-				return this.player.getCurrentTime();
+				return this.player.getPosition();
 			}
 		};
 
 		this.canChangeTime = function() {
 			if ( this.player != null ) {
 				//Is loaded and it is not buffering
-				return this.player.getVideoBytesTotal() != -1 && this.player.getPlayerState() != 3;
+				return this.player.getState() != "buffering";
 			}
 		};
 
 		this.think = function() {
 			if ( this.player != null ) {
-				if ( theater.isForceVideoRes() ) {
+				if ( theater.isForceVideoRes() && this.player.getState() == "playing" ) {
 					if ( this.lastWindowHeight != window.innerHeight ) {
-						if ( window.innerHeight <= 1536 && window.innerHeight > 1440 ) {
-							this.ytforceres = "highres";
-						}
-						if ( window.innerHeight <= 1440 && window.innerHeight > 1080 ) {
-							this.ytforceres = "highres";
-						}
-						if ( window.innerHeight <= 1080 && window.innerHeight > 720 ) {
-							this.ytforceres = "hd1080";
-						}
-						if ( window.innerHeight <= 720 && window.innerHeight > 480 ) {
-							this.ytforceres = "hd720";
-						}
-						if ( window.innerHeight <= 480 && window.innerHeight > 360 ) {
-							this.ytforceres = "large";
-						}
-						if ( window.innerHeight <= 360 && window.innerHeight > 240 ) {
-							this.ytforceres = "medium";
-						}
-						if ( window.innerHeight <= 240 ) {
-							this.ytforceres = "small";
+						var qualityLevels = this.player.getPlaylist()[0].sources;
+						var resMatching = [];
+						var defaultQuality = null;
+
+						for (var i=0; i < qualityLevels.length; i++) {
+							resMatching[qualityLevels[i]["label"]] = i;
+
+							if (qualityLevels[i]["default"]) {
+								defaultQuality = i;
+							}
 						}
 
-						this.player.setPlaybackQuality(this.ytforceres);
-						console.log("Forcing Quality Change to " + this.ytforceres);
+						if (defaultQuality == null) {
+							defaultQuality = ("720p" in resMatching) ? resMatching["720p"] : 1; // We're just gonna guess! :D
+						}
+
+						if ( window.innerHeight <= 1536 && window.innerHeight > 1440 ) {
+							this.forceRes = ("1080p" in resMatching) ? resMatching["1080p"] : defaultQuality;
+						}
+						if ( window.innerHeight <= 1440 && window.innerHeight > 1080 ) {
+							this.forceRes = ("1080p" in resMatching) ? resMatching["1080p"] : defaultQuality;
+						}
+						if ( window.innerHeight <= 1080 && window.innerHeight > 720 ) {
+							this.forceRes = ("1080p" in resMatching) ? resMatching["1080p"] : defaultQuality;
+						}
+						if ( window.innerHeight <= 720 && window.innerHeight > 480 ) {
+							this.forceRes = ("720p" in resMatching) ? resMatching["720p"] : defaultQuality;
+						}
+						if ( window.innerHeight <= 480 && window.innerHeight > 360 ) {
+							this.forceRes = ("480p" in resMatching) ? resMatching["480p"] : defaultQuality;
+						}
+						if ( window.innerHeight <= 360 && window.innerHeight > 240 ) {
+							this.forceRes = ("360p" in resMatching) ? resMatching["360p"] : defaultQuality;
+						}
+						if ( window.innerHeight <= 240 ) {
+							this.forceRes = ("240p" in resMatching) ? resMatching["240p"] : defaultQuality;
+						}
+
+						this.player.setCurrentQuality(this.forceRes);
+						console.log("Forcing Quality Change to " + this.forceRes);
 
 						this.lastWindowHeight = window.innerHeight;
 					}
 				}
 
 				if ( this.videoId != this.lastVideoId ) {
+					this.player.load([{
+						sources: [{file: this.videoId, "default": "true", type: "mp4"}]
+					}]);
+
 					this.lastVideoId = this.videoId;
 					this.lastStartTime = this.startTime;
 				}
 
-				if ( !this.sentAltDuration && (typeof(this.player.getDuration) === "function") && this.player.getDuration() > 0 ) { // Wait until it's ready
+				// Wait until it's ready before sending Duration
+				if ( this.player.getPlaylist()[0] && this.player.getPlaylist()[0].file != "example.mp4" && !this.sentAltDuration && this.player.getState() == "playing" && this.player.getDuration() > 0 ) {
 					console.log("RUNLUA: theater.SendAltDuration(" + this.player.getDuration() + ")");
 					this.sentAltDuration = true;
 				}
 
-				if ( (typeof(this.player.getPlayerState) === "function") && this.player.getPlayerState() != -1 ) {
-					if ( !this.initSeek ) {
-						this.seek( this.startTime + 3 ); // Assume 3 seconds of buffering
-						this.initSeek = true
-					}
+				if ( this.player.getState() != "idle" ) {
 
 					if ( this.startTime != this.lastStartTime ) {
 						this.seek( this.startTime );
@@ -2001,41 +2008,19 @@ function registerPlayer( type, object ) {
 		};
 
 		this.onReady = function() {
-			this.player = document.getElementById('player');
-			this.player.style.marginLeft = "-24.2%";
-
-			if ( theater.isForceVideoRes() ) {
-				if ( window.innerHeight <= 1536 && window.innerHeight > 1440 ) {
-					this.ytforceres = "highres";
-				}
-				if ( window.innerHeight <= 1440 && window.innerHeight > 1080 ) {
-					this.ytforceres = "highres";
-				}
-				if ( window.innerHeight <= 1080 && window.innerHeight > 720 ) {
-					this.ytforceres = "hd1080";
-				}
-				if ( window.innerHeight <= 720 && window.innerHeight > 480 ) {
-					this.ytforceres = "hd720";
-				}
-				if ( window.innerHeight <= 480 && window.innerHeight > 360 ) {
-					this.ytforceres = "large";
-				}
-				if ( window.innerHeight <= 360 && window.innerHeight > 240 ) {
-					this.ytforceres = "medium";
-				}
-				if ( window.innerHeight <= 240 ) {
-					this.ytforceres = "small";
-				}
-
-				this.player.setPlaybackQuality(this.ytforceres);
-				console.log("Forcing Quality Change to " + this.ytforceres);
-
-				this.lastWindowHeight = window.innerHeight;
-			};
+			this.player = viewer;
 
 			var self = this;
 			this.interval = setInterval( function() { self.think(self); }, 100 );
 		};
+
+		this.toggleControls = function( enabled ) {
+			this.player.setControls(enabled);
+		};
+
+		var self = this;
+		viewer.on('ready', function(){self.onReady();});
+		//viewer.on('setupError', function(){document.getElementById('player').innerHTML = "Uh oh";});
 	}
 	registerPlayer( "moetube", MoeTube );
 
