@@ -10,7 +10,7 @@ if (!String.prototype.startsWith) {
 
 var theater = {
 
-	VERSION: '1.8.0-YukiTheater',
+	VERSION: '1.8.1-YukiTheater',
 
 	playerContainer: null,
 	playerContent: null,
@@ -665,6 +665,9 @@ function registerPlayer( type, object ) {
 					setTimeout(function() {
 						self.player.pause();
 						self.player.play();
+
+						self.player.setVolume( (this.volume != null ? this.volume : theater.volume != null ? theater.volume : 25) / 100 );
+						self.player.setMuted( (this.volume != null ? this.volume : theater.volume != null ? theater.volume : 25) == 0 );
 					}, 5000)
 				}
 
@@ -688,10 +691,6 @@ function registerPlayer( type, object ) {
 
 		this.onReady = function() {
 			this.player = player;
-
-			this.player.setVolume( (this.volume != null ? this.volume : theater.volume != null ? theater.volume : 25) / 100 );
-			this.player.setMuted( this.volume != null ? this.volume : theater.volume != null ? theater.volume : 25 == 0 );
-
 			this.interval = setInterval( this.think.bind(this), 100 );
 		};
 
