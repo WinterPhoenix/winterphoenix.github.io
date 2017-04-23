@@ -1030,7 +1030,7 @@ function registerPlayer( type, object ) {
 					this.lastSrcChange = Math.round(Date.now()/1000) + 5; // Wait 5 seconds and then try again if it isn't working
 				}
 
-				if (this.lastSrcChange != "undefined") {
+				if (this.lastSrcChange != undefined) {
 					var curTime = Math.round(Date.now()/1000)
 					if (curTime >= this.lastSrcChange && this.player.readyState() === 0) {
 						console.log("Attempt to load RTMP Stream Failed! Retrying...");
@@ -1052,11 +1052,11 @@ function registerPlayer( type, object ) {
 			var self = this;
 			this.interval = setInterval( function() { self.think(self); }, 100 );
 		};
-		
+
 		this.toggleControls = function( enabled ) {
 			this.player.controls(enabled);
 		};
-		
+
 		var self = this;
 		viewer.ready(function(){self.onReady();});
 		viewer.on("error", function(event) {
