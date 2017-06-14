@@ -14,7 +14,7 @@ var theater = {
 
 	playerContainer: null,
 	playerContent: null,
-	// closedCaptions: false,
+	closedCaptions: false,
 	// language: "en",
 	hdPlayback: false,
 	player: null,
@@ -158,11 +158,6 @@ var theater = {
 		}
 	},
 
-	/*
-		Google Chromeless player doesn't support closed captions...
-		http://code.google.com/p/gdata-issues/issues/detail?id=444
-	*/
-	
 	enableCC: function() {
 		this.closedCaptions = true;
 	},
@@ -305,7 +300,7 @@ function registerPlayer( type, object ) {
 					controls: 1,
 					autohide: 1,
 					iv_load_policy: 3, // hide annotations
-					cc_load_policy: theater.closedCaptions ? 1 : 0
+					cc_load_policy: theater.isCCEnabled() ? 1 : 0
 				},
 				events: {
 					onReady: onYouTubePlayerReady,
