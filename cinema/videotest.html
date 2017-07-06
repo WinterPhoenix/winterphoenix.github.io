@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<title>YukiTheater: Video Support Analysis</title>
+		<title>YukiTheater: Video Support Test</title>
 		<script src="js/videotest.js" type="text/javascript"></script>
 		<style type="text/css">
 			body {
@@ -21,30 +21,29 @@
 		<div id="noflash"></div>
 		<script type="text/javascript">
 			var elem = document.getElementById("noflash");
-			var isAwesomium = navigator.userAgent.indexOf("Awesomium") != -1;
-			var isGModCEF = navigator.userAgent.indexOf("Chrome") != -1 && navigator.userAgent.indexOf("GMod/13") != -1;
+			var isGMod = navigator.userAgent.indexOf("GMod/13") != -1;
 
-			if (isAwesomium || isGModCEF) {
+			if (isGMod) {
 				elem.style.color = "#FFFFFF";
-				elem.innerHTML = "Your browser is " + (isAwesomium ? "Awesomium" : isGModCEF ? "Chromium Embedded Framework" : "Unknown") + ".<br/>";
+				elem.innerHTML = "User Agent:<br/>" + navigator.userAgent + "<br/><br/>";
 
 				if (Modernizr.flash) {
-					elem.innerHTML = elem.innerHTML + "Adobe Flash Player detected.<br/>";
+					elem.innerHTML = elem.innerHTML + "Adobe Flash Player:<br/>Yes<br/><br/>";
 					document.body.style.backgroundColor = "#80BA27";
 				} else {
-					elem.innerHTML = elem.innerHTML + "Adobe Flash Player not detected!<br/>";
+					elem.innerHTML = elem.innerHTML + "Adobe Flash Player:<br/>No<br/><br/>";
 					document.body.style.backgroundColor = "#FF0000";
 				}
 
 				if (Modernizr.video) {
-					elem.innerHTML = elem.innerHTML + "Video Support available (";
+					elem.innerHTML = elem.innerHTML + "Video Support:<br/>";
 					elem.innerHTML = elem.innerHTML + "h264: " + (Modernizr.video.h264 != "" ? Modernizr.video.h264 : "no") + ", ";
 					elem.innerHTML = elem.innerHTML + "hls: " + (Modernizr.video.hls != "" ? Modernizr.video.hls : "no") + ", ";
 					elem.innerHTML = elem.innerHTML + "ogg: " + (Modernizr.video.ogg != "" ? Modernizr.video.ogg : "no") + ", ";
 					elem.innerHTML = elem.innerHTML + "vp9: " + (Modernizr.video.vp9 != "" ? Modernizr.video.vp9 : "no") + ", ";
-					elem.innerHTML = elem.innerHTML + "webm: " + (Modernizr.video.webm != "" ? Modernizr.video.webm : "no") + ")";
+					elem.innerHTML = elem.innerHTML + "webm: " + (Modernizr.video.webm != "" ? Modernizr.video.webm : "no");
 				} else {
-					elem.innerHTML = elem.innerHTML + "Video Support not available!";
+					elem.innerHTML = elem.innerHTML + "Video Support:<br/>No";
 				}
 			} else {
 				elem.innerHTML = "You are not in GMod!<br/>Please open this webpage in GMod to get Video Support Analysis.";
