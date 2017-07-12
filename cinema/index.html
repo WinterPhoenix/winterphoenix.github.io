@@ -32,17 +32,14 @@
 	</style>
 </head>
 <body onload="init()">
-	<!--
-		Landing page for YukiTheater
+	<div id="announcement">
+		<strong>Stop Net Neutrality rules from being repealed!</strong> Visit <b>www.battleforthenet.com</b> to learn more about Net Neutrality and what you can do.
+	</div>
 
-		This webpage appears during the idle theater state
-		while there are no videos queued to play. 
-	-->
 	<div id="player-container">
 		<div id="player"></div>
 	</div>
 	<div id="content">
-		
 		<!--BEGIN SNOW JAVASCRIPT-->
 		<script type="text/javascript" src="js/ThreeCanvas.js"></script>
 		<script type="text/javascript" src="js/Snow.js"></script>
@@ -51,25 +48,20 @@
 			var SCREEN_HEIGHT = window.innerHeight;
 
 			var container;
-
 			var particle;
-
 			var camera;
 			var scene;
 			var renderer;
-
 			var mouseX = 0;
 			var mouseY = 0;
 
 			var windowHalfX = window.innerWidth / 2;
 			var windowHalfY = window.innerHeight / 2;
-			
+
 			var particles = []; 
 			var particleImage = new Image();//THREE.ImageUtils.loadTexture( "img/ParticleSmoke.png" );
 			particleImage.src = 'img/ParticleSmoke.png'; 
 
-		
-		
 			function init() {
 
 				container = document.createElement('div');
@@ -103,7 +95,7 @@
 				setInterval( loop, 1000 / 60 );
 				
 			}
-			
+
 			function onDocumentMouseMove( event ) {
 
 				mouseX = event.clientX - windowHalfX;
@@ -122,9 +114,7 @@
 			}
 
 			function onDocumentTouchMove( event ) {
-
 				if ( event.touches.length == 1 ) {
-
 					event.preventDefault();
 
 					mouseX = event.touches[ 0 ].pageX - windowHalfX;
@@ -132,13 +122,9 @@
 				}
 			}
 
-			//
-
 			function loop() {
-
 			for(var i = 0; i<particles.length; i++)
 				{
-
 					var particle = particles[i]; 
 					particle.updatePhysics(); 
 	
@@ -149,34 +135,27 @@
 						else if(x<-1000) x+=2000; 
 						if(z>1000) z-=2000; 
 						else if(z<-1000) z+=2000; 
-					}				
+					}
 				}
-			
+
 				camera.position.x += ( mouseX - camera.position.x ) * 0.05;
 				camera.position.y += ( - mouseY - camera.position.y ) * 0.05;
 				camera.lookAt(scene.position); 
 
 				renderer.render( scene, camera );
-				
 			}
-
 		</script>
 		<!--END SNOW JAVASCRIPT-->
-		
-		<!-- Curtains -->
+
 		<div id="right-curtain"></div>
 		<div id="left-curtain"></div>
 		<div id="top-curtain"></div>
 
-		<!-- Welcome header -->
 		<div id="header-container">
 			<div id="welcome"></div>
 		</div>
 
-		<!-- Information -->
 		<div id="info-container">
-
-			<!-- Flash Detection -->
 			<div class="info" id="noflash">
 				<script type="text/javascript">
 				var elem = document.getElementById("noflash");
@@ -188,14 +167,11 @@
 			</div>
 
 			<div class="info">To request a video, open the Video Request Menu by pressing F1, input a Link into the Text Box and then press the "Request Video" Button. Alternatively, Request it via the Web Browser.</div>
-
 		</div>
-		<!-- Footer -->
 		<div id="footer-container">
 		</div>
-
 	</div>
-	
+
 	<script>
 		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -205,6 +181,5 @@
 		ga('create', 'UA-39404760-2', 'auto');
 		ga('send', 'pageview');
 	</script>
-	
 </body>
 </html>
