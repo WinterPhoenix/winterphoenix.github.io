@@ -402,6 +402,10 @@ function registerPlayer( type, object ) {
 						this.lastVolume = this.volume;
 					}
 				}
+
+				if ( this.player.getPlayerState() == 2 ) { // If it's paused for some reason, play it
+					this.player.playVideo();
+				}
 			}
 
 		};
