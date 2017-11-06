@@ -6,27 +6,31 @@
 		<link href="style.css" rel="stylesheet" type="text/css">
 	</head>
 	<body>
-		<div style="position:absolute;top:24px;left:0;right:0;bottom:0;">
+		<div style="position:absolute;top:0;left:0;right:0;bottom:0;">
 			<section id="content-container">
-			<div id="top_banner"><strong>Hey there!</strong> Wondering why services have been disappearing/breaking lately? <strong>See <a href="https://github.com/Facepunch/garrysmod-requests/issues/791">here</a></strong>!</div>
-
 				<h1>Share a video from one of our services</h1>
 
 				<div style="text-align:center;font-size:0;">
 
-					<service style="background-image:url(logos/youtube.png);" onclick="selectService('YouTube','https://www.youtube.com');" onmouseover="hoverService();">-</service>
+					<service style="background-image:url(logos/youtube.png);" onclick="selectService('YouTube','https://www.youtube.com/');" onmouseover="hoverService();">-</service>
 
-					<service style="background-image:url(logos/ustream.png);" onclick="selectService('Ustream','http://www.ustream.tv');" onmouseover="hoverService();">-</service>
+					<service id="twitch" style="background-image:url(logos/twitch.png);" onclick="selectService('Twitch','https://twitch.tv/');" onmouseover="hoverService();">-</service>
 
-					<service style="background-image:url(logos/dailymotion.png);" onclick="selectService('Dailymotion','https://www.dailymotion.com');" onmouseover="hoverService();">-</service>
+					<service id="vimeo" style="background-image:url(logos/vimeo.svg);background-size:90%;" onclick="selectService('Vimeo','https://vimeo.com/');" onmouseover="hoverService();">-</service>
 
-					<service style="background-image:url(logos/9anime.png);" onclick="selectService('9Anime','http://9anime.to');" onmouseover="hoverService();">-</service>
+					<service style="background-image:url(logos/dailymotion.png);" onclick="selectService('Dailymotion','https://www.dailymotion.com/');" onmouseover="hoverService();">-</service>
+
+					<service style="background-image:url(logos/ustream.png);" onclick="selectService('Ustream','https://www.ustream.tv/');" onmouseover="hoverService();">-</service>
+
+					<service style="background-image:url(logos/cartoonhd.png);" onclick="selectService('CartoonHD','https://cartoonhd.in/');" onmouseover="hoverService();">-</service>
 
 					<br />
 
-					<service class="subtext" style="background-image:url(logos/animetwist.png);" onclick="selectService('AnimeTwist','https://twist.moe');" onmouseover="hoverService();">Anime Twist</service>
+					<service style="background-image:url(logos/9anime.png);" onclick="selectService('9Anime','https://9anime.to/');" onmouseover="hoverService();">-</service>
 
-					<service class="subtext" style="background-image:url(logos/moetube.png);" onclick="selectService('MoeTube','http://moetube.net');" onmouseover="hoverService();">MoeTube</service>
+					<service class="subtext" style="background-image:url(logos/animetwist.png);" onclick="selectService('AnimeTwist','https://twist.moe/');" onmouseover="hoverService();">Anime Twist</service>
+
+					<service class="subtext" style="background-image:url(logos/moetube.png);" onclick="selectService('MoeTube','https://moetube.net/');" onmouseover="hoverService();">MoeTube</service>
 
 					<service class="subtext" style="background-image:url(logos/reddit.png);" onclick="selectService('reddit/videos','https://www.reddit.com/r/videos/');" onmouseover="hoverService();">Videos</service>
 
@@ -47,6 +51,7 @@
 			// Event called when a service is hovered
 			function hoverService() {
 				hoverSound.play();
+				hoverSound.currentTime = 0;
 			}
 
 			// Event called when a service is selected
@@ -59,8 +64,14 @@
 				}, 800);
 			}
 
-			// Set a random tip on DOM load
 			document.addEventListener('DOMContentLoaded', function() {
+				// Hide Twitch and Vimeo options if running Awesomium, as they're not supported there
+				if (navigator.userAgent.indexOf("Awesomium") != -1) {
+					document.getElementById("twitch").style.display = "none";
+					document.getElementById("vimeo").style.display = "none";
+				}
+
+				// Set a random tip on DOM load
 				var tips = [
 					'Did you know that YukiTheater is a fork of the open-source Cinema gamemode?<br /><a href="https://github.com/pixeltailgames/cinema">View Cinema\'s code on GitHub</a>',
 					'Need Help?<br />Check out the <a href="https://www.yukitheater.org/theater/help.html">Help Page</a>, <a href="https://www.solsticegamestudios.com/forums/forums/support/">Help and Support Board</a> on our Forums, or <a href="http://steamcommunity.com/workshop/filedetails/discussion/118824086/828935672624191282/">Cinema FAQ</a>.',
