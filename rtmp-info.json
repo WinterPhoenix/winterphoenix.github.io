@@ -1,15 +1,10 @@
 {"info":[
 	{"id":"winter", "title":"WinterPhoenix96 - Movie Night", "live":true, "thumbnail":"https://winterphoenix96.github.io/rtmp-thumbnails/default.png"},
 	{"id":"sophie", "title":"Sophie-bear - Stream", "live":true, "thumbnail":"https://winterphoenix96.github.io/rtmp-thumbnails/default.png"},
-	{"id":"liquidus", "title":"Liquidus - Stream", "live":true, "thumbnail":"https://winterphoenix96.github.io/rtmp-thumbnails/default.png"},
 	{"id":"moose", "title":"Moose O' Crack - Stream", "live":true, "thumbnail":"https://winterphoenix96.github.io/rtmp-thumbnails/default.png"},
 	{"id":"nighthawk", "title":"Nighthawk - Stream", "live":true, "thumbnail":"https://winterphoenix96.github.io/rtmp-thumbnails/default.png"},
-	{"id":"shima", "title":"iShimakaze - Stream", "live":true, "thumbnail":"https://winterphoenix96.github.io/rtmp-thumbnails/shima.png"},
-	{"id":"keero", "title":"Keero Kyubey - Stream", "live":true, "thumbnail":"https://winterphoenix96.github.io/rtmp-thumbnails/default.png"},
-	{"id":"funk", "title":"Funkmasterg4 - Stream", "live":true, "thumbnail":"https://winterphoenix96.github.io/rtmp-thumbnails/default.png"},
 	{"id":"salty", "title":"salty bird - Stream", "live":true, "thumbnail":"https://winterphoenix96.github.io/rtmp-thumbnails/salty.jpg"},
-	{"id":"zep", "title":"Zep - Stream", "live":true, "thumbnail":"https://winterphoenix96.github.io/rtmp-thumbnails/zep.png"},
 	{"id":"oceanman", "title":"Ocean Man - Stream", "live":true, "thumbnail":"https://winterphoenix96.github.io/rtmp-thumbnails/default.png"},
-	{"id":"hugbeez", "title":"Hugbeez - Stream", "live":true, "thumbnail":"https://winterphoenix96.github.io/rtmp-thumbnails/default.png"},
-	{"id":"ynot", "title":"TheEpicYNot - Stream", "live":true, "thumbnail":"https://winterphoenix96.github.io/rtmp-thumbnails/default.png"}
+	{"id":"jim", "title":"JimtheKnight - Stream", "live":true, "thumbnail":"https://winterphoenix96.github.io/rtmp-thumbnails/default.png"}
 ]}
+
