@@ -6,6 +6,7 @@
 	{"id":"salty", "title":"salty bird - Stream", "live":true, "thumbnail":"https://winterphoenix96.github.io/rtmp-thumbnails/salty.jpg"},
 	{"id":"oceanman", "title":"Ocean Man - Stream", "live":true, "thumbnail":"https://winterphoenix96.github.io/rtmp-thumbnails/default.png"},
 	{"id":"jim", "title":"JimtheKnight - Stream", "live":true, "thumbnail":"https://winterphoenix96.github.io/rtmp-thumbnails/default.png"},
-	{"id":"firey", "title":"Fireypaws - Stream", "live":true, "thumbnail":"https://winterphoenix96.github.io/rtmp-thumbnails/default.png"}
+	{"id":"firey", "title":"Fireypaws - Stream", "live":true, "thumbnail":"https://winterphoenix96.github.io/rtmp-thumbnails/default.png"},
+	{"id":"liquidus", "title":"Liquidus - Stream", "live":true, "thumbnail":"https://winterphoenix96.github.io/rtmp-thumbnails/default.png"}
 ]}
 
