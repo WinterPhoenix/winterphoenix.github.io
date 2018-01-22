@@ -10,7 +10,7 @@ if (!String.prototype.startsWith) {
 
 var theater = {
 
-	VERSION: '2.0.0-YukiTheater',
+	VERSION: '2.0.1-YukiTheater',
 
 	playerContainer: null,
 	playerContent: null,
@@ -1561,6 +1561,8 @@ function registerPlayer( type, object ) {
 				if ( this.player.getPlaylist()[0] && this.player.getPlaylist()[0].file != "example.mp4" && !this.sentAltInfo && this.player.getState() == "playing" && this.player.getDuration() > 0 ) {
 					if (typeof(exTheater) != 'undefined') {
 						exTheater.loadVideoDuration(this.player.getDuration());
+					} else {
+						console.log("exTheater not defined for loadVideoDuration!");
 					}
 					this.sentAltInfo = true;
 				}
