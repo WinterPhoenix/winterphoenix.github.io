@@ -1218,6 +1218,8 @@ function registerPlayer( type, object ) {
 				if ( this.player.getPlaylist()[0] && this.player.getPlaylist()[0].file != "example.mp4" && !this.sentAltInfo && this.player.getState() == "playing" && this.player.getDuration() > 0 ) {
 					if (typeof(exTheater) != 'undefined') {
 						exTheater.loadVideoDuration(this.player.getDuration());
+					} else {
+						console.log("exTheater not defined for loadVideoDuration!");
 					}
 					this.sentAltInfo = true;
 				}
