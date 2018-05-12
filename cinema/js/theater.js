@@ -10,7 +10,7 @@ if (!String.prototype.startsWith) {
 
 var theater = {
 
-	VERSION: '2.0.1-YukiTheater',
+	VERSION: '2.1.0-YukiTheater',
 
 	playerContainer: null,
 	playerContent: null,
@@ -1430,7 +1430,6 @@ function registerPlayer( type, object ) {
 			theater.playerLoadFailure();
 		});
 	}
-	registerPlayer( "animetwist", JWPlayer_1 );
 	registerPlayer( "cartoonhd", JWPlayer_1 );
 
 	var JWPlayer_2 = function() {
@@ -1612,6 +1611,8 @@ function registerPlayer( type, object ) {
 	}
 	registerPlayer( "gogoanime", JWPlayer_2 );
 	registerPlayer( "animeseason", JWPlayer_2 );
+	registerPlayer( "animetwist", JWPlayer_2 );
+	registerPlayer( "masteranime", JWPlayer_2 );
 
 })();
 
