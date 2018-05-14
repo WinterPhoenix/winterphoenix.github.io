@@ -10,7 +10,7 @@ if (!String.prototype.startsWith) {
 
 var theater = {
 
-	VERSION: '2.1.0-YukiTheater',
+	VERSION: '2.1.1-YukiTheater',
 
 	playerContainer: null,
 	playerContent: null,
@@ -1430,7 +1430,8 @@ function registerPlayer( type, object ) {
 			theater.playerLoadFailure();
 		});
 	}
-	registerPlayer( "cartoonhd", JWPlayer_1 );
+	// JWPlayer_1 is not currently used for anything!
+	// Kept here in case we need it later
 
 	var JWPlayer_2 = function() {
 		// JW7 Key
