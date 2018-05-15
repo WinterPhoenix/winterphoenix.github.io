@@ -10,7 +10,7 @@ if (!String.prototype.startsWith) {
 
 var theater = {
 
-	VERSION: '2.2.0-YukiTheater',
+	VERSION: '2.2.1-YukiTheater',
 
 	playerContainer: null,
 	playerContent: null,
