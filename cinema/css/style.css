@@ -21,6 +21,10 @@ b {
 	color: #0361e0;
 }
 
+canvas {
+	position: absolute;
+}
+
 #announcement {
 	position: absolute;
 	margin-top: -64px;
