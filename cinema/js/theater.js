@@ -10,7 +10,7 @@ if (!String.prototype.startsWith) {
 
 var theater = {
 
-	VERSION: '2.1.1-YukiTheater',
+	VERSION: '2.2.0-YukiTheater',
 
 	playerContainer: null,
 	playerContent: null,
@@ -1088,7 +1088,7 @@ function registerPlayer( type, object ) {
 	registerPlayer( "dailymotion", Dailymotion );
 	registerPlayer( "dailymotionlive", Dailymotion );
 
-	var NineAnime = function() {
+	var JWPlayer_1 = function() {
 		// JW7 Key
 		jwplayer.key="GBbtI9R8M4R2gQOTSs7m7AdoMdxpK3DD4IcgmQ==";
 
@@ -1260,178 +1260,8 @@ function registerPlayer( type, object ) {
 			theater.playerLoadFailure();
 		});
 	}
-	registerPlayer( "9anime", NineAnime );
-
-	var JWPlayer_1 = function() {
-		// JW7 Key
-		jwplayer.key="GBbtI9R8M4R2gQOTSs7m7AdoMdxpK3DD4IcgmQ==";
-
-		/*
-			Embed Player Object
-		*/
-		var viewer = jwplayer("player");
-		viewer.setup({
-			height: "100%",
-			width: "100%",
-			controls: false,
-			autostart: true,
-			primary: 'flash',
-			displaytitle: true,
-			file: "example.mp4"
-		});
-
-		/*
-			Standard Player Methods
-		*/
-		this.setVideo = function( id ) {
-			this.lastStartTime = null;
-			this.lastVideoId = null;
-			this.videoId = id;
-			this.sentAltInfo = false;
-		};
-
-		this.setVolume = function( volume ) {
-			this.lastVolume = null;
-			this.volume = volume;
-		};
-
-		this.setStartTime = function( seconds ) {
-			this.lastStartTime = null;
-			this.startTime = seconds;
-		};
-
-		this.seek = function( seconds ) {
-			if ( this.player != null ) {
-				this.player.seek( seconds );
-
-				if ( this.player.getState() == "paused" || this.player.getState() == "idle" ) {
-					this.player.play(true);
-				}
-			}
-		};
-
-		this.onRemove = function() {
-			clearInterval( this.interval );
-		};
-
-		/*
-			Player Specific Methods
-		*/
-		this.getCurrentTime = function() {
-			if ( this.player != null ) {
-				return this.player.getPosition();
-			}
-		};
-
-		this.canChangeTime = function() {
-			if ( this.player != null ) {
-				//Is loaded and it is not buffering
-				return this.player.getState() != "buffering";
-			}
-		};
-
-		this.think = function() {
-			if ( this.player != null ) {
-				if ( theater.isForceVideoRes() && this.player.getState() == "playing" ) {
-					if ( this.lastWindowHeight != window.innerHeight ) {
-						var qualityLevels = this.player.getPlaylist()[0].sources;
-						var resMatching = [];
-						var defaultQuality = null;
-
-						for (var i=0; i < qualityLevels.length; i++) {
-							resMatching[qualityLevels[i]["label"]] = i;
-
-							if (qualityLevels[i]["default"]) {
-								defaultQuality = i;
-							}
-						}
-
-						if (defaultQuality == null) {
-							defaultQuality = ("720p" in resMatching) ? resMatching["720p"] : 1; // We're just gonna guess! :D
-						}
-
-						if ( window.innerHeight <= 1536 && window.innerHeight > 1440 ) {
-							this.forceRes = ("1080p" in resMatching) ? resMatching["1080p"] : defaultQuality;
-						}
-						if ( window.innerHeight <= 1440 && window.innerHeight > 1080 ) {
-							this.forceRes = ("1080p" in resMatching) ? resMatching["1080p"] : defaultQuality;
-						}
-						if ( window.innerHeight <= 1080 && window.innerHeight > 720 ) {
-							this.forceRes = ("1080p" in resMatching) ? resMatching["1080p"] : defaultQuality;
-						}
-						if ( window.innerHeight <= 720 && window.innerHeight > 480 ) {
-							this.forceRes = ("720p" in resMatching) ? resMatching["720p"] : defaultQuality;
-						}
-						if ( window.innerHeight <= 480 && window.innerHeight > 360 ) {
-							this.forceRes = ("480p" in resMatching) ? resMatching["480p"] : defaultQuality;
-						}
-						if ( window.innerHeight <= 360 && window.innerHeight > 240 ) {
-							this.forceRes = ("360p" in resMatching) ? resMatching["360p"] : defaultQuality;
-						}
-						if ( window.innerHeight <= 240 ) {
-							this.forceRes = ("240p" in resMatching) ? resMatching["240p"] : defaultQuality;
-						}
-
-						this.player.setCurrentQuality(this.forceRes);
-						console.log("Forcing Quality Change to " + this.forceRes);
-
-						this.lastWindowHeight = window.innerHeight;
-					}
-				}
-
-				if ( this.videoId != this.lastVideoId ) {
-					this.player.load([{
-						sources: [{file: this.videoId, "default": "true", type: "mp4"}]
-					}]);
-
-					this.lastVideoId = this.videoId;
-					this.lastStartTime = this.startTime;
-				}
-
-				// Wait until it's ready before sending Duration
-				if ( this.player.getPlaylist()[0] && this.player.getPlaylist()[0].file != "example.mp4" && !this.sentAltInfo && this.player.getState() == "playing" && this.player.getDuration() > 0 ) {
-					console.log("RUNLUA: theater.SendAltInfo(" + this.player.getDuration() + ")");
-					this.sentAltInfo = true;
-				}
-
-				if ( this.player.getState() != "idle" ) {
-
-					if ( this.startTime != this.lastStartTime ) {
-						this.seek( this.startTime );
-						this.lastStartTime = this.startTime;
-					}
-
-					if ( this.volume != this.player.getVolume() ) {
-						this.player.setVolume( this.volume );
-						this.volume = this.player.getVolume();
-					}
-				}
-
-				if (this.player.getState() == "buffering") {
-					this.player.setControls(true);
-				}
-			}
-		};
-
-		this.onReady = function() {
-			this.player = viewer;
-
-			var self = this;
-			this.interval = setInterval( function() { self.think(self); }, 100 );
-		};
-
-		this.toggleControls = function( enabled ) {
-			this.player.setControls(enabled);
-		};
-
-		var self = this;
-		viewer.on('ready', function(){self.onReady();});
-		viewer.on("setupError", function(event) {
-			theater.playerLoadFailure();
-		});
-	}
-	// JWPlayer_1 is not currently used for anything!
-	// Kept here in case we need it later
+	registerPlayer( "9anime", JWPlayer_1 );
+	registerPlayer( "fmovies", JWPlayer_1 );
 
 	var JWPlayer_2 = function() {
 		// JW7 Key
