@@ -10,7 +10,7 @@ if (!String.prototype.startsWith) {
 
 var theater = {
 
-	VERSION: '2.2.1-YukiTheater',
+	VERSION: '2.2.2-YukiTheater',
 
 	playerContainer: null,
 	playerContent: null,
@@ -320,11 +320,6 @@ function registerPlayer( type, object ) {
 		this.seek = function( seconds ) {
 			if ( this.player !== null ) {
 				this.player.seekTo( seconds, true );
-
-				// Video isn't playing
-				if ( this.player.getPlayerState() != 1 ) {
-					this.player.playVideo();
-				}
 			}
 		};
 
@@ -400,10 +395,6 @@ function registerPlayer( type, object ) {
 						this.player.setVolume( this.volume );
 						this.lastVolume = this.volume;
 					}
-				}
-
-				if ( this.player.getPlayerState() == 2 ) { // If it's paused for some reason, play it
-					this.player.playVideo();
 				}
 			}
 
