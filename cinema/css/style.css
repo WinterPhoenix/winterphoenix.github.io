@@ -140,7 +140,7 @@ canvas {
 	right: -500px;
 }
 
-#noflash {
+#missingComponent {
 	color: red;
 	font-weight: bold;
 	font-style: italic;

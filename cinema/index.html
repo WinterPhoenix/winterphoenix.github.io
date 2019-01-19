@@ -47,11 +47,16 @@
 		</div>
 
 		<div id="info-container">
-			<div class="info" id="noflash">
+			<div class="info" id="missingComponent">
 				<script type="text/javascript">
-				var elem = document.getElementById("noflash");
+				var chromeVer = /Chrome\/(\d+)/;
+				var clientIsChromium = chromeVer.exec(navigator.userAgent)[1] > 18;
 				var clientHasFlash = swfobject.hasFlashPlayerVersion("1");
-				if (!clientHasFlash) {
+
+				var elem = document.getElementById("missingComponent");
+				if (!clientIsChromium) {
+					elem.innerText = "Chromium not detected! Most videos will not play properly. Say /chromium for instructions on how to fix this.";
+				} else if (!clientHasFlash) {
 					elem.innerText = "Adobe Flash Player not detected! Some videos may not load. Say /flash for instructions on how to fix this.";
 				}
 				</script>
