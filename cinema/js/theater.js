@@ -302,7 +302,7 @@ function registerPlayer( type, object ) {
 					cc_load_policy: theater.isCCEnabled() ? 1 : 0
 				},
 				events: {
-					onReady: onYouTubePlayerReady,
+					onReady: onYouTubePlayerReady
 				}
 			});
 		};
