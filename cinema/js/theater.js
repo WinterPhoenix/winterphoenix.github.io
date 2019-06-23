@@ -10,7 +10,7 @@ if (!String.prototype.startsWith) {
 
 var theater = {
 
-	VERSION: '2.2.2-YukiTheater',
+	VERSION: "3.0.0-YukiTheater",
 
 	playerContainer: null,
 	playerContent: null,
@@ -473,7 +473,7 @@ function registerPlayer( type, object ) {
 					//theater.resetPlayer();
 					theater.loadVideo("vimeo", self.videoId, self.startTime); // *sigh* Just...reload the stupid thing and try again.
 				} else {
-					theater.playerLoadFailure();
+					//theater.playerLoadFailure();
 				}
 			});
 			player.on("loaded", function() {
@@ -901,19 +901,8 @@ function registerPlayer( type, object ) {
 	registerPlayer( "ustreamlive", UstreamVideo );
 
 	var YukiTheaterRTMP = function() {
-		videojs.options.flash.swf = "video-js-5.9.2/video-js.swf"
-
 		var pre_player = document.createElement('video');
-		pre_player.className = "video-js vjs-default-skin";
 		pre_player.id = "player";
-		pre_player.preload = "auto";
-		pre_player.autoplay = "true";
-		var player_container = document.getElementById('player').parentNode;
-		player_container.removeChild(document.getElementById('player'));
-		player_container.appendChild(pre_player);
-
-		var viewer = videojs('player');
-		viewer.poster("https://winterphoenix96.github.io/rtmp-thumbnails/default.png");
 
 		/*
 			Standard Player Methods
@@ -932,52 +921,117 @@ function registerPlayer( type, object ) {
 			clearInterval( this.interval );
 		};
 
-		/*
-			Player Specific Methods
-		*/
-		this.think = function() {
+		if (pre_player.canPlayType('video/mp4; codecs="avc1.42E01E, mp4a.40.2"') == "probably") {
+			// Supports MP4, for HLS
+			pre_player.style.width = "100%";
+			pre_player.style.height = "100%";
 
-			if ( this.player != null ) {
-				if ( this.videoId != this.lastVideoId ) {
-					this.player.src({ type: "rtmp/mp4", src: "rtmp://rtmp.yukitheater.org/live/" + this.videoId + "/"});
-					this.lastVideoId = this.videoId;
-					this.lastSrcChange = Math.round(Date.now()/1000) + 5; // Wait 5 seconds and then try again if it isn't working
-				}
+			var player_container = document.getElementById('player').parentNode;
+			player_container.removeChild(document.getElementById('player'));
+			player_container.appendChild(pre_player);
 
-				if (this.lastSrcChange != undefined) {
-					var curTime = Math.round(Date.now()/1000)
-					if (curTime >= this.lastSrcChange && this.player.readyState() === 0) {
-						console.log("Attempt to load RTMP Stream Failed! Retrying...");
-						this.player.src({ type: "rtmp/mp4", src: "rtmp://rtmp.yukitheater.org/live/" + this.videoId + "/"});
-						this.lastSrcChange = Math.round(Date.now()/1000) + 5;
+			var hls = new Hls();
+			hls.attachMedia(pre_player);
+
+			/*
+				Player Specific Methods
+			*/
+			this.think = function() {
+				if (this.player != null) {
+					if (this.videoId != this.lastVideoId) {
+						this.player.loadSource("http://rtmp.yukitheater.org/hls/" + this.videoId + ".m3u8");
+						this.lastVideoId = this.videoId;
+					}
+					
+					console.log(this.player.currentLevel);
+
+					if (this.volume != this.lastVolume) {
+						pre_player.volume = this.volume;
+						this.lastVolume = this.volume;
 					}
 				}
+			};
 
-				if ( this.volume != this.lastVolume ) {
-					this.player.volume( this.volume );
-					this.lastVolume = this.volume;
-				}
-			}
-		};
+			this.onReady = function() {
+				this.player = hls;
+				pre_player.play();
 
-		this.onReady = function() {
-			this.player = viewer;
+				var self = this;
+				this.interval = setInterval( function() { self.think(self); }, 100 );
+			};
+
+			this.toggleControls = function( enabled ) {
+				pre_player.controls = enabled;
+			};
 
 			var self = this;
-			this.interval = setInterval( function() { self.think(self); }, 100 );
-		};
+			hls.on(Hls.Events.MEDIA_ATTACHED, function() {
+				self.onReady();
+			});
+			hls.on(Hls.Events.ERROR, function(event, data) {
+				//theater.playerLoadFailure();
+			});
+		} else {
+			// Does not support MP4, for HLS
+			videojs.options.flash.swf = "video-js-5.9.2/video-js.swf"
 
-		this.toggleControls = function( enabled ) {
-			this.player.controls(enabled);
-		};
+			pre_player.className = "video-js vjs-default-skin";
+			pre_player.preload = "auto";
+			pre_player.autoplay = "true";
+			var player_container = document.getElementById('player').parentNode;
+			player_container.removeChild(document.getElementById('player'));
+			player_container.appendChild(pre_player);
 
-		var self = this;
-		viewer.ready(function(){self.onReady();});
-		viewer.on("error", function(event) {
-			if (viewer.error().code == 4) { // MEDIA_ERR_SRC_NOT_SUPPORTED
-				theater.playerLoadFailure();
-			}
-		});
+			var viewer = videojs('player');
+			viewer.poster("https://winterphoenix96.github.io/rtmp-thumbnails/default.png");
+
+			/*
+				Player Specific Methods
+			*/
+			this.think = function() {
+
+				if ( this.player != null ) {
+					if ( this.videoId != this.lastVideoId ) {
+						this.player.src({ type: "rtmp/mp4", src: "rtmp://rtmp.yukitheater.org/live/" + this.videoId + "/"});
+						this.lastVideoId = this.videoId;
+						this.lastSrcChange = Math.round(Date.now()/1000) + 5; // Wait 5 seconds and then try again if it isn't working
+					}
+
+					if (this.lastSrcChange != undefined) {
+						var curTime = Math.round(Date.now()/1000)
+						if (curTime >= this.lastSrcChange && this.player.readyState() === 0) {
+							console.log("Attempt to load RTMP Stream Failed! Retrying...");
+							this.player.src({ type: "rtmp/mp4", src: "rtmp://rtmp.yukitheater.org/live/" + this.videoId + "/"});
+							this.lastSrcChange = Math.round(Date.now()/1000) + 5;
+						}
+					}
+
+					if ( this.volume != this.lastVolume ) {
+						this.player.volume( this.volume );
+						this.lastVolume = this.volume;
+					}
+				}
+			};
+
+			this.onReady = function() {
+				this.player = viewer;
+
+				var self = this;
+				this.interval = setInterval( function() { self.think(self); }, 100 );
+			};
+
+			this.toggleControls = function( enabled ) {
+				this.player.controls(enabled);
+			};
+
+			var self = this;
+			viewer.ready(function(){self.onReady();});
+			viewer.on("error", function(event) {
+				if (viewer.error().code == 4) { // MEDIA_ERR_SRC_NOT_SUPPORTED
+					theater.playerLoadFailure();
+				}
+			});
+		}
 	};
 	registerPlayer( "yukirtmp", YukiTheaterRTMP );
 
@@ -994,7 +1048,7 @@ function registerPlayer( type, object ) {
 			width: "100%",
 			controls: false,
 			autostart: true,
-			primary: 'flash',
+			primary: document.createElement("video").canPlayType('video/mp4; codecs="avc1.42E01E, mp4a.40.2"') == "probably" ? "html5" : "flash",
 			displaytitle: true,
 			file: "example.mp4"
 		});
@@ -1169,7 +1223,7 @@ function registerPlayer( type, object ) {
 			width: "100%",
 			controls: false,
 			autostart: true,
-			primary: 'flash',
+			primary: document.createElement("video").canPlayType('video/mp4; codecs="avc1.42E01E, mp4a.40.2"') == "probably" ? "html5" : "flash",
 			displaytitle: true,
 			file: "example.mp4"
 		});
@@ -1334,9 +1388,7 @@ function registerPlayer( type, object ) {
 		});
 	}
 	registerPlayer( "gogoanime", JWPlayer_2 );
-	registerPlayer( "animeseason", JWPlayer_2 );
 	registerPlayer( "animetwist", JWPlayer_2 );
-	registerPlayer( "masteranime", JWPlayer_2 );
 
 })();
 
