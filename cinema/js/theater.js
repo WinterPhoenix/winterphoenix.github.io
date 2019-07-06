@@ -10,7 +10,7 @@ if (!String.prototype.startsWith) {
 
 var theater = {
 
-	VERSION: "3.0.0-YukiTheater",
+	VERSION: "3.0.1-YukiTheater",
 
 	playerContainer: null,
 	playerContent: null,
@@ -939,11 +939,19 @@ function registerPlayer( type, object ) {
 			this.think = function() {
 				if (this.player != null) {
 					if (this.videoId != this.lastVideoId) {
-						this.player.loadSource("http://rtmp.yukitheater.org/hls/" + this.videoId + ".m3u8");
+						this.player.loadSource("https://rtmp-hls.yukitheater.org/hls/" + this.videoId + ".m3u8");
 						this.lastVideoId = this.videoId;
+						this.lastSrcChange = Math.round(Date.now()/1000) + 5; // Wait 5 seconds and then try again if it isn't working
 					}
-					
-					console.log(this.player.currentLevel);
+
+					if (this.lastSrcChange != undefined) {
+						var curTime = Math.round(Date.now()/1000)
+						if (curTime >= this.lastSrcChange && this.player.currentLevel === -1) {
+							console.log("Attempt to load RTMP Stream Failed! Retrying...");
+							this.player.loadSource("http://rtmp.yukitheater.org/hls/" + this.videoId + ".m3u8");
+							this.lastSrcChange = Math.round(Date.now()/1000) + 5;
+						}
+					}
 
 					if (this.volume != this.lastVolume) {
 						pre_player.volume = this.volume;
@@ -997,6 +1005,7 @@ function registerPlayer( type, object ) {
 						this.lastSrcChange = Math.round(Date.now()/1000) + 5; // Wait 5 seconds and then try again if it isn't working
 					}
 
+					/*
 					if (this.lastSrcChange != undefined) {
 						var curTime = Math.round(Date.now()/1000)
 						if (curTime >= this.lastSrcChange && this.player.readyState() === 0) {
@@ -1005,6 +1014,7 @@ function registerPlayer( type, object ) {
 							this.lastSrcChange = Math.round(Date.now()/1000) + 5;
 						}
 					}
+					*/
 
 					if ( this.volume != this.lastVolume ) {
 						this.player.volume( this.volume );
