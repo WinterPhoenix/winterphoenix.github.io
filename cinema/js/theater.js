@@ -945,10 +945,13 @@ function registerPlayer( type, object ) {
 					}
 
 					if (this.lastSrcChange != undefined) {
-						var curTime = Math.round(Date.now()/1000)
-						if (curTime >= this.lastSrcChange && this.player.currentLevel === -1) {
-							console.log("Attempt to load RTMP Stream Failed! Retrying...");
-							this.player.loadSource("https://rtmp.yukitheater.org/hls/" + this.videoId + ".m3u8");
+						var curTime = Math.round(Date.now()/1000);
+						if (curTime >= this.lastSrcChange) {
+							if (this.player.currentLevel === -1) {
+								console.log("Attempt to load RTMP Stream Failed! Retrying...");
+								this.player.loadSource("https://rtmp.yukitheater.org/hls/" + this.videoId + ".m3u8");
+							}
+
 							this.lastSrcChange = Math.round(Date.now()/1000) + 5;
 						}
 					}
