@@ -1003,7 +1003,7 @@ function registerPlayer( type, object ) {
 
 				if ( this.player != null ) {
 					if ( this.videoId != this.lastVideoId ) {
-						this.player.src({ type: "rtmp/mp4", src: "rtmp://rtmp.yukitheater.org/show/" + this.videoId + "_720"});
+						this.player.src({ type: "rtmp/mp4", src: "rtmp://rtmp.yukitheater.org/show/" + this.videoId + "_src"});
 						this.lastVideoId = this.videoId;
 						this.lastSrcChange = Math.round(Date.now()/1000) + 5; // Wait 5 seconds and then try again if it isn't working
 					}
@@ -1013,7 +1013,7 @@ function registerPlayer( type, object ) {
 						var curTime = Math.round(Date.now()/1000)
 						if (curTime >= this.lastSrcChange && this.player.readyState() === 0) {
 							console.log("Attempt to load RTMP Stream Failed! Retrying...");
-							this.player.src({ type: "rtmp/mp4", src: "rtmp://rtmp.yukitheater.org/show/" + this.videoId + "_720"});
+							this.player.src({ type: "rtmp/mp4", src: "rtmp://rtmp.yukitheater.org/show/" + this.videoId + "_src"});
 							this.lastSrcChange = Math.round(Date.now()/1000) + 5;
 						}
 					}
