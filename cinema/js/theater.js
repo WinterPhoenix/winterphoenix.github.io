@@ -10,7 +10,7 @@ if (!String.prototype.startsWith) {
 
 var theater = {
 
-	VERSION: "3.0.3-YukiTheater",
+	VERSION: "3.0.4-YukiTheater",
 
 	playerContainer: null,
 	playerContent: null,
@@ -949,7 +949,7 @@ function registerPlayer( type, object ) {
 						if (curTime >= this.lastSrcChange) {
 							if (this.player.currentLevel === -1) {
 								console.log("Attempt to load RTMP Stream Failed! Retrying...");
-								this.player.loadSource("https://rtmp.yukitheater.org/hls/" + this.videoId + ".m3u8");
+								this.player.loadSource("https://rtmp-hls.yukitheater.org/hls/" + this.videoId + ".m3u8");
 							}
 
 							this.lastSrcChange = Math.round(Date.now()/1000) + 5;
