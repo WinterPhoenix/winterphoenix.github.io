@@ -53,12 +53,11 @@
 				var chromeVer = /Chrome\/(\d+)/;
 				var clientIsChromium = chromeVer.exec(navigator.userAgent)[1] > 18;
 				var clientHasFlash = swfobject.hasFlashPlayerVersion("1");
+				var clientHasCodecSupport = document.createElement("video").canPlayType('video/mp4; codecs="avc1.42E01E, mp4a.40.2"') == "probably";
 
 				var elem = document.getElementById("missingComponent");
-				if (!clientIsChromium) {
-					elem.innerText = "Chromium not detected! Most videos will not play properly. Say /chromium for instructions on how to fix this.";
-				} else if (!clientHasFlash) {
-					elem.innerText = "Adobe Flash Player not detected! Some videos may not load. Say /flash for instructions on how to fix this.";
+				if (!clientIsChromium || (!clientHasFlash && !clientHasCodecSupport)) {
+					elem.innerText = "Video Fixes not detected! Most videos will not play properly. Say /fixvideos for instructions on how to fix this.";
 				}
 				</script>
 			</div>
