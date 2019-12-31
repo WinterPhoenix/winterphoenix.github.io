@@ -1,0 +1,27 @@
+<html>
+	<head>
+		<title>YukiTheater RTMP Direct</title>
+		<script>
+			window.onload=function(){
+				setTimeout(function(){
+					var url = new URL(window.location.href);
+
+					document.getElementById("theater").contentWindow.theater.setVolume(100);
+					document.getElementById("theater").contentWindow.theater.loadVideo("yukirtmp", url.searchParams.get("user"));
+					setTimeout(function(){
+						document.getElementById("theater").contentWindow.theater.toggleControls(true);
+						document.getElementById("theater").contentWindow.theater.player.player.requestFullscreen();
+					}, 1000);
+				}, 1000);
+			};
+		</script>
+		<style type="text/css">
+			body {
+				margin: 0;
+			}
+		</style>
+	</head>
+	<body>
+		<iframe src="cinema/index.html" width="100%" height="100%" id="theater" frameBorder="0"/>
+	</body>
+</html>
